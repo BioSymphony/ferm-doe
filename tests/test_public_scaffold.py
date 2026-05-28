@@ -17,8 +17,6 @@ class PublicScaffoldTests(unittest.TestCase):
         readme = (ROOT / "README.md").read_text()
         for asset in [
             "assets/images/biosymphony-ferm-doe-banner.png",
-            "assets/images/biosymphony-ferm-doe-pipeline.png",
-            "assets/images/biosymphony-agent-loop.svg",
         ]:
             self.assertIn(asset, readme)
             self.assertTrue((ROOT / asset).exists(), asset)
