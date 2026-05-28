@@ -1,4 +1,4 @@
-# BioSymphony Ferm DoE Public Repo Agent Guide
+# BioSymphony Ferm DoE Agent Guide
 
 Public workspace for BioSymphony Ferm DoE.
 
