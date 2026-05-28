@@ -29,22 +29,18 @@ Key capabilities implemented in code:
 - A durable campaign manifest that supports pause, resume, Linear-backed review, and handoff between agent sessions or between an agent and a human.
 
 ```mermaid
-flowchart LR
-    SS["<b>bench 2 L</b><br/>qualified small-scale<br/>(real measurements)"]
-    BRIDGE{"bridge criteria<br/>━━━━━━━━━━━━<br/>kLa · P/V · tip-speed<br/>mix-time · OUR · RQ · VVM<br/>geometric similarity"}
-    LS["<b>pilot 50 L</b><br/>predicted behavior<br/>(before lab time)"]
-    R["agent escalates if<br/>bridge_status =<br/>not_qualified"]
-
-    SS --> BRIDGE --> LS
-    BRIDGE -.-> R
-
-    style SS fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    style LS fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
-    style BRIDGE fill:#f5f5f5,stroke:#424242,stroke-width:2px
-    style R fill:#ffcdd2,stroke:#c62828
+flowchart TB
+  Q("Question<br/>ferm · cell-culture · scale"):::proc --> S("Read SKILL.md"):::proc --> M[("campaign_manifest.json<br/>durable state")]:::hero --> V{"validate --summary"}:::gate
+  V -->|"RED · blocking"| FIX("fix failed checks"):::block
+  FIX --> M
+  V -->|"YELLOW · GREEN"| D("generate-design"):::proc --> A("analyze"):::proc --> P("plan-wave2"):::proc --> F("finalize → run packet<br/>+ AGENTS.md handoff"):::go
+  V -.->|"unsafe"| BLK("block — no execution approval"):::block
+  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
+  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
+  classDef gate fill:#fffdf8,stroke:#b0892f,color:#8a6a1f,stroke-width:1.5px;
+  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
+  classDef block fill:#fffdf8,stroke:#bf5a3c,color:#a44a2f,stroke-width:1.5px;
 ```
-
-![BioSymphony Ferm DoE workflow](assets/images/biosymphony-ferm-doe-pipeline.png)
 
 ## Design maps
 
@@ -52,15 +48,58 @@ These diagrams summarize the main design surfaces: experiment inputs, scale-tran
 
 ### Experiment design map
 
-![Experiment design map](assets/images/experiment-design-map.png)
+```mermaid
+flowchart LR
+  subgraph IN["Inputs"]
+    direction TB
+    O("objective") ~~~ R("responses") ~~~ F("factors") ~~~ C("constraints") ~~~ S("scale context")
+  end
+  subgraph CH["Design choices"]
+    direction TB
+    FAM("DoE family") ~~~ RB("runs & blocks") ~~~ RC("replicates & controls")
+  end
+  subgraph OUT["Outputs"]
+    direction TB
+    DM("design matrix") ~~~ RP("run plan") ~~~ MP("measurement plan") ~~~ NW("follow-up options")
+  end
+  IN ==> CH ==> OUT
+  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
+  class O,R,F,C,S,FAM,RB,RC,DM,RP,MP,NW proc;
+  style IN fill:#efeadd,stroke:#d9d2c0,color:#1b1b18;
+  style CH fill:#efeadd,stroke:#d9d2c0,color:#1b1b18;
+  style OUT fill:#efeadd,stroke:#d9d2c0,color:#1b1b18;
+```
 
 ### Scale transfer criteria
 
-![Scale transfer criteria](assets/images/scale-transfer-criteria.png)
+```mermaid
+flowchart LR
+  SRC("source scale<br/>qualified · real data"):::hero --> BR{"bridge criteria<br/>kLa · P/V · tip-speed<br/>mix-time · OUR · RQ · VVM<br/>geometric similarity"}:::gate
+  BR -->|"all matched"| MATCH("Match → proceed"):::go --> TGT("target scale<br/>predicted behavior"):::proc
+  BR -->|"some gaps"| GAP("Gap → measure / estimate"):::gate
+  BR -->|"not qualified"| RED("Redesign → agent escalates"):::block
+  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
+  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
+  classDef gate fill:#fffdf8,stroke:#b0892f,color:#8a6a1f,stroke-width:1.5px;
+  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
+  classDef block fill:#fffdf8,stroke:#bf5a3c,color:#a44a2f,stroke-width:1.5px;
+```
 
 ### DoE family selector
 
-![DoE family selector](assets/images/doe-family-selector.png)
+```mermaid
+flowchart LR
+  Q{"What is the<br/>situation?"}:::hero
+  Q -->|"many factors to screen"| SC("Screening<br/>PB · fractional"):::proc
+  Q -->|"curved response surface"| RSM("RSM<br/>CCD · Box-Behnken"):::proc
+  Q -->|"media / feed blend"| MX("Mixture<br/>simplex · extreme-vertices"):::proc
+  Q -->|"hard-to-change setpoints"| SP("Split-plot"):::proc
+  Q -->|"scale transfer"| SB("Scale bridge"):::proc
+  Q -->|"after first batch"| SA("Sequential augmentation"):::go
+  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
+  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
+  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
+```
 
 ## Start here
 
@@ -84,7 +123,23 @@ A first run:
 
 When you have a real campaign, pick a job-to-be-done from [`docs/USE_CASES.md`](docs/USE_CASES.md) and an agent harness from [Agent harnesses](#agent-harnesses).
 
-![BioSymphony Ferm DoE public agent loop](assets/images/biosymphony-agent-loop.svg)
+The readiness gate decides what the agent does next — RED blocks, YELLOW proceeds with caveats, GREEN is worth running:
+
+```mermaid
+flowchart TB
+  M[("campaign_manifest.json")]:::hero --> V("validate --summary"):::proc --> W{"worst axis +<br/>failed checks"}:::gate
+  W -->|"errors present"| R("RED · do not proceed"):::block
+  W -->|"guidance / synthetic"| Y("YELLOW · proceed with caveats<br/>not 'ready to run'"):::gate
+  W -->|"all axes clear"| G("GREEN · worth running"):::go
+  R --> FIX("fix failed checks → re-run"):::block --> V
+  Y --> N("design · analyze · plan follow-up"):::proc
+  G --> N
+  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
+  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
+  classDef gate fill:#fffdf8,stroke:#b0892f,color:#8a6a1f,stroke-width:1.5px;
+  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
+  classDef block fill:#fffdf8,stroke:#bf5a3c,color:#a44a2f,stroke-width:1.5px;
+```
 
 ## Popular use cases
 
@@ -117,32 +172,23 @@ State lives in `campaign_manifest.json` regardless of harness, so sessions pause
 
 ```mermaid
 flowchart LR
-    A1["Claude Code<br/>(Mon)"]
-    A2["Symphony worker<br/>(Tue)"]
-    H["human scientist<br/>(Wed)"]
-    A3["Codex CLI<br/>(Thu)"]
-    A4["Claude Code<br/>(Fri)"]
-
-    M[("campaign_manifest.json<br/>durable state")]
-
-    A1 <--> M
-    A2 <--> M
-    H <--> M
-    A3 <--> M
-    A4 <--> M
-
-    M --> S1["scale_context"]
-    M --> S2["evidence"]
-    M --> S3["arms[]"]
-    M --> S4["decision_rules"]
-    M --> S5["readiness_state"]
-
-    style M fill:#bbdefb,stroke:#1976d2,stroke-width:3px
-    style A1 fill:#f5f5f5
-    style A2 fill:#f5f5f5
-    style A3 fill:#f5f5f5
-    style A4 fill:#f5f5f5
-    style H fill:#fff9c4
+  A1("Claude Code"):::proc
+  A2("Symphony worker"):::proc
+  H("human scientist"):::go
+  A3("Codex CLI"):::proc
+  M[("campaign_manifest.json<br/>durable state")]:::hero
+  A1 <--> M
+  A2 <--> M
+  H <--> M
+  A3 <--> M
+  M --> S1("scale context"):::proc
+  M --> S2("evidence"):::proc
+  M --> S3("arms"):::proc
+  M --> S4("decision rules"):::proc
+  M --> S5("readiness state"):::proc
+  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
+  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
+  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
 ```
 
 ## When to use this
@@ -266,30 +312,56 @@ When the manifest is incomplete, the validator surfaces specific guidance instea
 
 A long-running agent reads `failed_check_ids`, fixes them in priority order, re-runs `validate`, and iterates.
 
+Each readiness axis is a gate the campaign must clear before it earns lab time. Any gate can stop it:
+
+```mermaid
+flowchart TB
+  IN("campaign<br/>inputs"):::hero --> G1{"inputs<br/>complete?"}:::gate
+  G1 -->|"no"| X1("missing inputs"):::block
+  G1 -->|"yes"| G2{"assay-power:<br/>can the readout<br/>detect the effect?"}:::gate
+  G2 -->|"no"| X2("assay can't see it"):::block
+  G2 -->|"yes"| G3{"doe-power:<br/>enough runs<br/>per coefficient?"}:::gate
+  G3 -->|"no"| X3("underpowered"):::block
+  G3 -->|"yes"| G4{"feasibility:<br/>fits equipment<br/>+ staffing?"}:::gate
+  G4 -->|"no"| X4("not runnable"):::block
+  G4 -->|"yes"| G5{"scale bridge<br/>qualified?"}:::gate
+  G5 -->|"no"| X5("escalate: bridge gap"):::block
+  G5 -->|"yes"| OK("readiness verdict —<br/>worth running"):::go
+  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
+  classDef gate fill:#fffdf8,stroke:#b0892f,color:#8a6a1f,stroke-width:1.5px;
+  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
+  classDef block fill:#fffdf8,stroke:#bf5a3c,color:#a44a2f,stroke-width:1.5px;
+```
+
 Every generated artifact also carries a `claim_level` that signals how rigorously the rows were produced, so a statistician (or a downstream agent) can decide whether to trust them as-is, review them, or rebuild them.
 
 ```mermaid
 flowchart TB
-    A["<b>exact</b><br/>deterministic generators<br/>(PB, DSD, CCD, BBD, LHS, simplex)"]
-    B["<b>adapter_backed</b><br/>backed by an external library<br/>(BoFire, BoTorch, ENTMOOT, OMLT)"]
-    C["<b>approximate</b><br/>stdlib closed-form approximation<br/>(t-quantile fallbacks, normal-approx p-values)"]
-    D["<b>heuristic</b><br/>coordinate-exchange or enumeration<br/>(D-optimal, I-optimal, extreme-vertices)"]
-    E["<b>planned_wave2_design</b><br/>follow-up plan, not executed<br/>(output of plan-wave2 stdlib path)"]
-    F["<b>bayesian_optimization_planned</b><br/>BO plan, surrogate fit, no execution<br/>(output of plan-wave2 --backend botorch)"]
-    G["<b>public_synthetic_demo</b><br/>synthetic public-safe planning fixture<br/>(do not execute as written)"]
-
-    A --> B --> C --> D --> E --> F --> G
-
-    style A fill:#c8e6c9,stroke:#2e7d32
-    style B fill:#dcedc8,stroke:#558b2f
-    style C fill:#f0f4c3,stroke:#9e9d24
-    style D fill:#fff9c4,stroke:#f9a825
-    style E fill:#ffe0b2,stroke:#ef6c00
-    style F fill:#ffccbc,stroke:#d84315
-    style G fill:#ffcdd2,stroke:#c62828
+  subgraph GEN["A · how the design matrix was generated  (a real rigor ladder)"]
+    direction LR
+    g1("exact"):::go --> g2("adapter_backed"):::go --> g3("approximate"):::gate --> g4("heuristic"):::gate
+  end
+  subgraph STAT["B · planning / analysis status  (computed, not executed)"]
+    direction LR
+    s1("wave1_analysis_planned"):::proc
+    s2("planned_wave2_design"):::proc
+    s3("bayesian_optimization_planned"):::proc
+  end
+  subgraph PROV["C · data provenance"]
+    direction LR
+    p1("public_synthetic_demo — hard refuse for 'ready to run'"):::block
+  end
+  GEN ==> STAT ==> PROV
+  style GEN fill:#efeadd,stroke:#d9d2c0,color:#1b1b18;
+  style STAT fill:#efeadd,stroke:#d9d2c0,color:#1b1b18;
+  style PROV fill:#efeadd,stroke:#d9d2c0,color:#1b1b18;
+  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
+  classDef gate fill:#fffdf8,stroke:#b0892f,color:#8a6a1f,stroke-width:1.5px;
+  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
+  classDef block fill:#fffdf8,stroke:#bf5a3c,color:#a44a2f,stroke-width:1.5px;
 ```
 
-The ladder goes from highest rigor (top, deterministic generators) to lowest (bottom, synthetic-demo rows). An agent that sees `claim_level: heuristic` knows to surface the row to a statistician before sealing the campaign; `claim_level: public_synthetic_demo` is a hard refuse for any "ready to run" claim.
+These eight labels are not a single ladder; they live on three axes. **A** is a true rigor ladder for how the design matrix was generated, from `exact` down to `heuristic`: an agent that sees `claim_level: heuristic` surfaces the row to a statistician before sealing the campaign. **B** marks planning and analysis outputs that were computed but not executed (the follow-up plan, the BO plan, the first-batch analysis). **C** is a provenance flag: `public_synthetic_demo` is a hard refuse for any "ready to run" claim.
 
 ## How it differs from the alternatives
 
@@ -308,6 +380,50 @@ The ladder goes from highest rigor (top, deterministic generators) to lowest (bo
 | GxP-validated | no | varies | no | no |
 
 This is a planning layer that sits above a DoE generator and a statistician. It frames what the campaign needs to learn, what would make it fail, and which measurements, constraints, and scale criteria have to be in place before a design is worth running.
+
+**The design tournament.** It does not emit one design. It generates competing design strategies, scores each against readiness, feasibility, and assay-readiness, and returns the best *runnable* one (or refuses with `no_accepted_design`):
+
+```mermaid
+flowchart LR
+  M[("manifest")]:::hero --> GEN("generate<br/>candidate designs"):::proc
+  GEN --> L1("classical DoE"):::proc
+  GEN --> L2("Bayesian / adaptive"):::proc
+  GEN --> L3("robustness-focused"):::proc
+  GEN --> L4("scale-up-aware"):::proc
+  GEN --> L5("low-cost scouting"):::proc
+  GEN --> AUD("skeptical audit lane"):::audit
+  L1 --> SC{"score candidates<br/>readiness · feasibility<br/>· assay-ready"}:::gate
+  L2 --> SC
+  L3 --> SC
+  L4 --> SC
+  L5 --> SC
+  AUD --> SC
+  SC --> W("selected design + verdict<br/>accepted / none accepted"):::go
+  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
+  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
+  classDef gate fill:#fffdf8,stroke:#b0892f,color:#8a6a1f,stroke-width:1.5px;
+  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
+  classDef audit fill:#fffdf8,stroke:#7d6a9c,color:#5f5080,stroke-width:1.5px;
+```
+
+The skeptical audit lane informs scoring but is never selected as the executable design (`tournament.py · run_design_tournament()`).
+
+**The cost-honesty stack.** Cost is reported in five layers, optimistic to fully-loaded, so a number is never quoted without its caveats:
+
+```mermaid
+flowchart TB
+  C1("1 · simulator number<br/>optimistic, model-only"):::c1
+  C2("2 · bulk-reagent number<br/>raw materials only"):::c2
+  C3("3 · fully-loaded shake-flask cost<br/>+ labor, consumables, overhead"):::c3
+  C4("4 · CMO benchmark<br/>external reality check"):::c4
+  C5("5 · stated range<br/>honest uncertainty band"):::c5
+  C1 --> C2 --> C3 --> C4 --> C5
+  classDef c1 fill:#eef2ec,stroke:#6f7d3f,color:#4c5630,stroke-width:1.5px;
+  classDef c2 fill:#f0f0e0,stroke:#8a8b4a,color:#585a2a,stroke-width:1.5px;
+  classDef c3 fill:#f5ecd7,stroke:#b0892f,color:#735518,stroke-width:1.5px;
+  classDef c4 fill:#f3e2d2,stroke:#bf7a45,color:#834f24,stroke-width:1.5px;
+  classDef c5 fill:#f3ddd4,stroke:#bf5a3c,color:#923f28,stroke-width:1.5px;
+```
 
 ## Demos
 
@@ -330,46 +446,26 @@ Public demos cover the main campaign shapes. The non-BoFire demos run on the std
 
 ## Architecture
 
-The diagram above is the first-run loop. The internal flow is:
+The hero loop at the top of this README is the first-run loop. The internal flow is:
 
-```text
-   user / Linear ticket
-            |
-            v
-  +----------------------+    +----------------------+
-  |   intake             |    |  long-running agent  |
-  |   profile pick       |--->|  reads SKILL.md      |
-  |   manifest skeleton  |    |  loop runs validate  |
-  +----------------------+    +----------+-----------+
-                                         |
-                                         v
-                              +----------------------+
-                              |  campaign_manifest   |
-                              |  (durable state)     |
-                              +----------+-----------+
-                                         |
-       +---------------------+-----------+-----------+---------------------+
-       v                     v                       v                     v
-  +--------+         +--------------+        +-------------+        +-------------+
-  |readiness|         |scale framing|        |source       |        |DoE selection|
-  | checks  |         |scale_context|        |context      |        |family,claim |
-  |per-axis |         |             |        |design notes |        |adapter route|
-  +----+----+         +------+-------+        +------+------+        +------+------+
-       |                     |                       |                     |
-       +---------------------+------+----------------+---------------------+
-                                    |
-                                    v
-                          +----------------------+
-                          |  run packet + follow-up |
-                          |  decision rules      |
-                          +----------+-----------+
-                                     |
-                                     v
-                          +----------------------+
-                          |  expected/AGENTS.md  |
-                          |  handoff to next     |
-                          |  agent or scientist  |
-                          +----------------------+
+```mermaid
+flowchart TB
+  U("user / Linear ticket"):::proc --> IN("intake<br/>profile pick · manifest skeleton"):::proc
+  IN --> AG("long-running agent<br/>reads SKILL.md · loops validate"):::proc
+  AG --> M[("campaign_manifest.json<br/>durable state")]:::hero
+  M --> RC("readiness checks<br/>per axis"):::gate
+  M --> SF("scale framing<br/>scale context"):::proc
+  M --> SRC("source context<br/>design notes"):::proc
+  M --> DS("DoE selection<br/>family · claim · adapter route"):::proc
+  RC --> RP("run packet + follow-up<br/>decision rules"):::go
+  SF --> RP
+  SRC --> RP
+  DS --> RP
+  RP --> HO("AGENTS.md handoff<br/>to next agent or scientist"):::go
+  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
+  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
+  classDef gate fill:#fffdf8,stroke:#b0892f,color:#8a6a1f,stroke-width:1.5px;
+  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
 ```
 
 ## Documentation
@@ -434,27 +530,22 @@ For multi-agent campaigns, the issue-pack contract lets an orchestrator fan work
 
 ```mermaid
 flowchart TB
-    O["<b>orchestrator</b><br/>Symphony / Claude Code + Linear / Codex CLI"]
-    O -- "ferm-doe engine generate-issue-pack" --> P["<b>issue_pack/</b><br/>dependency_graph.json<br/>linear-map.json<br/>issues/*.md"]
-
-    P --> A1["sub-agent A<br/>source scan"]
-    P --> A2["sub-agent B<br/>assay-power audit"]
-    P --> A3["sub-agent C<br/>cost rollup"]
-    P --> A4["sub-agent D<br/>scale-bridge math"]
-
-    A1 --> I["<b>integrator</b><br/>joins results into one packet"]
-    A2 --> I
-    A3 --> I
-    A4 --> I
-
-    I --> D["<b>review packet</b><br/>CITATIONS.json · NOTES.md<br/>SOURCES.bib · EVIDENCE.csv"]
-    D --> H["human review queue"]
-
-    style O fill:#bbdefb,stroke:#1976d2,stroke-width:2px
-    style P fill:#fff9c4
-    style I fill:#c8e6c9
-    style D fill:#ffe0b2
-    style H fill:#f5f5f5
+  O("orchestrator"):::hero
+  O -->|"engine generate-issue-pack"| P("issue_pack/<br/>dependency graph · issue files"):::gate
+  P --> A1("source scan"):::proc
+  P --> A2("assay-power audit"):::proc
+  P --> A3("cost rollup"):::proc
+  P --> A4("scale-bridge math"):::proc
+  A1 --> I("integrator"):::go
+  A2 --> I
+  A3 --> I
+  A4 --> I
+  I --> D("review packet<br/>CITATIONS · SOURCES · EVIDENCE"):::proc
+  D --> HQ("human review queue"):::go
+  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
+  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
+  classDef gate fill:#fffdf8,stroke:#b0892f,color:#8a6a1f,stroke-width:1.5px;
+  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
 ```
 
 The full runbook is in [`docs/ISSUE_PACK_GENERATION.md`](docs/ISSUE_PACK_GENERATION.md); pack chooser and copy-paste recipes live in [`docs/ISSUE_PACK_COOKBOOK.md`](docs/ISSUE_PACK_COOKBOOK.md).
@@ -553,6 +644,24 @@ ferm-doe engine utility check-deps
 
 Install only what your campaign needs. Each extra is independently routable; the skill falls back to a stdlib path when the extra is absent. For a capability-centric view ("I want to do X, which extra activates it"), see [`docs/ADAPTER_MAP.md`](docs/ADAPTER_MAP.md). For honest depth on each backend (quantitative leak counts, OMLT-supersedes-ENTMOOT, BoFire main currency note), see [`docs/BACKEND_EVAL_FINDINGS.md`](docs/BACKEND_EVAL_FINDINGS.md); for the load-bearing adapter design decisions (encodings, posterior wraps, optimizer knobs), see [`docs/ADAPTER_DESIGN_NOTES.md`](docs/ADAPTER_DESIGN_NOTES.md).
 
+Which engine for which problem:
+
+```mermaid
+flowchart TB
+  Q{"What does the<br/>campaign need?"}:::hero
+  Q -->|"unconstrained /<br/>simple-box screening"| STD("stdlib path<br/>PB · DSD · CCD · BBD · LHS"):::proc
+  Q -->|"linear / total-mass /<br/>cost-blend constraints"| BF("BoFire DoEStrategy"):::proc
+  Q -->|"multi-fidelity<br/>scale-bridge"| BF2("BoFire MultiFidelity"):::proc
+  Q -->|"GP Bayesian follow-up<br/>(qEI / qUCB)"| BT("BoTorch"):::proc
+  Q -->|"NChooseK cardinality<br/>in BO, not just DoE"| EM("ENTMOOT v2<br/>Sobo+NChooseK stalls #450"):::gate
+  Q -->|"hard constraints,<br/>MIP surrogate"| OM("OMLT"):::proc
+  Q -->|"very low data,<br/>sequential"| TP("TabPFN (token-gated)"):::go
+  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
+  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
+  classDef gate fill:#fffdf8,stroke:#b0892f,color:#8a6a1f,stroke-width:1.5px;
+  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
+```
+
 | Extra | Install | Adds |
 |---|---|---|
 | `scipy` | `pip install biosymphony-ferm-doe[scipy]` | Student-t p-values in `analyze`; t-quantile in `doe-power` |
@@ -573,7 +682,23 @@ Install only what your campaign needs. Each extra is independently routable; the
 A. Yes. `ferm-doe generate-design` emits a first-batch design CSV directly from the campaign manifest, stdlib only, no external generator required. Supported families and claim levels: `full_factorial`, `fractional_factorial`, `plackett_burman` (n in {8, 12, 16, 20, 24}), `definitive_screening` (k in {3..6, 9, 10}), `central_composite` (face-centered, rotatable, orthogonal), `box_behnken` (k in {3, 4}), `latin_hypercube`, and `scheffe_mixture` are emitted at `claim_level: exact`. `optimal_d`, `optimal_i`, and `extreme_vertices_mixture` use coordinate exchange or constraint enumeration and are labeled `heuristic`; review with a statistician before expensive runs. Follow-up candidate rows come from `ferm-doe plan-wave2` under `claim_level: planned_wave2_design`. Every row in every output carries the claim level so a statistician can see exactly how rigorously the matrix was produced.
 
 **Q. Does this adapt after the first batch?**
-A. Yes, in planning mode. `ferm-doe plan-wave2` joins trusted, QC-passing result rows, evaluates assay-power policy, writes negative memory and learning artifacts, and recommends `confirm`, `narrow`, `expand`, `pause`, `stop`, or a bridge-gated `scale_or_downscale` plan for the next experiment round. With `--backend botorch`, it routes through a Gaussian-process surrogate and an acquisition function (qEI or qUCB) for `n_candidates` follow-up points. Outputs are labeled `planned_wave2_design` or `bayesian_optimization_planned`, not validated optimization.
+A. Yes, in planning mode. `ferm-doe plan-wave2` joins trusted, QC-passing result rows, evaluates assay-power policy, writes negative memory and learning artifacts, and recommends `confirm`, `narrow`, `expand`, `pause`, `stop`, or a bridge-gated `scale_or_downscale` plan for the next experiment round. With `--backend botorch`, it routes through a Gaussian-process surrogate and an acquisition function (qEI or qUCB) for `n_candidates` follow-up points. Outputs are labeled `planned_wave2_design` or `bayesian_optimization_planned`, not validated optimization. The next batch is chosen from the data, not pre-scripted:
+
+```mermaid
+flowchart TB
+  A("analyze first-batch results<br/>effects · p-values · intervals"):::hero --> Q{"what do the<br/>data say?"}:::gate
+  Q -->|"signal clear, one winner"| C("confirm + robustness"):::go
+  Q -->|"strong factor, broad space"| N("narrow — RSM around actives"):::go
+  Q -->|"actives found, edges untested"| E("expand / augment design"):::proc
+  Q -->|"noise dominates"| P("pause — reproducibility checks"):::gate
+  Q -->|"improvement plateaus"| ST("stop — decision dossier"):::block
+  Q -->|"bench solid + bridge ok"| SCp("scale / downscale (bridge-gated)"):::proc
+  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
+  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
+  classDef gate fill:#fffdf8,stroke:#b0892f,color:#8a6a1f,stroke-width:1.5px;
+  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
+  classDef block fill:#fffdf8,stroke:#bf5a3c,color:#a44a2f,stroke-width:1.5px;
+```
 
 **Q. When do I route to BoFire vs the stdlib path?**
 A. See [`docs/BOFIRE_POSITIONING.md`](docs/BOFIRE_POSITIONING.md). Short version: stdlib for unconstrained or simple-box screening and adaptive follow-up planning; BoFire for linear or nonlinear constraint blends (cost, total-mass, NChooseK) and for multi-fidelity scale-bridge planning. The BoFire adapter degrades to a "not_available" report when the extra is absent, so smoke scripts run on any laptop.

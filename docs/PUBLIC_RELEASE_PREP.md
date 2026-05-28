@@ -106,12 +106,12 @@ Do not publish:
 
 ## Asset Notes
 
-The README images are AI-generated brand/diagram assets for public-release review:
+Diagrams in the README and [`VISUAL_OVERVIEW.md`](VISUAL_OVERVIEW.md) are now inline Mermaid (rendered by GitHub), so they carry no image assets. The remaining raster assets are AI-generated brand images for public-release review:
 
-- `assets/images/biosymphony-ferm-doe-banner.png`
-- `assets/images/biosymphony-ferm-doe-pipeline.png`
-- `assets/images/biosymphony-agent-loop.svg`
-- `assets/images/social-preview.png`
+- `assets/images/biosymphony-ferm-doe-banner.png` (README banner)
+- `assets/images/social-preview.png` (GitHub social preview)
+
+Superseded by inline Mermaid and safe to remove once confirmed: `biosymphony-ferm-doe-pipeline.png`, `biosymphony-agent-loop.svg`, `experiment-design-map.png`, `scale-transfer-criteria.png`, `doe-family-selector.png` (all under `assets/images/`).
 
 ## Demo Constraints
 
