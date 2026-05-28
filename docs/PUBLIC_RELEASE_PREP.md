@@ -111,7 +111,7 @@ Diagrams in the README and [`VISUAL_OVERVIEW.md`](VISUAL_OVERVIEW.md) are now in
 - `assets/images/biosymphony-ferm-doe-banner.png` (README banner)
 - `assets/images/social-preview.png` (GitHub social preview)
 
-Superseded by inline Mermaid and safe to remove once confirmed: `biosymphony-ferm-doe-pipeline.png`, `biosymphony-agent-loop.svg`, `experiment-design-map.png`, `scale-transfer-criteria.png`, `doe-family-selector.png` (all under `assets/images/`).
+The README renders these diagrams inline now, but the raster files are retained and tracked by the release scanner (`Makefile`, `noxfile.py`, `tests/test_public_scaffold.py`): `biosymphony-ferm-doe-pipeline.png`, `biosymphony-agent-loop.svg`, `experiment-design-map.png`, `scale-transfer-criteria.png`, `doe-family-selector.png` (all under `assets/images/`). Removing them would also mean updating that scanner coverage.
 
 ## Demo Constraints
 
