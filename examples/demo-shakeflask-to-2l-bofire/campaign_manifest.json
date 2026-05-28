@@ -1,0 +1,262 @@
+{
+  "schema_version": 1,
+  "campaign_id": "demo-shakeflask-to-2l-bofire",
+  "claim_level": "public_synthetic_demo",
+  "profiles": [
+    "scale_up_bridge"
+  ],
+  "objective": "Use synthetic 10 mL shake-flask observations as low-fidelity prior information for selecting 2 L controlled-bioreactor media and induction conditions.",
+  "system": {
+    "organism_label": "public_demo_microbial_expression_host",
+    "product_class": "secreted_protein_demo",
+    "scale": "10ml_shake_flask_to_2l_bioreactor",
+    "privacy": "synthetic_or_public_only"
+  },
+  "responses": [
+    {
+      "response_id": "titer_g_per_l",
+      "class": "titer",
+      "measurement_type": "assayed",
+      "direction": "maximize",
+      "unit": "g/L",
+      "assay_required": true,
+      "assay_method": "hplc_or_elisa_planned",
+      "sample_fraction": "clarified_supernatant",
+      "objective_lower": 0.0,
+      "objective_upper": 8.0,
+      "objective_weight": 1.0,
+      "standard_curve": {
+        "status": "planned_demo",
+        "acceptance": "Public example requires calibration before physical execution."
+      },
+      "matrix_effects_policy": {
+        "status": "planned_demo",
+        "note": "Public example requires matrix-effects review before physical execution."
+      }
+    }
+  ],
+  "factors": [
+    {
+      "factor_id": "glucose_g_l",
+      "type": "numeric",
+      "low": 10.0,
+      "high": 50.0,
+      "unit": "g/L"
+    },
+    {
+      "factor_id": "yeast_extract_g_l",
+      "type": "numeric",
+      "low": 0.0,
+      "high": 20.0,
+      "unit": "g/L",
+      "allow_zero": true
+    },
+    {
+      "factor_id": "induction_od600",
+      "type": "numeric",
+      "low": 0.6,
+      "high": 2.0,
+      "unit": "OD600"
+    },
+    {
+      "factor_id": "temperature_c",
+      "type": "numeric",
+      "low": 25.0,
+      "high": 34.0,
+      "unit": "C"
+    },
+    {
+      "factor_id": "initial_ph",
+      "type": "numeric",
+      "low": 6.6,
+      "high": 7.3,
+      "unit": "pH"
+    }
+  ],
+  "constraints": [
+    {
+      "constraint_id": "media_solids_lte_65_g_l",
+      "type": "linear",
+      "coefficients": {
+        "glucose_g_l": 1.0,
+        "yeast_extract_g_l": 1.0
+      },
+      "operator": "<=",
+      "rhs": 65.0,
+      "description": "Bound total added media solids for osmolality and mixing practicality."
+    }
+  ],
+  "campaign_arms": [
+    {
+      "arm_id": "shake_flask_10ml",
+      "scale_tier": "low_fidelity",
+      "format": "shake_flask",
+      "working_volume_ml": 10,
+      "purpose": "cheap scouting prior",
+      "run_budget": 12
+    },
+    {
+      "arm_id": "bioreactor_2l",
+      "scale_tier": "target_fidelity",
+      "format": "controlled_stirred_tank",
+      "working_volume_ml": 1500,
+      "purpose": "target scale adaptive confirmation",
+      "run_budget": 4
+    }
+  ],
+  "scale_context": {
+    "direction": "scale_up",
+    "from_scale": {
+      "scale_id": "shake_flask_10ml",
+      "vessel": "shake_flask",
+      "working_volume_l": 0.01,
+      "geometry": {
+        "h_over_d": 0.8,
+        "impeller_d_over_t": 0.0,
+        "n_impellers": 0,
+        "impeller_type": "orbital_shaker",
+        "sparger_type": "none"
+      },
+      "engineering_targets": {
+        "kLa_per_hour": 45,
+        "p_per_v_w_per_m3": 0,
+        "tip_speed_m_per_s": 0,
+        "mix_time_s": 120,
+        "do_setpoint_pct": 0,
+        "vvm": 0
+      }
+    },
+    "to_scale": {
+      "scale_id": "bioreactor_2l",
+      "vessel": "stirred_tank_bench",
+      "working_volume_l": 1.5,
+      "geometry": {
+        "h_over_d": 2.2,
+        "impeller_d_over_t": 0.36,
+        "n_impellers": 2,
+        "impeller_type": "rushton",
+        "sparger_type": "ring"
+      },
+      "engineering_targets": {
+        "kLa_per_hour": 120,
+        "p_per_v_w_per_m3": 900,
+        "tip_speed_m_per_s": 1.6,
+        "mix_time_s": 12,
+        "do_setpoint_pct": 30,
+        "vvm": 0.5
+      }
+    },
+    "bridge_strategy": {
+      "primary_criterion": "kLa",
+      "secondary_criteria": [
+        "p_per_v",
+        "mix_time",
+        "do_control"
+      ],
+      "rationale": "Shake flasks provide cheap media and induction signal, but the 2 L reactor target must retune oxygen transfer and mixing. Low-fidelity rows inform the posterior only after bridge qualification."
+    },
+    "bridge_factors": {
+      "transferable": [
+        "glucose_g_l",
+        "yeast_extract_g_l",
+        "induction_od600",
+        "temperature_c",
+        "initial_ph"
+      ],
+      "needs_retuning": [
+        "agitation_rpm",
+        "sparge_vvm",
+        "do_control"
+      ],
+      "not_applicable": [
+        "orbital_throw_mm"
+      ]
+    },
+    "qualification_evidence": [
+      "EV-SF2L-001"
+    ],
+    "recapitulation_criterion": {
+      "metric": "titer_g_per_l",
+      "tolerance": 0.75,
+      "status": "planned"
+    }
+  },
+  "design_policy": {
+    "augment_remaining_budget": 2,
+    "preferred_backend": "bofire",
+    "fallback_backend": "stdlib",
+    "wave1_design_seed": 42
+  },
+  "doe": {
+    "family": "custom_constrained",
+    "n_runs": 16,
+    "claim": "bofire_adapter_planning",
+    "model_terms": [
+      "main_effects"
+    ],
+    "randomized": true,
+    "design_table_path": "expected/selected_wave_1_design.csv"
+  },
+  "inputs": {
+    "historical_run_ledger": "inputs/historical_run_ledger.csv",
+    "evidence_table": "inputs/evidence_table.csv",
+    "equipment_inventory": "inputs/equipment_inventory.csv",
+    "reagent_inventory": "inputs/reagent_inventory.csv"
+  },
+  "readiness_expectation": "YELLOW",
+  "provenance": {
+    "fixture_authored_by": "biosymphony-ferm-doe",
+    "authored_on": "2026-05-15",
+    "non_claim": "Synthetic public fixture for adapter and RunPod smoke testing only."
+  },
+  "decision_rules": [
+    {
+      "rule_id": "public-demo-review",
+      "scope": "global",
+      "comparator": "qualitative",
+      "threshold": "readiness remains YELLOW or better",
+      "action": "pause"
+    }
+  ],
+  "stop_rules": [
+    {
+      "rule_id": "stop-on-private-data",
+      "condition": "non-public data would be required",
+      "action": "pause"
+    }
+  ],
+  "risk_register": [
+    {
+      "risk_id": "public-demo-boundary",
+      "category": "claim_boundary",
+      "likelihood": "medium",
+      "impact": "high",
+      "mitigation": "Keep example as synthetic planning fixture only.",
+      "status": "open"
+    }
+  ],
+  "readiness": {
+    "overall": "YELLOW",
+    "reasons": [
+      "Public synthetic example fixture."
+    ]
+  },
+  "arms": [
+    {
+      "arm_id": "shake_flask_10ml",
+      "scale_tier": "low_fidelity",
+      "format": "shake_flask",
+      "working_volume_ml": 10,
+      "purpose": "cheap scouting prior",
+      "run_budget": 12
+    },
+    {
+      "arm_id": "bioreactor_2l",
+      "scale_tier": "target_fidelity",
+      "format": "controlled_stirred_tank",
+      "working_volume_ml": 1500,
+      "purpose": "target scale adaptive confirmation",
+      "run_budget": 4
+    }
+  ]
+}

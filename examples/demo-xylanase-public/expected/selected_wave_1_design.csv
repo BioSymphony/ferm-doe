@@ -1,0 +1,5 @@
+run_id,run_role,temperature_c,initial_ph,carbon_source
+DEMO-001,screening,28,6.0,glucose
+DEMO-002,screening,34,6.8,glycerol
+DEMO-003,screening,37,7.5,xylose_mix
+DEMO-004,control,30,6.5,glucose

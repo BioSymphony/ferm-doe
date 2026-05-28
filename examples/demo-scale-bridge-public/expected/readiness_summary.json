@@ -1,0 +1,11 @@
+{
+  "campaign_id": "demo-scale-bridge-public",
+  "status": "YELLOW",
+  "claim_level": "public_synthetic_demo",
+  "reasons": [
+    "Recapitulation criterion is declared (recapitulation_score ≥ 0.85) but not yet executed; this is a planning artifact, not qualification evidence.",
+    "Bench kLa-vs-RPM curve is not yet qualified; scale_context endpoints declare matched kLa targets but the bench-side mapping needs lab measurement.",
+    "Titer and OUR pipelines need cross-scale qualification before physical execution.",
+    "Pilot reference rows are synthetic placeholders for public release."
+  ]
+}

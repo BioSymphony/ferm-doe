@@ -1,0 +1,56 @@
+schema_version: 1
+campaign_id: xylanase-wxz1-2012-demo
+context:
+  organism: Penicillium sp. WX-Z1
+  product: xylanase
+  scale: submerged_fermentation
+  demo_only: true
+factors:
+  - id: wheat_bran_g_l
+    name: Wheat bran
+    unit: g/L
+    type: continuous
+    min: 5
+    max: 35
+    default: 20
+    category: carbon_substrate
+  - id: yeast_extract_g_l
+    name: Yeast extract
+    unit: g/L
+    type: continuous
+    min: 0.5
+    max: 1.5
+    default: 1
+    category: nitrogen_source
+  - id: sodium_nitrate_g_l
+    name: Sodium nitrate
+    unit: g/L
+    type: continuous
+    min: 5
+    max: 15
+    default: 10
+    category: nitrogen_source
+  - id: magnesium_sulfate_g_l
+    name: Magnesium sulfate
+    unit: g/L
+    type: continuous
+    min: 0.2
+    max: 2
+    default: 1.1
+    category: salt
+  - id: calcium_chloride_g_l
+    name: Calcium chloride
+    unit: g/L
+    type: continuous
+    min: 0.2
+    max: 2
+    default: 1.1
+    category: salt
+responses:
+  - id: xylanase_activity_u_ml
+    name: Xylanase activity
+    unit: U/mL
+    direction: maximize
+readiness_notes:
+  - Public paper metadata omits enough operational detail that this remains a planning demo.
+  - A real campaign needs organism handling constraints, inoculum details, assay validation, equipment limits, and safety review.

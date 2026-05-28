@@ -1,0 +1,2 @@
+evidence_id,source_type,source_ref,source_url,claim,confidence,review_status,decision_impact,reuse_notes,transformation_notes
+EV-SF2L-001,synthetic_demo_note,public demo fixture,not_applicable,Shake-flask rows are cheaper low-fidelity evidence and cannot be treated as 2 L validation without bridge qualification.,high,accepted,keeps readiness at YELLOW,synthetic row note,no private or unpublished data used

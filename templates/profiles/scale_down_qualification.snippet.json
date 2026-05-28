@@ -1,0 +1,29 @@
+{
+  "profiles": ["scale_down_qualification"],
+  "arms": [
+    {"arm_id": "reference_large_scale", "scale_tier": "REPLACE_ME", "purpose": "reference"},
+    {"arm_id": "small_scale_target", "scale_tier": "REPLACE_ME", "purpose": "downscale_target", "bridge_to": {"arm_id": "reference_large_scale", "criterion": "kLa", "rationale": "REPLACE_ME"}}
+  ],
+  "scale_context": {
+    "direction": "scale_down",
+    "from_scale": {
+      "label": "REPLACE_ME",
+      "vessel": "REPLACE_ME",
+      "working_volume_l": 0,
+      "geometry": {"h_over_d": 0, "impeller_d_over_t": 0, "n_impellers": 0, "impeller_type": "REPLACE_ME", "sparger_type": "REPLACE_ME"},
+      "engineering_targets": {"kLa_per_hour": 0, "p_per_v_w_per_m3": 0, "tip_speed_m_per_s": 0, "mix_time_s": 0, "do_setpoint_pct": 0, "vvm": 0}
+    },
+    "to_scale": {
+      "label": "REPLACE_ME",
+      "vessel": "REPLACE_ME",
+      "working_volume_l": 0,
+      "geometry": {"h_over_d": 0, "impeller_d_over_t": 0, "n_impellers": 0, "impeller_type": "REPLACE_ME", "sparger_type": "REPLACE_ME"},
+      "engineering_targets": {"kLa_per_hour": 0, "p_per_v_w_per_m3": 0, "tip_speed_m_per_s": 0, "mix_time_s": 0, "do_setpoint_pct": 0, "vvm": 0}
+    },
+    "bridge_strategy": {"primary_criterion": "kLa", "secondary_criteria": ["p_per_v", "mix_time"], "rationale": "REPLACE_ME"},
+    "bridge_factors": {"transferable": [], "needs_retuning": [], "not_applicable": []},
+    "known_offsets": [],
+    "qualification_evidence": [],
+    "recapitulation_criterion": {"metric": "REPLACE_ME", "tolerance": 0, "status": "planned"}
+  }
+}

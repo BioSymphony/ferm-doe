@@ -1,0 +1,5 @@
+reagent_id,reagent,available_amount,unit,status,notes
+RG-001,defined_media_components,5,L,placeholder,public demo placeholder
+RG-002,trace_blend_a,1,kit,placeholder,public demo placeholder
+RG-003,trace_blend_b,1,kit,placeholder,public demo placeholder
+RG-004,titer_assay_standards,1,kit,placeholder,assay qualification required

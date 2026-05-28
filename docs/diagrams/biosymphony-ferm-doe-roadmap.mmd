@@ -1,0 +1,56 @@
+flowchart LR
+  subgraph Now["Now: useful scaffolding, not yet the full superpower"]
+    A1["Public starter studies"]
+    A2["Xylanase demo ledger"]
+    A3["Manifest and sidecar validators"]
+    A4["Dossier generator"]
+    A5["Tracker issue pack skeleton"]
+    A1 --> A3
+    A2 --> A4
+    A3 --> A5
+  end
+
+  subgraph Gap["Critical gap"]
+    G1["No campaign compiler yet"]
+    G2["No real design tournament scorer yet"]
+    G3["No result ingestion to follow-up yet"]
+    G4["No commercial-grade DOE backend adapter yet"]
+  end
+
+  subgraph Next["Next: BioSymphony Ferm DoE superpower"]
+    B1["Messy scientist ask"]
+    B2["Campaign state compiler"]
+    B3["Autonomous multi-agent DOE planner"]
+    B4["Workflow modes"]
+    B5["Design backend and scoring"]
+    B6["Readiness gates"]
+    B7["Runnable ferm-doe-dossier"]
+    B8["Tracker issue DAG"]
+    B9["Result ingestion and follow-up planner"]
+
+    B1 --> B2
+    B2 --> B3
+    B2 --> B4
+    B3 --> B5
+    B4 --> B6
+    B5 --> B7
+    B6 --> B7
+    B7 --> B8
+    B8 --> B9
+    B9 --> B2
+  end
+
+  Now --> Gap --> Next
+
+  subgraph Modes["Reusable workflow modes, not rigid templates"]
+    M1["Any fermentation DOE"]
+    M2["Plate to flask"]
+    M3["Flask to benchtop bioreactor"]
+    M4["Batch to fed-batch"]
+    M5["Bioreactor scale-up"]
+    M6["Bioreactor to plate downscale"]
+    M7["Cost and productivity minimizer"]
+    M8["Assay and product-class planner"]
+  end
+
+  B4 --> Modes

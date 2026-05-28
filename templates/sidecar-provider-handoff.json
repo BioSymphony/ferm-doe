@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "sidecar_kind": "provider_handoff",
+  "handoff_kind": "external_provider_handoff",
+  "id": "provider-handoff-demo-001",
+  "name": "Demo external-provider handoff",
+  "interface": {
+    "name": "biosymphony-ferm-doe.sidecar",
+    "version": 1,
+    "slots": [
+      "provider_handoff"
+    ]
+  },
+  "provider": "external-provider",
+  "status": "ready_for_orchestrator",
+  "run_id": "demo-ferm-doe-smoke",
+  "resource_name_prefix": "biosymphony-ferm-doe-mini",
+  "claim_level": "remote_artifact_execution_only",
+  "handoff_reason": "worker_provider_api_unreachable",
+  "reason": "worker_provider_api_unreachable",
+  "remote_execution_by": "orchestrator",
+  "worker": {
+    "id": "",
+    "role": "validator",
+    "may_create_paid_resources": false
+  },
+  "files": {
+    "launch_manifest": "<launch_manifest_path>",
+    "local_preflight": "",
+    "startup": ""
+  },
+  "manifest": {
+    "sha256": "template_sha256_replaced_at_generation",
+    "validation": {
+      "external_command": "<provider_bridge_bin> validate-manifest <launch_manifest_path> --json"
+    }
+  },
+  "remote_execution": {
+    "verification_mode": "tcp",
+    "port": 8000,
+    "timeout_seconds": 300,
+    "interval_seconds": 10,
+    "cleanup_action": "delete"
+  },
+  "tracker_closeout": {
+    "remote_execution_by": "orchestrator",
+    "claim_level": "artifact_execution_only",
+    "requires_cleanup_status": true,
+    "requires_artifact_hashes": true
+  },
+  "source_contracts": {
+    "launch_bundle": {
+      "path": "<launch_bundle_path>"
+    },
+    "launch_manifest": {
+      "path": "<launch_manifest_path>",
+      "required_for_remote_mutation": true
+    }
+  },
+  "execution_boundary": {
+    "worker_role": "validate_prepare_only",
+    "cloud_mutation_role": "orchestrator",
+    "paid_resource_mutation_allowed_in_worker": false,
+    "no_silent_provider_fallback": true
+  },
+  "worker_reachability_preflight": {
+    "required_before_mutation": true,
+    "command": "<provider_bridge_bin> list-resources --name-prefix biosymphony-ferm-doe-mini --json",
+    "on_failure": "write_provider_handoff_and_stop"
+  },
+  "orchestrator_actions": [
+    {
+      "action": "validate_manifest",
+      "command": "<provider_bridge_bin> validate-manifest <launch_manifest_path> --json"
+    },
+    {
+      "action": "duplicate_check",
+      "command": "<provider_bridge_bin> list-resources --name-prefix biosymphony-ferm-doe-mini --json"
+    },
+    {
+      "action": "create_resource",
+      "command": "<provider_bridge_bin> create-resource <launch_manifest_path> --out-dir <run_out_dir>/remote --max-spend-usd 2 --execute --json"
+    },
+    {
+      "action": "verify_tcp_packet",
+      "command": "<provider_bridge_bin> verify-tcp-packet <launch_manifest_path> $RESOURCE_ID --port 8000 --out-dir <run_out_dir>/tcp --timeout-seconds 300 --interval-seconds 10 --json"
+    },
+    {
+      "action": "cleanup_resource",
+      "command": "<provider_bridge_bin> cleanup-resource $RESOURCE_ID --action delete --out-dir <run_out_dir>/remote --execute --json"
+    },
+    {
+      "action": "post_cleanup_prefix_check",
+      "command": "<provider_bridge_bin> list-resources --name-prefix biosymphony-ferm-doe-mini --json"
+    }
+  ],
+  "closeout_requirements": {
+    "artifact_verification_required": true,
+    "cleanup_verification_required": true,
+    "tracker_outcome_required": true,
+    "claim_level_required": true,
+    "post_cleanup_prefix_check_required": true
+  },
+  "expected_artifacts": [
+    "remote-execution/status.json",
+    "remote-execution/monitor_events.ndjson",
+    "remote-execution/logs/startup.log",
+    "remote-execution/artifact_hashes.jsonl",
+    "remote-execution/artifacts/ferm-doe-mini-summary.json",
+    "remote-execution/artifacts/ferm-doe-mini-design.csv",
+    "remote-execution/artifacts/remote-readiness-verdict.md",
+    "remote-execution/artifacts/orchestrator-outcome.md",
+    "remote-execution/artifacts/remote-execution.tar.gz"
+  ],
+  "validation_commands": [
+    "python3 skills/biosymphony-ferm-doe/scripts/sidecar_check.py templates/sidecar-provider-handoff.json",
+    "<provider_bridge_bin> validate-manifest <launch_manifest_path> --json",
+    "<provider_bridge_bin> validate-handoff <run_out_dir>/provider_handoff.json --json"
+  ],
+  "secrets_policy": {
+    "no_literal_secrets": true,
+    "runtime_env_only": [
+      "PROVIDER_API_KEY",
+      "TRACKER_API_KEY"
+    ]
+  }
+}

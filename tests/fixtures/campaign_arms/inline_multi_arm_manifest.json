@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "campaign_id": "campaign-arms-inline-demo",
+  "name": "Campaign arms inline demo",
+  "objective": {
+    "primary": "Plan separate plate and reactor scouting arms without merging incompatible controls.",
+    "direction": "maximize",
+    "response_id": "titer_mg_l"
+  },
+  "readiness_target": "YELLOW",
+  "sources": [],
+  "inputs": [],
+  "campaign_arms": [
+    {
+      "arm_id": "plate",
+      "name": "Deep-well plate scouting",
+      "purpose": "Scout pH and fill volume at high throughput.",
+      "run_budget": 6,
+      "format": "96_well_deep_well_plate"
+    },
+    {
+      "arm_id": "reactor",
+      "name": "Controlled fed-batch reactor",
+      "purpose": "Scout controlled pH, temperature, and feed policy.",
+      "run_budget": 5,
+      "format": "ambr_fed_batch"
+    }
+  ],
+  "constraints": [
+    {
+      "constraint_id": "separate_arm_execution",
+      "type": "hard",
+      "description": "Plate-only and reactor-only factors must not appear in one executable run table."
+    }
+  ],
+  "responses": [
+    {
+      "response_id": "titer_mg_l",
+      "name": "Soluble titer",
+      "unit": "mg/L",
+      "direction": "maximize",
+      "class": "titer",
+      "sample_fraction": "supernatant",
+      "assay_method": "HPLC",
+      "calibration": "external standard",
+      "matrix_effects_policy": "spike recovery per arm before execution"
+    }
+  ],
+  "factors": [
+    {
+      "factor_id": "plate_ph",
+      "name": "Plate medium pH",
+      "type": "continuous",
+      "unit": "pH",
+      "min": 6.5,
+      "max": 7.4,
+      "phase": "growth",
+      "arm_id": "plate"
+    },
+    {
+      "factor_id": "plate_fill_ul",
+      "name": "Plate fill volume",
+      "type": "continuous",
+      "unit": "uL",
+      "min": 600,
+      "max": 1000,
+      "phase": "growth",
+      "arm_id": "plate"
+    },
+    {
+      "factor_id": "reactor_temp_c",
+      "name": "Reactor production temperature",
+      "type": "continuous",
+      "unit": "C",
+      "min": 24,
+      "max": 32,
+      "phase": "production",
+      "arm_id": "reactor"
+    },
+    {
+      "factor_id": "reactor_feed_ml_h",
+      "name": "Reactor feed rate",
+      "type": "continuous",
+      "unit": "mL/h",
+      "min": 1,
+      "max": 5,
+      "phase": "feed",
+      "arm_id": "reactor"
+    }
+  ],
+  "design_policy": {
+    "design_intent": "space_filling_scout",
+    "run_budget": 8,
+    "campaign_arm_mode": "per_arm"
+  }
+}

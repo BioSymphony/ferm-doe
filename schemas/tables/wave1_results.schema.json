@@ -1,0 +1,20 @@
+{
+  "name": "wave1_results",
+  "title": "first-batch results",
+  "description": "Minimum result-ingestion contract. Response and factor columns are campaign-specific extra fields.",
+  "fields": [
+    {"name": "design_run_id", "type": "string", "constraints": {"required": true}},
+    {"name": "arm_id", "type": "string"},
+    {"name": "qc_status", "type": "string", "constraints": {"required": true}},
+    {"name": "inclusion_status", "type": "string", "constraints": {"required": true}},
+    {"name": "trust_score", "type": "number", "constraints": {"required": true, "minimum": 0, "maximum": 1}},
+    {"name": "primary_response", "type": "number"}
+  ],
+  "x-biosymphony": {
+    "allowExtraFields": true,
+    "targets": [
+      "templates/wave2-results.template.csv",
+      "examples/*/inputs/wave1_results.csv"
+    ]
+  }
+}

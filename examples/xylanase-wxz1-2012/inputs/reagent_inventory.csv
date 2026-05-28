@@ -1,0 +1,8 @@
+reagent_id,name,category,approx_available_amount,unit,purity_or_grade,storage,constraints,notes
+RX001,Wheat bran,carbon_substrate,1000,g,food_or_lab_grade,dry_room_temperature,,demo approximate input
+RX002,Yeast extract,nitrogen_source,250,g,lab_grade,room_temperature,,demo approximate input
+RX003,Sodium nitrate,nitrogen_source,250,g,lab_grade,room_temperature,,demo approximate input
+RX004,Magnesium sulfate,salt,250,g,lab_grade,room_temperature,,demo approximate input
+RX005,Calcium chloride,salt,250,g,lab_grade,room_temperature,,demo approximate input
+RX006,Xylan substrate,assay_reagent,50,g,assay_grade,room_temperature,,needed for activity assay readiness check
+

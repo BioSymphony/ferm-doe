@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "factors": [
+    {
+      "id": "temp_c",
+      "name": "Production temperature",
+      "unit": "C",
+      "type": "continuous",
+      "min": 25,
+      "max": 35,
+      "phase": "production"
+    },
+    {
+      "id": "feed_strategy",
+      "name": "Feed strategy",
+      "type": "categorical",
+      "levels": ["pulse", "constant"],
+      "phase": "feed"
+    }
+  ],
+  "responses": [
+    {
+      "id": "titer_mg_l",
+      "name": "Titer",
+      "unit": "mg/L",
+      "direction": "maximize",
+      "class": "titer",
+      "sample_fraction": "whole_broth",
+      "assay_method": "hplc"
+    }
+  ]
+}

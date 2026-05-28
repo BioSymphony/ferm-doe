@@ -1,0 +1,2 @@
+evidence_id,source_type,source_ref,source_url,claim,confidence,review_status,decision_impact,reuse_notes,transformation_notes
+EV-001,synthetic_demo_note,public demo fixture,not_applicable,"Diagnostic walkthrough: this manifest is intentionally underspecified.",high,accepted,keeps verdict YELLOW,synthetic row note,no private or unpublished data used

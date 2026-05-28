@@ -1,0 +1,6 @@
+run_id,source_type,scale,working_volume_l,temperature_c,initial_ph,do_setpoint_pct,stir_rpm,kla_per_h,p_per_v_w_per_m3,titer_g_per_l,our_mmol_per_l_per_h,trust_score,notes
+SYN-PILOT-001,synthetic_demo,pilot_50L,50,32,7.0,30,400,250,2000,3.4,80,0.4,synthetic placeholder pilot row for public demo
+SYN-PILOT-002,synthetic_demo,pilot_50L,50,33,7.0,30,420,260,2050,3.5,82,0.4,synthetic placeholder pilot row for public demo
+SYN-PILOT-003,synthetic_demo,pilot_50L,50,32,6.8,30,400,245,1980,3.3,78,0.4,synthetic placeholder pilot row for public demo
+SYN-BENCH-001,synthetic_demo,bench_2L,1.5,32,7.0,30,650,255,1500,3.0,72,0.3,synthetic placeholder bench row used to illustrate downscale starting point
+SYN-BENCH-002,synthetic_demo,bench_2L,1.5,33,7.0,30,700,275,1700,3.1,76,0.3,synthetic placeholder bench row used to illustrate downscale starting point

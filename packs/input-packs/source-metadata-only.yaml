@@ -1,0 +1,20 @@
+schema_version: 1
+pack_id: source-metadata-only
+pack_type: input
+name: Source metadata only
+data_safety: public_metadata_only
+required_artifacts:
+  - source_catalog
+  - campaign_manifest
+required_metadata:
+  - doi
+  - url
+  - reuse_caveat
+allowed_table_status:
+  - candidate_metadata_only
+  - candidate_verify_license
+forbidden:
+  - copied numeric tables
+  - figure-derived digitization without license review
+  - private process records
+

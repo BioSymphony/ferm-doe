@@ -1,0 +1,90 @@
+{
+  "campaign_id": "demo-split-plot-fedbatch-public",
+  "claim_level": "public_synthetic_demo",
+  "profiles": ["split_plot_fed_batch"],
+  "objective": "Plan a split-plot fed-batch DoE where temperature and DO setpoint are hard-to-change (whole-plot) and media composition components are easy-to-change (sub-plot).",
+  "system": {
+    "organism_label": "public_demo_microbe",
+    "product_class": "secreted_protein_demo",
+    "scale": "bench_2L_planning_demo",
+    "privacy": "synthetic_or_public_only"
+  },
+  "responses": [
+    {
+      "response_id": "titer_g_per_l",
+      "class": "titer",
+      "measurement_type": "assayed",
+      "direction": "maximize",
+      "assay_required": true,
+      "assay_method": "elisa_planned",
+      "sample_fraction": "clarified_supernatant",
+      "standard_curve": {"status": "planned_demo", "acceptance": "linearity, blanks, dilution linearity required before physical execution"},
+      "matrix_effects_policy": {"status": "planned_demo", "note": "Matrix interference must be bounded across media composition variants."}
+    }
+  ],
+  "factors": [
+    {"factor_id": "temperature_c", "type": "numeric", "low": 30, "high": 37, "unit": "C", "hard_to_change": true},
+    {"factor_id": "do_setpoint_pct", "type": "numeric", "low": 20, "high": 40, "unit": "percent", "hard_to_change": true},
+    {"factor_id": "carbon_concentration_g_per_l", "type": "numeric", "low": 5, "high": 20, "unit": "g_per_l"},
+    {"factor_id": "nitrogen_concentration_g_per_l", "type": "numeric", "low": 2, "high": 8, "unit": "g_per_l"},
+    {"factor_id": "trace_element_blend", "type": "categorical", "levels": ["blend_a", "blend_b"]}
+  ],
+  "constraints": [
+    {"constraint_id": "public_demo_only", "kind": "data_policy", "description": "Use synthetic or public-source rows only."},
+    {"constraint_id": "whole-plot-replication", "kind": "feasibility", "description": "Each whole-plot (temperature, DO) combination is run in duplicate to estimate whole-plot variance."}
+  ],
+  "doe": {
+    "family": "split_plot",
+    "n_runs": 16,
+    "n_replicates": 2,
+    "randomized": true,
+    "claim": "heuristic",
+    "design_table_path": "expected/selected_wave_1_design.csv"
+  },
+  "decision_rules": [
+    {
+      "rule_id": "advance-on-titer",
+      "scope": "response:titer_g_per_l",
+      "comparator": "ge",
+      "threshold": 4.0,
+      "action": "advance_to_next_wave",
+      "evidence_required": ["wave_1_results", "assay_qualification_log"]
+    }
+  ],
+  "stop_rules": [
+    {
+      "rule_id": "stop-on-whole-plot-noise",
+      "condition": "Whole-plot replicate variance exceeds sub-plot variance by >5x; split-plot structure is unstable",
+      "action": "pause",
+      "owner_role": "process_engineering"
+    }
+  ],
+  "risk_register": [
+    {"risk_id": "whole-plot-variance", "category": "feasibility", "likelihood": "medium", "impact": "medium", "mitigation": "Run whole-plot replication and inspect variance ratio before sub-plot expansion.", "owner_role": "process_engineering", "status": "open"}
+  ],
+  "assumptions": [
+    {"assumption_id": "trace-blend-ordering", "statement": "blend_a and blend_b are ordinally similar; effect is treated as categorical for the demo.", "source": "synthetic_demo", "status": "inferred"}
+  ],
+  "readiness": {
+    "axes": {
+      "responses": {"titer_g_per_l": "planned"},
+      "factors": {"temperature_c": "qualified", "do_setpoint_pct": "qualified", "carbon_concentration_g_per_l": "qualified", "nitrogen_concentration_g_per_l": "qualified", "trace_element_blend": "qualified"},
+      "doe": "qualified_with_caveats",
+      "decision_rules": "qualified",
+      "evidence": "qualified_with_caveats"
+    },
+    "overall": "YELLOW",
+    "reasons": [
+      "Titer assay readiness is planned, not executed.",
+      "Whole-plot variance is unknown until first replication.",
+      "Synthetic placeholder rows used."
+    ]
+  },
+  "inputs": {
+    "historical_run_ledger": "inputs/historical_run_ledger.csv",
+    "equipment_inventory": "inputs/equipment_inventory.csv",
+    "reagent_inventory": "inputs/reagent_inventory.csv",
+    "evidence_table": "inputs/evidence_table.csv"
+  },
+  "readiness_expectation": "YELLOW"
+}

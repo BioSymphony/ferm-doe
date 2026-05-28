@@ -1,0 +1,49 @@
+schema_version: 1
+pack_id: doe-parity-v0
+pack_type: issue_pack
+name: reference DOE Comparable DOE Engine Parity
+activation_policy:
+  default_active_wave: wave0
+  max_concurrent_agents: 1
+  keep_downstream_in_backlog: true
+labels:
+  - biosymphony-ferm-doe
+  - doe-parity
+  - doe-engine
+issues:
+  - id: parity-contract
+    file: issues/01-parity-contract.md
+    wave: wave0
+    blocks:
+      - custom-design-core
+      - diagnostics-core
+  - id: custom-design-core
+    file: issues/02-custom-design-core.md
+    wave: wave1
+    blocks:
+      - design-family-generators
+      - compare-designs
+  - id: diagnostics-core
+    file: issues/03-diagnostics-core.md
+    wave: wave1
+    blocks:
+      - compare-designs
+  - id: design-family-generators
+    file: issues/04-design-family-generators.md
+    wave: wave2
+    blocks:
+      - augment-and-bayesopt
+  - id: compare-designs
+    file: issues/05-compare-designs.md
+    wave: wave2
+    blocks:
+      - parity-report
+  - id: augment-and-bayesopt
+    file: issues/06-augment-and-bayesopt.md
+    wave: wave3
+    blocks:
+      - parity-report
+  - id: parity-report
+    file: issues/07-parity-report.md
+    wave: wave4
+    blocks: []

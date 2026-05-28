@@ -1,0 +1,6 @@
+item_id,item_type,scale,capacity,unit,status,notes
+EQ-PILOT-001,stirred_tank_pilot,pilot_50L,50,liter,reference,reference vessel: declared as pilot baseline
+EQ-BENCH-001,stirred_tank_bench,bench_2L,2,liter,available,downscale qualification target
+EQ-OFFGAS-001,off_gas_analyzer,both,1,unit,available,public demo placeholder; required for OUR derivation at both scales
+EQ-PROBE-001,do_probe,both,2,unit,available,public demo placeholder
+EQ-ASSAY-001,plate_reader,both,96,well_plate,available,public demo placeholder for titer assay

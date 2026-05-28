@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "campaign_id": "backend-eval-static-constrained-media",
+  "objective": {"primary": "Maximize synthetic titer under media cost and carbon constraints"},
+  "readiness_expectation": "YELLOW",
+  "factors": [
+    {"factor_id": "glucose_g_l", "type": "continuous", "min": 0, "max": 40},
+    {"factor_id": "glycerol_g_l", "type": "continuous", "min": 0, "max": 40},
+    {"factor_id": "lactose_g_l", "type": "continuous", "min": 0, "max": 20},
+    {"factor_id": "yeast_extract_g_l", "type": "continuous", "min": 0, "max": 12}
+  ],
+  "constraints": [
+    {"constraint_id": "total_carbon_lte_60", "type": "linear", "coefficients": {"glucose_g_l": 1, "glycerol_g_l": 1, "lactose_g_l": 1}, "operator": "<=", "rhs": 60},
+    {"constraint_id": "cost_lte_0_18", "type": "linear", "coefficients": {"glucose_g_l": 0.0007, "glycerol_g_l": 0.0017, "lactose_g_l": 0.0009, "yeast_extract_g_l": 0.0035}, "operator": "<=", "rhs": 0.18},
+    {"constraint_id": "one_or_two_carbons", "type": "nchoosek", "features": ["glucose_g_l", "glycerol_g_l", "lactose_g_l"], "min_count": 1, "max_count": 2}
+  ],
+  "responses": [
+    {"response_id": "titer_mg_l", "direction": "maximize", "measurement_type": "assayed", "assay_required": true}
+  ],
+  "backend_eval": {"scenario_id": "static_constrained_media", "primary_tool": "bofire"}
+}

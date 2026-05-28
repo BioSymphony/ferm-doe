@@ -1,0 +1,7 @@
+run_id,arm_id,source_type,glucose_g_l,yeast_extract_g_l,induction_od600,temperature_c,initial_ph,titer_g_per_l,trust_score,notes
+SF-001,shake_flask_10ml,synthetic_demo,20,5,0.8,30,7.0,1.8,0.40,low-fidelity shake-flask scouting row
+SF-002,shake_flask_10ml,synthetic_demo,35,5,1.2,30,7.0,2.5,0.40,low-fidelity shake-flask scouting row
+SF-003,shake_flask_10ml,synthetic_demo,45,10,1.5,28,6.8,2.9,0.40,low-fidelity shake-flask scouting row
+SF-004,shake_flask_10ml,synthetic_demo,25,15,1.0,32,7.2,2.2,0.40,low-fidelity shake-flask scouting row
+BR-001,bioreactor_2l,synthetic_demo,30,8,1.2,30,7.0,3.1,0.60,target-fidelity seed row with DO control
+BR-002,bioreactor_2l,synthetic_demo,40,10,1.4,29,6.9,3.4,0.60,target-fidelity seed row with DO control

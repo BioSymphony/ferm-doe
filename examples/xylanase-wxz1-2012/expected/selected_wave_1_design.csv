@@ -1,0 +1,5 @@
+run_id,run_role,wheat_bran_g_l,yeast_extract_g_l,sodium_nitrate_g_l,magnesium_sulfate_g_l,calcium_chloride_g_l
+DEMO-001,screening,5,0.5,5,0.2,0.2
+DEMO-002,screening,35,1.5,15,2,2
+DEMO-003,screening,20.0,1.0,10.0,1.1,1.1
+DEMO-004,control,20.0,1.0,10.0,1.1,1.1

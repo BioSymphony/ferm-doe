@@ -1,0 +1,4 @@
+run_id,source_type,temperature_c,do_setpoint_pct,carbon_concentration_g_per_l,nitrogen_concentration_g_per_l,trace_element_blend,titer_g_per_l,trust_score,notes
+SYN-SP-001,synthetic_demo,32,30,10,4,blend_a,3.1,0.3,synthetic placeholder row for split-plot demo
+SYN-SP-002,synthetic_demo,32,30,15,4,blend_a,3.4,0.3,synthetic placeholder row for split-plot demo
+SYN-SP-003,synthetic_demo,35,30,10,4,blend_b,3.2,0.3,synthetic placeholder row for split-plot demo

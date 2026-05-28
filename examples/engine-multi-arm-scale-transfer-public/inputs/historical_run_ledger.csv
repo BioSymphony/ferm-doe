@@ -1,0 +1,5 @@
+run_id,arm_id,source_type,production_temperature_c,induction_time_h,soluble_titer_mg_l,specific_productivity_mg_g_h,media_cost_usd_l,acetate_g_l,bridge_delta_pct,inclusion_status,trust_score,notes
+SYN-P1,plate_downscale,synthetic_demo,24,18,280,12,18,0.8,22,included,0.75,synthetic low-temperature plate prior
+SYN-P2,plate_downscale,synthetic_demo,30,26,410,15,22,1.6,18,included,0.75,synthetic high-temperature plate prior
+SYN-B1,ambr_reactor,synthetic_demo,24,18,300,13,25,0.7,14,included,0.75,synthetic reactor bridge prior
+SYN-B2,ambr_reactor,synthetic_demo,30,26,390,14,30,1.4,12,included,0.75,synthetic reactor bridge prior

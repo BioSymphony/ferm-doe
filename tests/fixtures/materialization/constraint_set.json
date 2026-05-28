@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "constraints": [
+    {
+      "constraint_id": "max_temp",
+      "type": "hard",
+      "description": "External temperature ceiling from input file."
+    },
+    {
+      "constraint_id": "avoid_feed_temp_corner",
+      "type": "forbidden_combination",
+      "when": {
+        "feed_strategy": ["pulse"],
+        "temp_c": {"min": 34}
+      },
+      "description": "Avoid pulsed feed at the highest temperature corner."
+    }
+  ]
+}

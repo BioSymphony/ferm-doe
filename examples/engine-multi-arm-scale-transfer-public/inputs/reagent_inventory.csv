@@ -1,0 +1,4 @@
+reagent_id,name,source_type,available_quantity,unit,notes
+media-base,Synthetic media base,synthetic_demo,100,L,placeholder inventory for planning only
+carbon-feed,Synthetic carbon feed,synthetic_demo,20,L,placeholder inventory for planning only
+standard-protein,Synthetic assay standard,synthetic_demo,10,mg,placeholder inventory for planning only

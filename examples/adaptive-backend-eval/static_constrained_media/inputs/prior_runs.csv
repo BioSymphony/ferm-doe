@@ -1,0 +1,5 @@
+run_id,glucose_g_l,glycerol_g_l,lactose_g_l,yeast_extract_g_l,titer_mg_l,include
+SM-001,20,0,5,4,74,yes
+SM-002,0,20,5,6,69,yes
+SM-003,25,15,0,4,81,yes
+SM-004,0,15,10,8,66,yes

@@ -1,0 +1,25 @@
+{
+  "name": "reagent_inventory",
+  "title": "Reagent inventory",
+  "description": "Minimum reagent inventory contract for public examples and campaign inputs.",
+  "fields": [
+    {"name": "reagent_id", "type": "string", "constraints": {"required": true}},
+    {"name": "name", "type": "string"},
+    {"name": "reagent", "type": "string"},
+    {"name": "category", "type": "string"},
+    {"name": "available_amount", "type": "number", "constraints": {"minimum": 0}},
+    {"name": "approx_available_amount", "type": "number", "constraints": {"minimum": 0}},
+    {"name": "available_quantity", "type": "number", "constraints": {"minimum": 0}},
+    {"name": "unit", "type": "string"},
+    {"name": "status", "type": "string"},
+    {"name": "notes", "type": "string"}
+  ],
+  "primaryKey": "reagent_id",
+  "x-biosymphony": {
+    "allowExtraFields": true,
+    "targets": [
+      "templates/reagent-inventory.csv",
+      "examples/*/inputs/reagent_inventory.csv"
+    ]
+  }
+}

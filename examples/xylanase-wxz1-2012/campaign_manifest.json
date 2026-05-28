@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "campaign_id": "xylanase-wxz1-2012-demo",
+  "name": "Starter xylanase fermentation readiness demo",
+  "objective": {
+    "primary": "Use public paper-derived submerged fermentation data to exercise upstream readiness, factor-space, and first-batch planning workflows.",
+    "direction": "maximize",
+    "response_id": "xylanase_activity_u_ml",
+    "notes": "This is a demo planning dataset, not a lab execution recommendation."
+  },
+  "readiness_target": "YELLOW",
+  "sources": [
+    {
+      "source_id": "cui-zhao-2012-xylanase",
+      "title": "Optimization of Xylanase Production from Penicillium sp. WX-Z1 by a Two-Step Statistical Strategy: Plackett-Burman and Box-Behnken Experimental Design",
+      "authors": "F. J. Cui and L. M. Zhao",
+      "year": 2012,
+      "doi": "10.3390/ijms130810630",
+      "url": "https://www.mdpi.com/1422-0067/13/8/10630",
+      "license": "CC BY 3.0",
+      "reuse_note": "Numeric run data are normalized into the demo ledger with attribution; prose is not copied."
+    }
+  ],
+  "inputs": {
+    "historical_run_ledger": "inputs/historical_run_ledger.csv",
+    "evidence_table": "inputs/evidence_table.csv",
+    "equipment_inventory": "inputs/equipment_inventory.csv",
+    "reagent_inventory": "inputs/reagent_inventory.csv"
+  },
+  "constraints": [
+    {
+      "constraint_id": "demo_only",
+      "description": "No physical experiment should be run directly from this demo without organism, assay, equipment, and safety review."
+    },
+    {
+      "constraint_id": "source_scope",
+      "description": "The normalized ledger covers published optimization factors and omits unreported operational metadata."
+    }
+  ],
+  "responses": [
+    {
+      "response_id": "xylanase_activity_u_ml",
+      "name": "Xylanase activity",
+      "unit": "U/mL",
+      "direction": "maximize",
+      "class": "activity",
+      "measurement_type": "assayed",
+      "assay_required": true,
+      "assay_method": "planned_public_demo_assay",
+      "sample_fraction": "declared_public_demo_fraction",
+      "standard_curve": {
+        "status": "planned_demo",
+        "acceptance": "Public example requires calibration before physical execution."
+      },
+      "matrix_effects_policy": {
+        "status": "planned_demo",
+        "note": "Public example requires matrix-effects review before physical execution."
+      }
+    }
+  ],
+  "factors": [
+    {
+      "factor_id": "wheat_bran_g_l",
+      "name": "Wheat bran",
+      "unit": "g/L",
+      "type": "numeric",
+      "min": 5,
+      "max": 35,
+      "low": 5,
+      "high": 35
+    },
+    {
+      "factor_id": "yeast_extract_g_l",
+      "name": "Yeast extract",
+      "unit": "g/L",
+      "type": "numeric",
+      "min": 0.5,
+      "max": 1.5,
+      "low": 0.5,
+      "high": 1.5
+    },
+    {
+      "factor_id": "sodium_nitrate_g_l",
+      "name": "Sodium nitrate",
+      "unit": "g/L",
+      "type": "numeric",
+      "min": 5,
+      "max": 15,
+      "low": 5,
+      "high": 15
+    },
+    {
+      "factor_id": "magnesium_sulfate_g_l",
+      "name": "Magnesium sulfate",
+      "unit": "g/L",
+      "type": "numeric",
+      "min": 0.2,
+      "max": 2,
+      "low": 0.2,
+      "high": 2
+    },
+    {
+      "factor_id": "calcium_chloride_g_l",
+      "name": "Calcium chloride",
+      "unit": "g/L",
+      "type": "numeric",
+      "min": 0.2,
+      "max": 2,
+      "low": 0.2,
+      "high": 2
+    }
+  ],
+  "artifacts": [
+    "examples/xylanase-wxz1-2012/source/source_catalog.md",
+    "examples/xylanase-wxz1-2012/inputs/historical_run_ledger.csv",
+    "examples/xylanase-wxz1-2012/inputs/factor_space.yaml",
+    "examples/xylanase-wxz1-2012/inputs/reagent_inventory.csv",
+    "examples/xylanase-wxz1-2012/linear_issues/wave0-readiness.md",
+    "examples/xylanase-wxz1-2012/outputs/readiness_verdict.md"
+  ],
+  "claim_level": "public_synthetic_demo",
+  "profiles": [
+    "screening"
+  ],
+  "system": {
+    "organism_label": "public_demo_system",
+    "product_class": "public_demo_product",
+    "scale": "public_demo_scale",
+    "privacy": "synthetic_or_public_only"
+  },
+  "doe": {
+    "family": "custom_constrained",
+    "n_runs": 4,
+    "randomized": true,
+    "claim": "heuristic",
+    "design_table_path": "expected/selected_wave_1_design.csv"
+  },
+  "decision_rules": [
+    {
+      "rule_id": "public-demo-review",
+      "scope": "global",
+      "comparator": "qualitative",
+      "threshold": "readiness remains YELLOW or better",
+      "action": "pause"
+    }
+  ],
+  "stop_rules": [
+    {
+      "rule_id": "stop-on-private-data",
+      "condition": "non-public data would be required",
+      "action": "pause"
+    }
+  ],
+  "risk_register": [
+    {
+      "risk_id": "public-demo-boundary",
+      "category": "claim_boundary",
+      "likelihood": "medium",
+      "impact": "high",
+      "mitigation": "Keep example as synthetic planning fixture only.",
+      "status": "open"
+    }
+  ],
+  "readiness": {
+    "overall": "YELLOW",
+    "reasons": [
+      "Public synthetic example fixture."
+    ]
+  }
+}

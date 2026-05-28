@@ -1,0 +1,4 @@
+reagent_id,reagent,available_amount,unit,status,notes
+RG-001,xylan_substrate,10,g,placeholder,public demo placeholder
+RG-002,xylose_standard,1,g,placeholder,standard curve required
+RG-003,buffer_components,1,set,placeholder,public demo placeholder

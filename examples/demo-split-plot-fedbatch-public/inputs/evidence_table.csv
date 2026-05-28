@@ -1,0 +1,3 @@
+evidence_id,source_type,source_ref,source_url,claim,confidence,review_status,decision_impact,reuse_notes,transformation_notes
+EV-001,public_literature,"Jones & Nachtsheim 2009 Journal of Quality Technology split-plot guidance",https://doi.org/10.1080/00224065.2009.11917782,"Hard-to-change vs easy-to-change factors should be modeled as whole-plot vs sub-plot to honor the actual randomization restriction.",medium,accepted,sets DoE family choice,citation metadata only,generalized into doe.family = split_plot
+EV-002,synthetic_demo_note,public demo fixture,not_applicable,"All historical rows are synthetic placeholders for public release.",high,accepted,keeps readiness at YELLOW,synthetic row note,no private or unpublished data used

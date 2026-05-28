@@ -1,0 +1,4 @@
+run_id,run_role,temperature_c,media_blend
+DW-001,center,33,blend_a
+DW-002,vary_temperature,30,blend_a
+DW-003,vary_media,33,blend_b

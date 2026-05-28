@@ -1,0 +1,56 @@
+{
+  "scenario_id": "adaptive_orchestration",
+  "primary_tool": "ax",
+  "purpose": "Pilot Ax as trial lifecycle infrastructure, not as a DoE default.",
+  "inputs": [
+    {
+      "path": "campaign_manifest.json",
+      "role": "BioSymphony manifest"
+    },
+    {
+      "path": "inputs/prior_runs.csv",
+      "role": "trial lifecycle seed rows"
+    }
+  ],
+  "commands": [
+    "python3 skills/biosymphony-ferm-doe/scripts/preflight_check.py examples/adaptive-backend-eval/adaptive_orchestration/campaign_manifest.json",
+    "nox -s adaptive_backend_live_imports"
+  ],
+  "expected_artifacts": [
+    ".runtime/adaptive-backend-eval/adaptive_orchestration/ax_report.json",
+    ".runtime/adaptive-backend-eval/adaptive_orchestration/trial_lifecycle.json",
+    ".runtime/adaptive-backend-eval/adaptive_orchestration/candidate_table.csv"
+  ],
+  "acceptance_checks": [
+    "trial lifecycle is explicit",
+    "storage and resume assumptions are declared",
+    "manifest remains source of truth",
+    "Ax can be disabled without blocking dossier compilation"
+  ],
+  "contract_version": "1.0.0",
+  "contract_schema": "docs/schemas/smoke-artifact-contract.json",
+  "batch_sizes": [
+    1,
+    16
+  ],
+  "closed_loop_rounds": 3,
+  "negative_controls": [
+    {
+      "scenario": "bad_result_join",
+      "perturbation": "swap run_id between two tell rows",
+      "expect": "fail_closed_with_route_report"
+    }
+  ],
+  "contract_artifacts": [
+    ".runtime/adaptive-backend-eval/adaptive_orchestration/result.json",
+    ".runtime/adaptive-backend-eval/adaptive_orchestration/route_report.json",
+    ".runtime/adaptive-backend-eval/adaptive_orchestration/candidate_table.csv",
+    ".runtime/adaptive-backend-eval/adaptive_orchestration/constraint_check.json",
+    ".runtime/adaptive-backend-eval/adaptive_orchestration/fallback_report.json",
+    ".runtime/adaptive-backend-eval/adaptive_orchestration/closed_loop_replay.json",
+    ".runtime/adaptive-backend-eval/adaptive_orchestration/negative_control_report.json",
+    ".runtime/adaptive-backend-eval/adaptive_orchestration/artifact_hashes.json",
+    ".runtime/adaptive-backend-eval/adaptive_orchestration/license_note.md",
+    ".runtime/adaptive-backend-eval/adaptive_orchestration/planning_boundary.md"
+  ]
+}

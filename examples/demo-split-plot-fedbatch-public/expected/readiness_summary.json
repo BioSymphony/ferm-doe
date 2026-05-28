@@ -1,0 +1,10 @@
+{
+  "campaign_id": "demo-split-plot-fedbatch-public",
+  "status": "YELLOW",
+  "claim_level": "public_synthetic_demo",
+  "reasons": [
+    "Titer assay readiness is planned, not executed.",
+    "Whole-plot variance is unknown until the first replication runs.",
+    "Historical rows are synthetic placeholders for public release."
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "selected_wave_1_design",
+  "title": "Selected first-batch design",
+  "description": "Executable selected design table. Factor columns are campaign-specific extra fields.",
+  "fields": [
+    {"name": "run_id", "type": "string", "constraints": {"required": true}},
+    {"name": "arm_id", "type": "string"},
+    {"name": "run_role", "type": "string"},
+    {"name": "selected_design_id", "type": "string"},
+    {"name": "planned_status", "type": "string"}
+  ],
+  "primaryKey": "run_id",
+  "x-biosymphony": {
+    "allowExtraFields": true,
+    "targets": [
+      "examples/*/expected/selected_wave_1_design.csv"
+    ]
+  }
+}

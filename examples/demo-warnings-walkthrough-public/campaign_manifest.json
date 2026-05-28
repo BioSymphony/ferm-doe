@@ -1,0 +1,60 @@
+{
+  "campaign_id": "demo-warnings-walkthrough-public",
+  "claim_level": "public_synthetic_demo",
+  "profiles": ["screening"],
+  "objective": "Diagnostic walkthrough: this manifest is intentionally underspecified so the validator surfaces a representative set of guidance warnings. Status remains YELLOW with error_count = 0; warning_count > 0 is the point.",
+  "system": {
+    "organism_label": "public_demo_microbe",
+    "product_class": "demo",
+    "scale": "diagnostic_planning_demo",
+    "privacy": "synthetic_or_public_only"
+  },
+  "responses": [
+    {
+      "response_id": "incomplete_titer",
+      "class": "titer",
+      "measurement_type": "assayed",
+      "direction": "maximize",
+      "assay_required": true,
+      "assay_method": null,
+      "sample_fraction": "clarified_supernatant"
+    }
+  ],
+  "factors": [
+    {"factor_id": "temperature_c", "type": "numeric", "low": 30, "high": 37, "unit": "C"},
+    {"factor_id": "media_blend", "type": "mixture"}
+  ],
+  "constraints": [
+    {"constraint_id": "public_demo_only", "kind": "data_policy", "description": "Use synthetic or public-source rows only."}
+  ],
+  "doe": {
+    "family": "definitive_screening",
+    "n_runs": 3,
+    "randomized": true,
+    "claim": "heuristic",
+    "design_table_path": "expected/selected_wave_1_design.csv"
+  },
+  "assumptions": [
+    {"assumption_id": "diagnostic-only", "statement": "This manifest is a diagnostic; it is intentionally incomplete to exercise the validator.", "source": "demo_design", "status": "confirmed"}
+  ],
+  "readiness": {
+    "axes": {
+      "responses": {"incomplete_titer": "in_progress"},
+      "factors": {"temperature_c": "qualified", "media_blend": "in_progress"},
+      "doe": "in_progress",
+      "evidence": "in_progress"
+    },
+    "overall": "YELLOW",
+    "reasons": [
+      "Diagnostic manifest: assay contract is incomplete and the mixture factor has no components declared.",
+      "DoE n_runs is below the family minimum.",
+      "decision_rules and stop_rules have not been declared.",
+      "equipment_inventory and reagent_inventory inputs are not provided."
+    ]
+  },
+  "inputs": {
+    "historical_run_ledger": "inputs/historical_run_ledger.csv",
+    "evidence_table": "inputs/evidence_table.csv"
+  },
+  "readiness_expectation": "YELLOW"
+}

@@ -1,0 +1,33 @@
+schema_version: 1
+campaign_id: example
+factors:
+  - id: temperature_c
+    name: Temperature
+    unit: C
+    type: continuous
+    min: 25
+    max: 34
+    default: 30
+    constraints: []
+  - id: initial_ph
+    name: Initial pH
+    unit: pH
+    type: continuous
+    min: 5.5
+    max: 7.5
+    default: 6.5
+    constraints: []
+  - id: yeast_extract_g_l
+    name: Yeast extract
+    unit: g/L
+    type: continuous
+    min: 0
+    max: 20
+    default: 5
+    constraints: []
+responses:
+  - id: titer
+    name: Product titer
+    unit: configurable
+    direction: maximize
+

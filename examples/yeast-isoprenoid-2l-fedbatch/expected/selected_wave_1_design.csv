@@ -1,0 +1,5 @@
+run_id,run_role,production_temp_c,ph_setpoint,inducer_x_g_l,feed_rate_ml_h,harvest_time_h,nitrogen_supplement
+DEMO-001,screening,20,5.2,0.1,1,72,none
+DEMO-002,screening,30,6.8,1.0,7,120,yeast_extract
+DEMO-003,screening,25.0,6.0,0.55,4.0,96.0,ammonium_sulfate
+DEMO-004,control,25.0,6.0,0.55,4.0,96.0,none

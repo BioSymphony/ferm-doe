@@ -1,0 +1,118 @@
+{
+  "campaign_id": "demo-xylanase-public",
+  "claim_level": "public_synthetic_demo",
+  "profiles": ["screening"],
+  "objective": "Plan a small pre-experiment fermentation DoE for public-safe xylanase enzyme production.",
+  "system": {
+    "organism_label": "public_demo_microbe",
+    "product_class": "secreted_enzyme_activity",
+    "scale": "shake_flask_to_benchtop_planning_demo",
+    "privacy": "synthetic_or_public_only"
+  },
+  "responses": [
+    {
+      "response_id": "xylanase_activity_u_ml",
+      "class": "activity",
+      "measurement_type": "assayed",
+      "direction": "maximize",
+      "assay_required": true,
+      "objective_lower": 0,
+      "objective_upper": 200,
+      "objective_weight": 1.0,
+      "assay_method": "colorimetric_reducing_sugar_activity_assay",
+      "sample_fraction": "clarified_supernatant",
+      "standard_curve": {
+        "analyte": "xylose_equivalent",
+        "status": "planned_demo",
+        "acceptance": "linear range and blank controls required before physical execution"
+      },
+      "matrix_effects_policy": {
+        "status": "planned_demo",
+        "note": "Dilution linearity and media blank interference must be checked."
+      }
+    },
+    {
+      "response_id": "run_duration_h",
+      "class": "time",
+      "measurement_type": "clock",
+      "direction": "minimize",
+      "assay_required": false,
+      "assay_method": null,
+      "sample_fraction": "not_applicable"
+    }
+  ],
+  "factors": [
+    {"factor_id": "temperature_c", "type": "numeric", "low": 28, "high": 37, "unit": "C"},
+    {"factor_id": "initial_ph", "type": "numeric", "low": 6.0, "high": 7.5, "unit": "pH"},
+    {"factor_id": "carbon_source", "type": "categorical", "levels": ["glucose", "glycerol", "xylose_mix"]}
+  ],
+  "constraints": [
+    {"constraint_id": "public_demo_only", "kind": "data_policy", "description": "Use synthetic or public-source rows only."},
+    {"constraint_id": "assay_linearity_required", "kind": "measurement_readiness", "description": "Activity assay linear range must be confirmed before physical execution."}
+  ],
+  "doe": {
+    "family": "custom_constrained",
+    "n_runs": 4,
+    "randomized": true,
+    "claim": "heuristic",
+    "design_table_path": "expected/selected_wave_1_design.csv"
+  },
+  "decision_rules": [
+    {
+      "rule_id": "advance-on-active-factor",
+      "scope": "global",
+      "comparator": "qualitative",
+      "threshold": "any factor effect outside replicate noise",
+      "action": "advance_to_next_wave",
+      "evidence_required": ["wave_1_results", "assay_qualification_log"]
+    }
+  ],
+  "stop_rules": [
+    {
+      "rule_id": "stop-on-assay-failure",
+      "condition": "standard curve linearity not established or matrix interference not bounded",
+      "action": "pause",
+      "owner_role": "analytics"
+    }
+  ],
+  "risk_register": [
+    {
+      "risk_id": "assay-readiness",
+      "category": "measurement",
+      "likelihood": "medium",
+      "impact": "high",
+      "mitigation": "Qualify standard curve and matrix interference before physical execution.",
+      "owner_role": "analytics",
+      "status": "open"
+    }
+  ],
+  "assumptions": [
+    {
+      "assumption_id": "factor-space-public-only",
+      "statement": "All factor ranges in this demo are illustrative and derived from public process literature, not internal data.",
+      "source": "synthetic_demo",
+      "status": "inferred"
+    }
+  ],
+  "readiness": {
+    "axes": {
+      "responses": {"xylanase_activity_u_ml": "planned", "run_duration_h": "qualified"},
+      "factors": {"temperature_c": "qualified", "initial_ph": "qualified", "carbon_source": "qualified"},
+      "doe": "qualified_with_caveats",
+      "decision_rules": "qualified_with_caveats",
+      "evidence": "qualified_with_caveats"
+    },
+    "overall": "YELLOW",
+    "reasons": [
+      "Activity assay readiness is planned but not executed.",
+      "Historical rows are synthetic placeholders."
+    ]
+  },
+  "inputs": {
+    "historical_run_ledger": "inputs/historical_run_ledger.csv",
+    "equipment_inventory": "inputs/equipment_inventory.csv",
+    "reagent_inventory": "inputs/reagent_inventory.csv",
+    "evidence_table": "inputs/evidence_table.csv"
+  },
+  "readiness_expectation": "YELLOW"
+}

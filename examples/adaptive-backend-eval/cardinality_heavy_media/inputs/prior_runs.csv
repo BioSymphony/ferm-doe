@@ -1,0 +1,5 @@
+run_id,glucose_g_l,glycerol_g_l,lactose_g_l,sucrose_g_l,titer_mg_l
+CH-001,20,0,0,0,58
+CH-002,0,20,0,0,55
+CH-003,15,0,15,0,76
+CH-004,0,15,0,15,61

@@ -1,0 +1,9 @@
+{
+  "campaign_id": "doe-fast-path-custom-design-demo",
+  "status": "YELLOW",
+  "claim_level": "public_synthetic_demo",
+  "reasons": [
+    "Public synthetic example fixture.",
+    "Suitable for workflow validation, not physical execution."
+  ]
+}

@@ -1,0 +1,13 @@
+design_run_id,qc_status,inclusion_status,trust_score,temperature_c,initial_ph,carbon_g_l,nitrogen_g_l,agitation_rpm,do_setpoint_pct,inoculum_pct,titer_g_l,run_cost_usd
+D001,pass,include,0.95,28,6.0,40,2,600,20,1,8,150
+D002,pass,include,0.95,37,7.5,40,2,200,60,1,22,180
+D003,pass,include,0.95,28,7.5,10,2,600,20,10,4,200
+D004,pass,include,0.95,37,6.0,10,10,200,20,1,12,250
+D005,pass,include,0.95,28,7.5,10,10,200,60,1,9,220
+D006,pass,include,0.95,37,7.5,40,10,600,20,10,28,300
+D007,pass,include,0.95,28,6.0,40,10,200,60,10,16,260
+D008,pass,include,0.95,37,6.0,10,2,600,60,10,11,210
+C001,pass,include,0.95,32.5,6.75,25,6,400,40,5.5,15,225
+C002,pass,include,0.95,32.5,6.75,25,6,400,40,5.5,16,225
+C003,pass,include,0.95,32.5,6.75,25,6,400,40,5.5,14,225
+C004,pass,include,0.95,32.5,6.75,25,6,400,40,5.5,15,225

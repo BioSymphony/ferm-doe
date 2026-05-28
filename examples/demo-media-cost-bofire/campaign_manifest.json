@@ -1,0 +1,248 @@
+{
+  "schema_version": 1,
+  "campaign_id": "demo-media-cost-bofire-v0",
+  "claim_level": "public_synthetic_demo",
+  "profiles": [
+    "screening"
+  ],
+  "objective": "Cost-constrained media optimization smoke exercising BoFire DoEStrategy with linear cost-budget, total-carbon-mass, and n-choose-k carbon-source-cardinality constraints. Demonstrates that BoFire-routed designs satisfy non-box constraints the stdlib generator cannot honor.",
+  "system": {
+    "organism_label": "public_demo_e_coli",
+    "product_class": "secreted_protein_demo",
+    "scale": "shake_flask_screening_demo",
+    "privacy": "synthetic_or_public_only"
+  },
+  "responses": [
+    {
+      "response_id": "specific_titer_g_per_L",
+      "class": "titer",
+      "measurement_type": "assayed",
+      "direction": "maximize",
+      "unit": "g/L",
+      "assay_required": true,
+      "assay_method": "elisa_or_hplc_planned",
+      "sample_fraction": "clarified_supernatant",
+      "objective_lower": 0.0,
+      "objective_upper": 5.0,
+      "objective_shape": "linear",
+      "objective_weight": 1.0,
+      "standard_curve": {
+        "status": "planned_demo",
+        "acceptance": "Public example requires calibration before physical execution."
+      },
+      "matrix_effects_policy": {
+        "status": "planned_demo",
+        "note": "Public example requires matrix-effects review before physical execution."
+      }
+    }
+  ],
+  "factors": [
+    {
+      "factor_id": "glucose",
+      "type": "numeric",
+      "low": 0.0,
+      "high": 50.0,
+      "unit": "g/L",
+      "allow_zero": true,
+      "category": "carbon_source",
+      "cost_per_kg_usd_bulk": 0.7,
+      "cost_source_note": "Bulk food/feed-grade glucose; Sigma research-grade ~$60-120/kg."
+    },
+    {
+      "factor_id": "glycerol",
+      "type": "numeric",
+      "low": 0.0,
+      "high": 50.0,
+      "unit": "g/L",
+      "allow_zero": true,
+      "category": "carbon_source",
+      "cost_per_kg_usd_bulk": 1.7,
+      "cost_source_note": "USP 99.7% bulk. Crude glycerin (80%) is ~$0.55/kg if usable."
+    },
+    {
+      "factor_id": "lactose",
+      "type": "numeric",
+      "low": 0.0,
+      "high": 50.0,
+      "unit": "g/L",
+      "allow_zero": true,
+      "category": "carbon_source",
+      "cost_per_kg_usd_bulk": 0.9,
+      "cost_source_note": "Food-grade bulk lactose."
+    },
+    {
+      "factor_id": "sucrose",
+      "type": "numeric",
+      "low": 0.0,
+      "high": 50.0,
+      "unit": "g/L",
+      "allow_zero": true,
+      "category": "carbon_source",
+      "cost_per_kg_usd_bulk": 1.1,
+      "cost_source_note": "Refined food sucrose."
+    },
+    {
+      "factor_id": "xylose",
+      "type": "numeric",
+      "low": 0.0,
+      "high": 50.0,
+      "unit": "g/L",
+      "allow_zero": true,
+      "category": "carbon_source",
+      "cost_per_kg_usd_bulk": 2.0,
+      "cost_source_note": "CP 95% xylose; the priciest commodity carbon in this panel."
+    },
+    {
+      "factor_id": "ammonium_sulfate",
+      "type": "numeric",
+      "low": 0.5,
+      "high": 10.0,
+      "unit": "g/L",
+      "category": "nitrogen_inorganic",
+      "cost_per_kg_usd_bulk": 0.25,
+      "cost_source_note": "Fertilizer/technical grade; ~$675/ton FOB US 2026."
+    },
+    {
+      "factor_id": "corn_steep_liquor",
+      "type": "numeric",
+      "low": 0.0,
+      "high": 30.0,
+      "unit": "g/L",
+      "allow_zero": true,
+      "category": "nitrogen_complex",
+      "cost_per_kg_usd_bulk": 0.8,
+      "cost_source_note": "50% solids basis; rich N + trace + amino-acid source."
+    },
+    {
+      "factor_id": "yeast_extract",
+      "type": "numeric",
+      "low": 0.0,
+      "high": 25.0,
+      "unit": "g/L",
+      "allow_zero": true,
+      "category": "nitrogen_complex",
+      "cost_per_kg_usd_bulk": 3.5,
+      "cost_source_note": "Commodity grade (e.g. Angel). Pharma-grade YE is $15-30/kg."
+    },
+    {
+      "factor_id": "tryptone",
+      "type": "numeric",
+      "low": 0.0,
+      "high": 20.0,
+      "unit": "g/L",
+      "allow_zero": true,
+      "category": "nitrogen_complex",
+      "cost_per_kg_usd_bulk": 12.0,
+      "cost_source_note": "Casein peptone, bulk. The most expensive N source in this panel."
+    }
+  ],
+  "constraints": [
+    {
+      "constraint_id": "total_carbon_lte_100",
+      "type": "linear",
+      "coefficients": {
+        "glucose": 1.0,
+        "glycerol": 1.0,
+        "lactose": 1.0,
+        "sucrose": 1.0,
+        "xylose": 1.0
+      },
+      "operator": "<=",
+      "rhs": 100.0,
+      "description": "Total carbon source loading capped at 100 g/L to bound osmotic pressure."
+    },
+    {
+      "constraint_id": "at_most_two_carbons",
+      "type": "nchoosek",
+      "features": [
+        "glucose",
+        "glycerol",
+        "lactose",
+        "sucrose",
+        "xylose"
+      ],
+      "min_count": 1,
+      "max_count": 2,
+      "none_also_valid": false,
+      "description": "Between 1 and 2 carbon sources active simultaneously. Single carbon = simpler culture prep; max 2 = bounded combinatorial logistics; zero carbon is nonsensical for heterotrophs."
+    },
+    {
+      "constraint_id": "media_cost_lte_080_per_L",
+      "type": "linear",
+      "coefficients": {
+        "glucose": 0.0007,
+        "glycerol": 0.0017,
+        "lactose": 0.0009,
+        "sucrose": 0.0011,
+        "xylose": 0.002,
+        "ammonium_sulfate": 0.00025,
+        "corn_steep_liquor": 0.0008,
+        "yeast_extract": 0.0035,
+        "tryptone": 0.012
+      },
+      "operator": "<=",
+      "rhs": 0.8,
+      "description": "Total media cost <= $0.80/L. Coefficients are $/g (1 g/L * $/g = $/L). Bulk process-grade pricing per agents' May 2026 research. Research-grade Sigma pricing would be ~10-50x higher and is not appropriate for this fixture. Tight-budget framing rules out tryptone-heavy + expensive-carbon corners."
+    }
+  ],
+  "design_policy": {
+    "augment_remaining_budget": 12,
+    "preferred_backend": "bofire",
+    "wave1_design_seed": 42,
+    "fallback_backend": "stdlib"
+  },
+  "doe": {
+    "family": "custom_constrained",
+    "n_runs": 12,
+    "claim": "bofire_adapter_planning",
+    "model_terms": [
+      "main_effects"
+    ],
+    "design_table_path": "expected/selected_wave_1_design.csv",
+    "randomized": true
+  },
+  "provenance": {
+    "fixture_authored_by": "biosymphony-ferm-doe research swarm",
+    "authored_on": "2026-05-15",
+    "cost_pricing_basis": "2026 Q1-Q2 bulk industrial process-grade indicative pricing; see README.md sources",
+    "non_claim": "Pricing is teachable, not procurement-quote accurate. Recipe is not benchtop-validated."
+  },
+  "decision_rules": [
+    {
+      "rule_id": "public-demo-review",
+      "scope": "global",
+      "comparator": "qualitative",
+      "threshold": "readiness remains YELLOW or better",
+      "action": "pause"
+    }
+  ],
+  "stop_rules": [
+    {
+      "rule_id": "stop-on-private-data",
+      "condition": "non-public data would be required",
+      "action": "pause"
+    }
+  ],
+  "risk_register": [
+    {
+      "risk_id": "public-demo-boundary",
+      "category": "claim_boundary",
+      "likelihood": "medium",
+      "impact": "high",
+      "mitigation": "Keep example as synthetic planning fixture only.",
+      "status": "open"
+    }
+  ],
+  "readiness": {
+    "overall": "YELLOW",
+    "reasons": [
+      "Public synthetic example fixture."
+    ]
+  },
+  "inputs": {
+    "historical_run_ledger": "inputs/historical_run_ledger.csv",
+    "evidence_table": "inputs/evidence_table.csv",
+    "equipment_inventory": "inputs/equipment_inventory.csv",
+    "reagent_inventory": "inputs/reagent_inventory.csv"
+  }
+}

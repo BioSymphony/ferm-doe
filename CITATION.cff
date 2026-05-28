@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+title: BioSymphony Ferm DoE
+message: "If you use this project, please cite the repository."
+type: software
+version: 0.1.0a0
+date-released: 2026-05-05
+authors:
+  - name: BioSymphony contributors
+abstract: "AI-agent-ready DoE planning for fermentation and biomanufacturing: choose design families, check scale-up/down criteria, route BO backends, and produce run packets."
+keywords:
+  - fermentation
+  - bioprocess
+  - biomanufacturing
+  - cell-culture
+  - fed-batch
+  - perfusion
+  - design-of-experiments
+  - experimental-design
+  - doe
+  - bayesian-optimization
+  - optimization
+  - scale-up
+  - scale-down
+  - kla
+  - bioreactor
+  - biosafety
+  - python
+  - ai-agents
+  - agentic-ai
+license: MIT
+repository-code: "https://github.com/BioSymphony/ferm-doe"

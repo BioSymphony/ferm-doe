@@ -1,0 +1,12 @@
+{
+  "campaign_id": "demo-warnings-walkthrough-public",
+  "status": "YELLOW",
+  "claim_level": "public_synthetic_demo",
+  "reasons": [
+    "Diagnostic manifest: assay contract is incomplete (assay_method, standard_curve, matrix_effects_policy missing).",
+    "Mixture factor 'media_blend' has no components declared.",
+    "DoE family declared as definitive_screening but n_runs=3 is below the family minimum (2k+1 = 5 for k=2).",
+    "Profile-advised manifest blocks not declared: decision_rules, stop_rules.",
+    "Public-safety advised inputs not provided: equipment_inventory, reagent_inventory."
+  ]
+}

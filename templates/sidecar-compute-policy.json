@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "sidecar_kind": "compute_policy",
+  "id": "compute-policy-demo-001",
+  "name": "Demo compute policy",
+  "interface": {
+    "name": "biosymphony-ferm-doe.sidecar",
+    "version": 1,
+    "slots": [
+      "compute_policy"
+    ]
+  },
+  "default_profile": "local-stdlib",
+  "blessed_remote_provider": "external-provider",
+  "launch_policy": "remote_launch_requires_explicit_operator_approval",
+  "profiles": [
+    {
+      "profile_id": "local-stdlib",
+      "provider": "local",
+      "mode": "stdlib",
+      "enabled": true,
+      "launch_allowed": true,
+      "intended_jobs": [
+        "compile-state",
+        "score-readiness",
+        "propose-design",
+        "compile-dossier",
+        "contract-self-check"
+      ],
+      "validation_commands": [
+        "python3 -m unittest discover -s tests -v",
+        "python3 skills/biosymphony-ferm-doe/scripts/compile_ferm_doe_dossier.py --manifest examples/xylanase-wxz1-2012/campaign_manifest.json --out .runtime/local-stdlib-dossier --run-budget 8",
+        "python3 skills/biosymphony-ferm-doe/scripts/dossier_check.py .runtime/local-stdlib-dossier",
+        "python3 skills/biosymphony-ferm-doe/scripts/ferm_doe_contract_self_check.py .runtime/local-stdlib-dossier"
+      ],
+      "closeout_requirements": [
+        "record validation command output",
+        "record contract self-check status",
+        "record claim level"
+      ]
+    },
+    {
+      "profile_id": "approved-remote-dry-run",
+      "provider": "external-provider",
+      "mode": "container",
+      "enabled": false,
+      "launch_allowed": false,
+      "intended_jobs": [
+        "reproduce local validation",
+        "compile deterministic dossier in container",
+        "run optional heavier adapters when explicitly enabled"
+      ],
+      "validation_commands": [
+        "python3 skills/biosymphony-ferm-doe/scripts/sidecar_check.py templates/sidecar-compute-policy.json templates/sidecar-provider-handoff.json",
+        "python3 skills/biosymphony-ferm-doe/scripts/compile_ferm_doe_dossier.py --manifest examples/xylanase-wxz1-2012/campaign_manifest.json --out ferm-doe-dossier --run-budget 8",
+        "python3 skills/biosymphony-ferm-doe/scripts/dossier_check.py ferm-doe-dossier",
+        "python3 skills/biosymphony-ferm-doe/scripts/ferm_doe_contract_self_check.py ferm-doe-dossier"
+      ],
+      "closeout_requirements": [
+        "record image, region, resource class, runtime, and cost estimate",
+        "record image pull result and actual container state, not only the provider-reported desired state",
+        "record provider handoff artifact when a worker cannot reach the provider API",
+        "record stage-progress ledger and done marker or explicit partial-failure marker",
+        "record artifact hashes",
+        "cleanup by stopping or deleting the resource unless retention is explicitly approved",
+        "write tracker outcome block with artifact paths and caveats"
+      ]
+    },
+    {
+      "profile_id": "approved-remote-serverless",
+      "provider": "external-provider",
+      "mode": "serverless",
+      "enabled": false,
+      "launch_allowed": false,
+      "intended_jobs": [
+        "stable readiness scoring",
+        "stable design proposal",
+        "stable benchmark utilities"
+      ],
+      "validation_commands": [
+        "python3 skills/biosymphony-ferm-doe/scripts/sidecar_check.py templates/sidecar-compute-policy.json templates/sidecar-provider-handoff.json",
+        "python3 -m compileall -q src skills/biosymphony-ferm-doe/scripts"
+      ],
+      "closeout_requirements": [
+        "record endpoint id and image digest",
+        "record provider handoff artifact if endpoint mutation is performed outside the worker",
+        "record request and response artifact manifest",
+        "record timeout, retry, and cleanup policy"
+      ]
+    },
+    {
+      "profile_id": "external-container-adapter",
+      "provider": "external-provider",
+      "mode": "container",
+      "enabled": false,
+      "launch_allowed": false,
+      "intended_jobs": [
+        "portable container validation when the primary provider is not available"
+      ],
+      "validation_commands": [
+        "python3 skills/biosymphony-ferm-doe/scripts/compile_ferm_doe_dossier.py --manifest examples/xylanase-wxz1-2012/campaign_manifest.json --out ferm-doe-dossier --run-budget 8",
+        "python3 skills/biosymphony-ferm-doe/scripts/ferm_doe_contract_self_check.py ferm-doe-dossier"
+      ],
+      "closeout_requirements": [
+        "record provider, image, runtime, cost estimate, and artifact hashes",
+        "state why the primary provider was not used",
+        "preserve the same tracker outcome block shape"
+      ]
+    }
+  ],
+  "safety": {
+    "no_secrets_in_sidecar": true,
+    "private_data_policy": "secure-store references or sanitized ledgers only",
+    "remote_compute_default": "off"
+  }
+}

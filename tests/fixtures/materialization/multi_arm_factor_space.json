@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "arms": [
+    {
+      "arm_id": "plate",
+      "kind": "deep_well_plate",
+      "factors": [
+        {
+          "id": "plate_ph",
+          "name": "Plate pH",
+          "type": "continuous",
+          "unit": "pH",
+          "min": 6.5,
+          "max": 7.4,
+          "phase": "growth"
+        }
+      ]
+    },
+    {
+      "arm_id": "reactor",
+      "kind": "fed_batch_reactor",
+      "factors": [
+        {
+          "id": "reactor_temp_c",
+          "name": "Reactor temperature",
+          "type": "continuous",
+          "unit": "C",
+          "min": 22,
+          "max": 30,
+          "phase": "production"
+        },
+        {
+          "id": "feed_rate_ml_h",
+          "name": "Feed rate",
+          "type": "continuous",
+          "unit": "mL/h",
+          "min": 1,
+          "max": 6,
+          "phase": "feed"
+        }
+      ]
+    }
+  ],
+  "responses": [
+    {
+      "id": "titer_mg_l",
+      "name": "Titer",
+      "unit": "mg/L",
+      "direction": "maximize"
+    }
+  ]
+}

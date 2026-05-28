@@ -1,0 +1,5 @@
+run_id,run_role,glucose,glycerol,lactose,sucrose,xylose,ammonium_sulfate,corn_steep_liquor,yeast_extract,tryptone
+DEMO-001,screening,0.0,0.0,0.0,0.0,0.0,0.5,0.0,0.0,0.0
+DEMO-002,screening,50.0,50.0,50.0,50.0,50.0,10.0,30.0,25.0,20.0
+DEMO-003,screening,25.0,25.0,25.0,25.0,25.0,5.25,15.0,12.5,10.0
+DEMO-004,control,25.0,25.0,25.0,25.0,25.0,5.25,15.0,12.5,10.0

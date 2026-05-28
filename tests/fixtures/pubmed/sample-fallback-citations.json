@@ -1,0 +1,28 @@
+[
+  {
+    "id": "garcia_ochoa_2009",
+    "type": "review",
+    "title": "Oxygen uptake rate in microbial processes: An overview",
+    "authors": ["Garcia-Ochoa, Felix", "Gomez, Emilio"],
+    "year": 2009,
+    "venue": "Biotechnology Advances",
+    "doi": "10.1016/j.biotechadv.2008.10.006",
+    "url": "https://doi.org/10.1016/j.biotechadv.2008.10.006",
+    "phase_used": [],
+    "claim_supported": "Sample fallback citation: kLa review used for sanity-checking oxygen transfer.",
+    "non_claim": "Synthetic test fixture; no campaign-specific provenance."
+  },
+  {
+    "id": "junker_2004",
+    "type": "review",
+    "title": "Scale-up methodologies for Escherichia coli and yeast fermentation processes",
+    "authors": ["Junker, Beth H."],
+    "year": 2004,
+    "venue": "Journal of Bioscience and Bioengineering",
+    "doi": "10.1263/jbb.97.347",
+    "url": "https://doi.org/10.1263/jbb.97.347",
+    "phase_used": [],
+    "claim_supported": "Sample fallback citation: scale-up review used for sanity-checking fermentation transfer guidance.",
+    "non_claim": "Synthetic test fixture; no campaign-specific provenance."
+  }
+]

@@ -1,0 +1,185 @@
+{
+  "campaign_id": "demo-scale-bridge-public",
+  "claim_level": "public_synthetic_demo",
+  "profiles": ["scale_down_qualification"],
+  "objective": "Plan a downscale qualification: build a 2 L benchtop model that recapitulates a pilot 50 L aerobic microbial process using kLa-matched scale-down with P/V and mixing time as secondary criteria.",
+  "system": {
+    "organism_label": "public_demo_aerobic_microbe",
+    "product_class": "secreted_protein_demo",
+    "scale": "pilot_50L_to_bench_2L_planning_demo",
+    "privacy": "synthetic_or_public_only"
+  },
+  "responses": [
+    {
+      "response_id": "titer_g_per_l",
+      "class": "titer",
+      "measurement_type": "assayed",
+      "direction": "maximize",
+      "assay_required": true,
+      "objective_lower": 0,
+      "objective_upper": 100,
+      "objective_weight": 1.0,
+      "assay_method": "hplc_or_elisa_planned",
+      "sample_fraction": "clarified_supernatant",
+      "standard_curve": {"status": "planned_demo", "acceptance": "linear range and dilution linearity must be qualified at both scales before physical execution"},
+      "matrix_effects_policy": {"status": "planned_demo", "note": "Matrix interference must be bounded at both scales because the broth changes with feed strategy."}
+    },
+    {
+      "response_id": "our_mmol_per_l_per_h",
+      "class": "metabolite",
+      "measurement_type": "instrument",
+      "direction": "target",
+      "assay_required": false,
+      "sample_fraction": "off_gas",
+      "acceptance_criteria": "OUR profile shape at bench is within ±20% of pilot reference at matched culture phase"
+    },
+    {
+      "response_id": "recapitulation_score",
+      "class": "quality_attribute",
+      "measurement_type": "derived",
+      "direction": "maximize",
+      "assay_required": false,
+      "sample_fraction": "not_applicable",
+      "acceptance_criteria": "Composite of titer ratio and OUR shape distance; ≥0.85 to declare downscale qualified"
+    }
+  ],
+  "factors": [
+    {"factor_id": "temperature_c", "type": "numeric", "low": 30, "high": 37, "unit": "C"},
+    {"factor_id": "initial_ph", "type": "numeric", "low": 6.5, "high": 7.2, "unit": "pH"},
+    {"factor_id": "do_setpoint_pct", "type": "numeric", "low": 20, "high": 40, "unit": "percent"},
+    {"factor_id": "stir_rpm_bench", "type": "numeric", "low": 400, "high": 900, "unit": "rpm"},
+    {"factor_id": "feed_rate_ml_per_h", "type": "numeric", "low": 4, "high": 10, "unit": "ml_per_h"}
+  ],
+  "constraints": [
+    {"constraint_id": "public_demo_only", "kind": "data_policy", "description": "Use synthetic or public-source rows only."},
+    {"constraint_id": "kla_match_window", "kind": "feasibility", "description": "Bench stir RPM must yield kLa within ±10% of pilot reference at matched DO setpoint."}
+  ],
+  "arms": [
+    {
+      "arm_id": "pilot_reference",
+      "scale_tier": "pilot_50L",
+      "purpose": "reference",
+      "responses": [],
+      "factors": []
+    },
+    {
+      "arm_id": "benchtop_qualification",
+      "scale_tier": "bench_2L",
+      "purpose": "downscale_target",
+      "bridge_to": {"arm_id": "pilot_reference", "criterion": "kLa", "rationale": "kLa-matched downscale; mass-transfer-limited regime expected at both scales."}
+    }
+  ],
+  "scale_context": {
+    "direction": "scale_down",
+    "from_scale": {
+      "label": "pilot_50L",
+      "vessel": "stirred_tank_pilot",
+      "working_volume_l": 50,
+      "geometry": {"h_over_d": 2.5, "impeller_d_over_t": 0.4, "n_impellers": 2, "impeller_type": "rushton", "sparger_type": "ring"},
+      "engineering_targets": {"kLa_per_hour": 250, "p_per_v_w_per_m3": 2000, "tip_speed_m_per_s": 2.5, "mix_time_s": 12, "do_setpoint_pct": 30, "vvm": 1.0}
+    },
+    "to_scale": {
+      "label": "bench_2L",
+      "vessel": "stirred_tank_bench",
+      "working_volume_l": 1.5,
+      "geometry": {"h_over_d": 2.2, "impeller_d_over_t": 0.4, "n_impellers": 2, "impeller_type": "rushton", "sparger_type": "ring"},
+      "engineering_targets": {"kLa_per_hour": 250, "p_per_v_w_per_m3": 1500, "tip_speed_m_per_s": 2.2, "mix_time_s": 6, "do_setpoint_pct": 30, "vvm": 1.0}
+    },
+    "bridge_strategy": {
+      "primary_criterion": "kLa",
+      "secondary_criteria": ["p_per_v", "mix_time"],
+      "rationale": "Aerobic microbial culture is typically OTR-limited, so kLa is matched first. P/V and mix time are tracked as secondary because they shift when geometry changes and may degrade recapitulation if neglected."
+    },
+    "bridge_factors": {
+      "transferable": ["temperature_c", "initial_ph", "do_setpoint_pct"],
+      "needs_retuning": ["stir_rpm_bench", "feed_rate_ml_per_h"],
+      "not_applicable": []
+    },
+    "known_offsets": [
+      {"axis": "mix_time", "offset_description": "Bench mix time is shorter than pilot at matched kLa; expect faster transient response to pulse perturbations.", "magnitude": "≈0.5x", "evidence_id": "EV-001"}
+    ],
+    "qualification_evidence": ["EV-001", "EV-002"],
+    "recapitulation_criterion": {
+      "metric": "recapitulation_score",
+      "tolerance": 0.85,
+      "status": "planned"
+    }
+  },
+  "doe": {
+    "family": "definitive_screening",
+    "n_runs": 11,
+    "n_center_points": 0,
+    "randomized": true,
+    "claim": "heuristic",
+    "model_terms": ["main_effects", "quadratic"],
+    "design_table_path": "expected/selected_wave_1_design.csv"
+  },
+  "decision_rules": [
+    {
+      "rule_id": "qualify-on-recap-score",
+      "scope": "global",
+      "comparator": "ge",
+      "threshold": 0.85,
+      "action": "advance_to_next_wave",
+      "evidence_required": ["wave_1_results", "pilot_reference_ledger"]
+    },
+    {
+      "rule_id": "narrow-on-our-mismatch",
+      "scope": "response:our_mmol_per_l_per_h",
+      "comparator": "qualitative",
+      "threshold": "OUR profile shape distance > 0.2 across active culture phase",
+      "action": "narrow_factor_space",
+      "evidence_required": ["wave_1_results"]
+    }
+  ],
+  "stop_rules": [
+    {
+      "rule_id": "stop-on-kla-deviation",
+      "condition": "Measured bench kLa is outside ±10% of pilot reference target across all design rows",
+      "action": "pause",
+      "owner_role": "process_engineering"
+    },
+    {
+      "rule_id": "stop-on-assay-failure",
+      "condition": "Titer assay linear range or dilution linearity not established",
+      "action": "pause",
+      "owner_role": "analytics"
+    }
+  ],
+  "risk_register": [
+    {"risk_id": "kla-mismatch", "category": "scale_bridge", "likelihood": "medium", "impact": "high", "mitigation": "Qualify bench kLa across stir_rpm range before first batch starts.", "owner_role": "process_engineering", "status": "open"},
+    {"risk_id": "geometry-shear", "category": "scale_bridge", "likelihood": "low", "impact": "medium", "mitigation": "Track tip speed and visible foam; note that bench tip speed is lower than pilot.", "owner_role": "process_engineering", "status": "open"},
+    {"risk_id": "assay-readiness", "category": "measurement", "likelihood": "medium", "impact": "high", "mitigation": "Qualify titer and OUR pipelines at both scales; ELISA matrix interference must be bounded.", "owner_role": "analytics", "status": "open"}
+  ],
+  "assumptions": [
+    {"assumption_id": "regime-otr-limited", "statement": "The active culture phase is OTR-limited at both scales, so kLa is the appropriate primary criterion.", "source": "Garcia-Ochoa & Gomez 2009 review (cited in evidence_table)", "status": "inferred"},
+    {"assumption_id": "rushton-rushton-bridge", "statement": "Rushton-to-Rushton geometry transfer keeps power-number-based P/V comparable up to ±25% for the working volumes used here.", "source": "process engineering heuristic; demo only", "status": "unverified"},
+    {"assumption_id": "synthetic-rows-only", "statement": "All historical rows in this manifest are synthetic placeholders for public release; numbers are illustrative.", "source": "synthetic_demo", "status": "inferred"}
+  ],
+  "readiness": {
+    "axes": {
+      "responses": {"titer_g_per_l": "planned", "our_mmol_per_l_per_h": "planned", "recapitulation_score": "planned"},
+      "factors": {"temperature_c": "qualified", "initial_ph": "qualified", "do_setpoint_pct": "qualified", "stir_rpm_bench": "qualified_with_caveats", "feed_rate_ml_per_h": "qualified_with_caveats"},
+      "arms": {"pilot_reference": "qualified_with_caveats", "benchtop_qualification": "planned"},
+      "scale_context": "qualified_with_caveats",
+      "doe": "qualified_with_caveats",
+      "decision_rules": "qualified",
+      "evidence": "qualified_with_caveats",
+      "feasibility": "in_progress"
+    },
+    "overall": "YELLOW",
+    "reasons": [
+      "Recapitulation evidence is planned, not executed.",
+      "Bench kLa-vs-RPM curve is not yet qualified.",
+      "Assay readiness across both scales is planned only.",
+      "Pilot reference rows are synthetic placeholders for public release."
+    ]
+  },
+  "inputs": {
+    "historical_run_ledger": "inputs/historical_run_ledger.csv",
+    "equipment_inventory": "inputs/equipment_inventory.csv",
+    "reagent_inventory": "inputs/reagent_inventory.csv",
+    "evidence_table": "inputs/evidence_table.csv"
+  },
+  "readiness_expectation": "YELLOW"
+}

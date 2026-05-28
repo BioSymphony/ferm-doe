@@ -1,0 +1,4 @@
+run_id,source_type,trust_score,notes,production_temp_c,ph_setpoint,inducer_x_g_l,feed_rate_ml_h,harvest_time_h,nitrogen_supplement,isoprenoid_titer_mg_l
+SYN-001,synthetic_demo,0.4,public synthetic fixture row,20,5.2,0.1,1,72,none,100
+SYN-002,synthetic_demo,0.4,public synthetic fixture row,30,6.8,1.0,7,120,yeast_extract,110
+SYN-003,synthetic_demo,0.4,public synthetic fixture row,25.0,6.0,0.55,4.0,96.0,ammonium_sulfate,120

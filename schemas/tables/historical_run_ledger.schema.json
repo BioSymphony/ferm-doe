@@ -1,0 +1,22 @@
+{
+  "name": "historical_run_ledger",
+  "title": "Historical run ledger",
+  "description": "Minimum historical run ledger contract. Factors and responses are campaign-specific extra fields.",
+  "fields": [
+    {"name": "run_id", "type": "string", "constraints": {"required": true}},
+    {"name": "source_run_id", "type": "string"},
+    {"name": "source_type", "type": "string"},
+    {"name": "arm_id", "type": "string"},
+    {"name": "scale", "type": "string"},
+    {"name": "inclusion_status", "type": "string"},
+    {"name": "trust_score", "type": "number", "constraints": {"minimum": 0, "maximum": 1}},
+    {"name": "notes", "type": "string"}
+  ],
+  "primaryKey": "run_id",
+  "x-biosymphony": {
+    "allowExtraFields": true,
+    "targets": [
+      "examples/*/inputs/historical_run_ledger.csv"
+    ]
+  }
+}

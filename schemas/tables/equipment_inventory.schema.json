@@ -1,0 +1,28 @@
+{
+  "name": "equipment_inventory",
+  "title": "Equipment inventory",
+  "description": "Equipment or capacity table contract. Supports both compact public fixtures and canonical equipment_id templates.",
+  "fields": [
+    {"name": "equipment_id", "type": "string"},
+    {"name": "item_id", "type": "string"},
+    {"name": "type", "type": "string"},
+    {"name": "item_type", "type": "string"},
+    {"name": "count", "type": "integer", "constraints": {"minimum": 0}},
+    {"name": "capacity", "type": "number", "constraints": {"minimum": 0}},
+    {"name": "unit", "type": "string"},
+    {"name": "status", "type": "string"}
+  ],
+  "x-biosymphony": {
+    "allowExtraFields": true,
+    "requiredAny": [
+      {
+        "fields": ["equipment_id", "item_id"],
+        "message": "equipment inventory requires equipment_id or item_id"
+      }
+    ],
+    "targets": [
+      "templates/equipment-capacity.csv",
+      "examples/*/inputs/equipment_inventory.csv"
+    ]
+  }
+}

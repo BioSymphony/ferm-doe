@@ -1,0 +1,56 @@
+{
+  "scenario_id": "static_constrained_media",
+  "primary_tool": "bofire",
+  "purpose": "Compare BoFire constrained static DoE/BO candidate generation against fallback planning.",
+  "inputs": [
+    {
+      "path": "campaign_manifest.json",
+      "role": "BioSymphony manifest"
+    },
+    {
+      "path": "inputs/prior_runs.csv",
+      "role": "sanitized prior observations"
+    }
+  ],
+  "commands": [
+    "python3 skills/biosymphony-ferm-doe/scripts/preflight_check.py examples/adaptive-backend-eval/static_constrained_media/campaign_manifest.json",
+    "python3 skills/biosymphony-ferm-doe/scripts/run_bofire_smoke.py --manifest examples/adaptive-backend-eval/static_constrained_media/campaign_manifest.json --results examples/adaptive-backend-eval/static_constrained_media/inputs/prior_runs.csv --out-json .runtime/adaptive-backend-eval/static_constrained_media/bofire_report.json --out-html .runtime/adaptive-backend-eval/static_constrained_media/bofire_report.html --out-hashes .runtime/adaptive-backend-eval/static_constrained_media/artifact_hashes.json --budget 8 --seed 42"
+  ],
+  "expected_artifacts": [
+    ".runtime/adaptive-backend-eval/static_constrained_media/bofire_report.json",
+    ".runtime/adaptive-backend-eval/static_constrained_media/bofire_report.html",
+    ".runtime/adaptive-backend-eval/static_constrained_media/artifact_hashes.json"
+  ],
+  "acceptance_checks": [
+    "route report records non_box_constraints",
+    "candidate rows satisfy factor bounds",
+    "candidate rows satisfy linear constraints",
+    "manifest remains source of truth"
+  ],
+  "contract_version": "1.0.0",
+  "contract_schema": "docs/schemas/smoke-artifact-contract.json",
+  "batch_sizes": [
+    1,
+    16
+  ],
+  "closed_loop_rounds": 1,
+  "negative_controls": [
+    {
+      "scenario": "infeasible_constraints",
+      "perturbation": "tighten linear constraint to make all feasible space empty",
+      "expect": "fail_closed_with_route_report"
+    }
+  ],
+  "contract_artifacts": [
+    ".runtime/adaptive-backend-eval/static_constrained_media/result.json",
+    ".runtime/adaptive-backend-eval/static_constrained_media/route_report.json",
+    ".runtime/adaptive-backend-eval/static_constrained_media/candidate_table.csv",
+    ".runtime/adaptive-backend-eval/static_constrained_media/constraint_check.json",
+    ".runtime/adaptive-backend-eval/static_constrained_media/fallback_report.json",
+    ".runtime/adaptive-backend-eval/static_constrained_media/closed_loop_replay.json",
+    ".runtime/adaptive-backend-eval/static_constrained_media/negative_control_report.json",
+    ".runtime/adaptive-backend-eval/static_constrained_media/artifact_hashes.json",
+    ".runtime/adaptive-backend-eval/static_constrained_media/license_note.md",
+    ".runtime/adaptive-backend-eval/static_constrained_media/planning_boundary.md"
+  ]
+}

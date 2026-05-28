@@ -1,0 +1,17 @@
+run_id,whole_plot_id,temperature_c,do_setpoint_pct,carbon_concentration_g_per_l,nitrogen_concentration_g_per_l,trace_element_blend
+SP-001,WP-1,30,20,5,2,blend_a
+SP-002,WP-1,30,20,20,2,blend_b
+SP-003,WP-1,30,20,5,8,blend_b
+SP-004,WP-1,30,20,20,8,blend_a
+SP-005,WP-2,30,40,5,2,blend_b
+SP-006,WP-2,30,40,20,2,blend_a
+SP-007,WP-2,30,40,5,8,blend_a
+SP-008,WP-2,30,40,20,8,blend_b
+SP-009,WP-3,37,20,5,2,blend_a
+SP-010,WP-3,37,20,20,2,blend_b
+SP-011,WP-3,37,20,5,8,blend_b
+SP-012,WP-3,37,20,20,8,blend_a
+SP-013,WP-4,37,40,5,2,blend_b
+SP-014,WP-4,37,40,20,2,blend_a
+SP-015,WP-4,37,40,5,8,blend_a
+SP-016,WP-4,37,40,20,8,blend_b

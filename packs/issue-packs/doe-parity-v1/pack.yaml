@@ -1,0 +1,63 @@
+schema_version: 1
+pack_id: doe-parity-v1
+pack_type: issue_pack
+name: High-ROI DOE Parity Upgrade
+activation_policy:
+  default_active_wave: wave0
+  max_concurrent_agents: 1
+  keep_downstream_in_backlog: true
+labels:
+  - biosymphony-ferm-doe
+  - doe-parity
+  - high-roi-doe
+issues:
+  - id: baseline-contract
+    file: issues/01-baseline-contract.md
+    wave: wave0
+    blocks:
+      - intent-and-claims
+      - input-materialization
+      - execution-planner
+  - id: intent-and-claims
+    file: issues/02-intent-and-claims.md
+    wave: wave1
+    blocks:
+      - adapters-and-generators
+      - diagnostics-verdicts
+      - parity-reporting
+  - id: input-materialization
+    file: issues/03-input-materialization.md
+    wave: wave1
+    blocks:
+      - dossier-integration
+  - id: execution-planner
+    file: issues/04-execution-planner.md
+    wave: wave1
+    blocks:
+      - dossier-integration
+  - id: adapters-and-generators
+    file: issues/05-adapters-and-generators.md
+    wave: wave2
+    blocks:
+      - benchmark-harness
+      - dossier-integration
+  - id: diagnostics-verdicts
+    file: issues/06-diagnostics-verdicts.md
+    wave: wave2
+    blocks:
+      - benchmark-harness
+      - dossier-integration
+  - id: benchmark-harness
+    file: issues/07-benchmark-harness.md
+    wave: wave3
+    blocks:
+      - parity-reporting
+  - id: dossier-integration
+    file: issues/08-dossier-integration.md
+    wave: wave3
+    blocks:
+      - parity-reporting
+  - id: parity-reporting
+    file: issues/09-parity-reporting.md
+    wave: wave4
+    blocks: []

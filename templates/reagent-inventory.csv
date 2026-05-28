@@ -1,0 +1,8 @@
+reagent_id,name,category,approx_available_amount,unit,purity_or_grade,storage,constraints,notes
+R001,Glucose,carbon_source,1000,g,lab_grade,room_temperature,,example placeholder
+R002,Yeast extract,nitrogen_source,250,g,lab_grade,room_temperature,,example placeholder
+R003,Ammonium sulfate,nitrogen_source,500,g,lab_grade,room_temperature,,example placeholder
+R004,Magnesium sulfate,salt,250,g,lab_grade,room_temperature,,example placeholder
+R005,Calcium chloride,salt,250,g,lab_grade,room_temperature,,example placeholder
+R006,Antifoam,process_additive,100,ml,process_grade,room_temperature,,example placeholder
+

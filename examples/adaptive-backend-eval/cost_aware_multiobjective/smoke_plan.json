@@ -1,0 +1,56 @@
+{
+  "scenario_id": "cost_aware_multiobjective",
+  "primary_tool": "botorch",
+  "purpose": "Pilot direct BoTorch/Ax cost-aware acquisition while preserving BioSymphony cost-stack ownership.",
+  "inputs": [
+    {
+      "path": "campaign_manifest.json",
+      "role": "BioSymphony manifest"
+    },
+    {
+      "path": "inputs/prior_runs.csv",
+      "role": "synthetic multi-objective observations"
+    }
+  ],
+  "commands": [
+    "python3 skills/biosymphony-ferm-doe/scripts/preflight_check.py examples/adaptive-backend-eval/cost_aware_multiobjective/campaign_manifest.json",
+    "nox -s adaptive_backend_live_imports"
+  ],
+  "expected_artifacts": [
+    ".runtime/adaptive-backend-eval/cost_aware_multiobjective/botorch_cost_report.json",
+    ".runtime/adaptive-backend-eval/cost_aware_multiobjective/candidate_table.csv",
+    ".runtime/adaptive-backend-eval/cost_aware_multiobjective/cost_stack_check.md"
+  ],
+  "acceptance_checks": [
+    "cost-aware acquisition is named explicitly",
+    "all rows pass BioSymphony constraint revalidation",
+    "cost claims use the five-layer cost stack",
+    "fallback report is written when custom model path is unavailable"
+  ],
+  "contract_version": "1.0.0",
+  "contract_schema": "docs/schemas/smoke-artifact-contract.json",
+  "batch_sizes": [
+    1,
+    16
+  ],
+  "closed_loop_rounds": 1,
+  "negative_controls": [
+    {
+      "scenario": "unrealistic_cost_model",
+      "perturbation": "set per-component cost to 0 or negative",
+      "expect": "fail_closed_with_route_report"
+    }
+  ],
+  "contract_artifacts": [
+    ".runtime/adaptive-backend-eval/cost_aware_multiobjective/result.json",
+    ".runtime/adaptive-backend-eval/cost_aware_multiobjective/route_report.json",
+    ".runtime/adaptive-backend-eval/cost_aware_multiobjective/candidate_table.csv",
+    ".runtime/adaptive-backend-eval/cost_aware_multiobjective/constraint_check.json",
+    ".runtime/adaptive-backend-eval/cost_aware_multiobjective/fallback_report.json",
+    ".runtime/adaptive-backend-eval/cost_aware_multiobjective/closed_loop_replay.json",
+    ".runtime/adaptive-backend-eval/cost_aware_multiobjective/negative_control_report.json",
+    ".runtime/adaptive-backend-eval/cost_aware_multiobjective/artifact_hashes.json",
+    ".runtime/adaptive-backend-eval/cost_aware_multiobjective/license_note.md",
+    ".runtime/adaptive-backend-eval/cost_aware_multiobjective/planning_boundary.md"
+  ]
+}

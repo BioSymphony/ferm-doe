@@ -1,0 +1,4 @@
+item_id,item_type,capacity,unit,status,notes
+EQ-001,stirred_tank_bench,2,liter,available,public demo placeholder
+EQ-002,off_gas_analyzer,1,unit,available,public demo placeholder
+EQ-003,plate_reader,96,well_plate,available,public demo placeholder for titer assay

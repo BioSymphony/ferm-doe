@@ -1,0 +1,56 @@
+{
+  "scenario_id": "scale_bridge_planning",
+  "primary_tool": "bofire",
+  "purpose": "Check that backend candidate support does not claim scale transferability.",
+  "inputs": [
+    {
+      "path": "campaign_manifest.json",
+      "role": "BioSymphony multi-arm manifest"
+    },
+    {
+      "path": "inputs/prior_runs.csv",
+      "role": "synthetic per-arm prior observations"
+    }
+  ],
+  "commands": [
+    "python3 skills/biosymphony-ferm-doe/scripts/preflight_check.py examples/adaptive-backend-eval/scale_bridge_planning/campaign_manifest.json",
+    "python3 skills/biosymphony-ferm-doe/scripts/run_bofire_smoke.py --manifest examples/adaptive-backend-eval/scale_bridge_planning/campaign_manifest.json --results examples/adaptive-backend-eval/scale_bridge_planning/inputs/prior_runs.csv --out-json .runtime/adaptive-backend-eval/scale_bridge_planning/bofire_report.json --out-html .runtime/adaptive-backend-eval/scale_bridge_planning/bofire_report.html --out-hashes .runtime/adaptive-backend-eval/scale_bridge_planning/artifact_hashes.json --budget 4 --seed 42"
+  ],
+  "expected_artifacts": [
+    ".runtime/adaptive-backend-eval/scale_bridge_planning/bofire_report.json",
+    ".runtime/adaptive-backend-eval/scale_bridge_planning/per_arm_candidate_table.csv",
+    ".runtime/adaptive-backend-eval/scale_bridge_planning/scale_bridge_gate.json"
+  ],
+  "acceptance_checks": [
+    "scale-bridge entry conditions are checked outside backend",
+    "no backend claims transferability by itself",
+    "assay comparability is documented",
+    "candidate table is split per executable arm when needed"
+  ],
+  "contract_version": "1.0.0",
+  "contract_schema": "docs/schemas/smoke-artifact-contract.json",
+  "batch_sizes": [
+    1,
+    16
+  ],
+  "closed_loop_rounds": 2,
+  "negative_controls": [
+    {
+      "scenario": "missing_scale_bridge",
+      "perturbation": "remove kLa/DO bridge data while keeping transferability claim",
+      "expect": "fail_closed_with_route_report"
+    }
+  ],
+  "contract_artifacts": [
+    ".runtime/adaptive-backend-eval/scale_bridge_planning/result.json",
+    ".runtime/adaptive-backend-eval/scale_bridge_planning/route_report.json",
+    ".runtime/adaptive-backend-eval/scale_bridge_planning/candidate_table.csv",
+    ".runtime/adaptive-backend-eval/scale_bridge_planning/constraint_check.json",
+    ".runtime/adaptive-backend-eval/scale_bridge_planning/fallback_report.json",
+    ".runtime/adaptive-backend-eval/scale_bridge_planning/closed_loop_replay.json",
+    ".runtime/adaptive-backend-eval/scale_bridge_planning/negative_control_report.json",
+    ".runtime/adaptive-backend-eval/scale_bridge_planning/artifact_hashes.json",
+    ".runtime/adaptive-backend-eval/scale_bridge_planning/license_note.md",
+    ".runtime/adaptive-backend-eval/scale_bridge_planning/planning_boundary.md"
+  ]
+}

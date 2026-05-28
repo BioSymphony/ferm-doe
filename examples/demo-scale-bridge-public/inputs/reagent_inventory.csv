@@ -1,0 +1,4 @@
+reagent_id,reagent,available_amount,unit,status,notes
+RG-001,defined_media_components,10,L,placeholder,public demo placeholder
+RG-002,feed_solution,2,L,placeholder,public demo placeholder
+RG-003,titer_assay_standards,1,kit,placeholder,assay qualification required at both scales

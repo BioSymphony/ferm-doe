@@ -1,0 +1,85 @@
+{
+  "pack_id": "scientific-swarm-v0",
+  "pack_type": "issue_pack",
+  "claim_level": "planned_wave1_design",
+  "public_safe": true,
+  "activation_policy": {
+    "default_active_wave": "SW-W0",
+    "max_concurrent_agents": 5,
+    "keep_downstream_in_backlog": true
+  },
+  "parallelism_policy": {
+    "SW-W0": 1,
+    "SW-W1": 4,
+    "SW-W2": 3,
+    "SW-W3": 1
+  },
+  "work_items": [
+    {
+      "id": "SW-W0-01",
+      "title": "Swarm contract and artifact schema",
+      "wave": "SW-W0",
+      "depends_on": [],
+      "expected_artifacts": ["evidence_swarm_plan.json"]
+    },
+    {
+      "id": "SW-W1-01",
+      "title": "Evidence prior and source-trust review",
+      "wave": "SW-W1",
+      "depends_on": ["SW-W0-01"],
+      "expected_artifacts": ["evidence_table.csv", "evidence_source_ledger.csv"]
+    },
+    {
+      "id": "SW-W1-02",
+      "title": "Assay and product-class skeptic review",
+      "wave": "SW-W1",
+      "depends_on": ["SW-W0-01"],
+      "expected_artifacts": ["assumption_attack_report.json"]
+    },
+    {
+      "id": "SW-W1-03",
+      "title": "Process, scale-transfer, cost, and runability review",
+      "wave": "SW-W1",
+      "depends_on": ["SW-W0-01"],
+      "expected_artifacts": ["observability_plan.json", "control_run_strategy.json"]
+    },
+    {
+      "id": "SW-W2-01",
+      "title": "Factor-universe integration",
+      "wave": "SW-W2",
+      "depends_on": ["SW-W1-01", "SW-W1-03"],
+      "expected_artifacts": ["factor_universe.json", "factor_universe.md"]
+    },
+    {
+      "id": "SW-W2-02",
+      "title": "Assumption attack and contradiction reconciliation",
+      "wave": "SW-W2",
+      "depends_on": ["SW-W1-01", "SW-W1-02", "SW-W1-03"],
+      "expected_artifacts": ["assumption_attack_report.json"]
+    },
+    {
+      "id": "SW-W2-03",
+      "title": "Observability and control strategy",
+      "wave": "SW-W2",
+      "depends_on": ["SW-W1-02", "SW-W1-03"],
+      "expected_artifacts": ["observability_plan.json", "control_run_strategy.json"]
+    },
+    {
+      "id": "SW-W3-01",
+      "title": "Dossier handoff and follow-up memory notes",
+      "wave": "SW-W3",
+      "depends_on": ["SW-W2-01", "SW-W2-02", "SW-W2-03"],
+      "expected_artifacts": ["swarm_adjudication_brief.md"]
+    }
+  ],
+  "validation_commands": [
+    "PYTHONPATH=src python3 -m biosymphony_ferm_doe.cli audit .",
+    "PYTHONPATH=src python3 -m biosymphony_ferm_doe.cli check-dossier examples/demo-xylanase-public"
+  ],
+  "non_claims": [
+    "Swarm artifacts are planning support only.",
+    "No physical-execution validation.",
+    "No optimized condition claim without executed joined evidence.",
+    "No provider mutation."
+  ]
+}

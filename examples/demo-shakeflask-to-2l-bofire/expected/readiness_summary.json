@@ -1,0 +1,9 @@
+{
+  "campaign_id": "demo-shakeflask-to-2l-bofire",
+  "status": "YELLOW",
+  "claim_level": "public_synthetic_demo",
+  "reasons": [
+    "Public synthetic example fixture.",
+    "Suitable for workflow validation, not physical execution."
+  ]
+}

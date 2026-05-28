@@ -1,0 +1,4 @@
+run_id,source_type,trust_score,notes,temperature_c,ph_setpoint,feed_rate_ml_h,nitrogen_source,titer_mg_l
+SYN-001,synthetic_demo,0.4,public synthetic fixture row,24,5.5,1,yeast_extract,100
+SYN-002,synthetic_demo,0.4,public synthetic fixture row,32,6.8,6,peptone,110
+SYN-003,synthetic_demo,0.4,public synthetic fixture row,28.0,6.15,3.5,ammonium_sulfate,120

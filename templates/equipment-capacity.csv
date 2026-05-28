@@ -1,0 +1,5 @@
+equipment_id,type,count,working_volume_min_ml,working_volume_max_ml,parallel_runs,temperature_range_c,controls_available,notes
+E001,shake_flask_incubator,1,25,250,24,20-37,temperature_and_agitation,example placeholder
+E002,microplate_incubator,1,0.1,2,96,20-37,temperature_and_shaking,example placeholder
+E003,bench_bioreactor,2,250,1000,2,20-40,pH_DO_agitation_feed,example placeholder
+

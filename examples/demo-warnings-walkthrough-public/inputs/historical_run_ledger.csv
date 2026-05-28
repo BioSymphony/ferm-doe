@@ -1,0 +1,3 @@
+run_id,source_type,temperature_c,media_blend,trust_score,notes
+SYN-W-001,synthetic_demo,32,blend_a,0.3,synthetic placeholder for diagnostic walkthrough
+SYN-W-002,synthetic_demo,35,blend_b,0.3,synthetic placeholder for diagnostic walkthrough

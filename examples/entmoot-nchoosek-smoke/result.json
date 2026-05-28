@@ -1,0 +1,116 @@
+{
+  "smoke_id": "entmoot-v2-nchoosek-smoke",
+  "entmoot_version": "2.1.1",
+  "solver": "highs",
+  "n_bo_iters": 4,
+  "n_components": 4,
+  "nchoosek_min": 1,
+  "nchoosek_max": 2,
+  "cost_ceiling_usd_per_L": 1.2,
+  "cardinality_pass_count": 4,
+  "cost_pass_count": 4,
+  "constraint_violations": [],
+  "verdict": "SMOKE_PASSED",
+  "candidates": [
+    {
+      "iteration": 1,
+      "amounts": {
+        "glucose": -0.0,
+        "glycerol": 40.0,
+        "lactose": -0.0,
+        "sucrose": -0.0
+      },
+      "binary": {
+        "glucose": 0.0,
+        "glycerol": 1.0,
+        "lactose": 0.0,
+        "sucrose": 1.0
+      },
+      "n_active": 2,
+      "active_carbons": [
+        "glycerol",
+        "sucrose"
+      ],
+      "cost_per_L": 0.068,
+      "cardinality_ok": true,
+      "cost_ok": true,
+      "obj": -0.36177611975014456,
+      "elapsed_s": 2.26
+    },
+    {
+      "iteration": 2,
+      "amounts": {
+        "glucose": -0.0,
+        "glycerol": -0.0,
+        "lactose": 30.0,
+        "sucrose": 30.0
+      },
+      "binary": {
+        "glucose": 0.0,
+        "glycerol": 0.0,
+        "lactose": 1.0,
+        "sucrose": 1.0
+      },
+      "n_active": 2,
+      "active_carbons": [
+        "lactose",
+        "sucrose"
+      ],
+      "cost_per_L": 0.06,
+      "cardinality_ok": true,
+      "cost_ok": true,
+      "obj": -0.3158536596853045,
+      "elapsed_s": 4.36
+    },
+    {
+      "iteration": 3,
+      "amounts": {
+        "glucose": -0.0,
+        "glycerol": -0.0,
+        "lactose": -0.0,
+        "sucrose": 5.171787412560987
+      },
+      "binary": {
+        "glucose": 1.0,
+        "glycerol": 0.0,
+        "lactose": 0.0,
+        "sucrose": 1.0
+      },
+      "n_active": 2,
+      "active_carbons": [
+        "glucose",
+        "sucrose"
+      ],
+      "cost_per_L": 0.0057,
+      "cardinality_ok": true,
+      "cost_ok": true,
+      "obj": -0.31403460333360284,
+      "elapsed_s": 1.11
+    },
+    {
+      "iteration": 4,
+      "amounts": {
+        "glucose": 40.0,
+        "glycerol": 0.0,
+        "lactose": 2.9052214828317737,
+        "sucrose": 0.0
+      },
+      "binary": {
+        "glucose": 1.0,
+        "glycerol": 0.0,
+        "lactose": 1.0,
+        "sucrose": 0.0
+      },
+      "n_active": 2,
+      "active_carbons": [
+        "glucose",
+        "lactose"
+      ],
+      "cost_per_L": 0.0306,
+      "cardinality_ok": true,
+      "cost_ok": true,
+      "obj": -0.27385103438456904,
+      "elapsed_s": 1.27
+    }
+  ]
+}

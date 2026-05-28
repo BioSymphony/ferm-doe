@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/BioSymphony/ferm-doe/main/schemas/task_request.schema.json",
+  "title": "BioSymphony Ferm DoE Task Request",
+  "description": "Public-safe dispatch contract for one bounded Ferm DoE planning task. This schema intentionally avoids private tracker ids, provider mutation fields, private paths, credentials, and private artifacts.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "request_kind",
+    "task_request_id",
+    "campaign_id",
+    "title",
+    "public_safety",
+    "expected_artifacts",
+    "acceptance_criteria",
+    "validation_commands",
+    "touched_areas"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "request_kind": {
+      "const": "ferm_doe_task_request"
+    },
+    "task_request_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Pack-local or harness-local id. Do not use private tracker ids."
+    },
+    "campaign_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string"
+    },
+    "claim_level": {
+      "type": "string",
+      "enum": [
+        "public_synthetic_demo",
+        "internal_planning",
+        "physical_execution_planning",
+        "planned_wave1_design",
+        "planned_wave2_design",
+        "evidence_plan_only",
+        "evidence_rows_for_review",
+        "run_packet_planning_compose"
+      ]
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["low", "normal", "high", "urgent"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["proposed", "ready", "in_progress", "blocked", "done"]
+    },
+    "public_safety": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "privacy",
+        "private_data_allowed",
+        "provider_mutation_allowed",
+        "tracker_specific_ids_allowed"
+      ],
+      "properties": {
+        "privacy": {
+          "const": "synthetic_or_public_only"
+        },
+        "private_data_allowed": {
+          "const": false
+        },
+        "provider_mutation_allowed": {
+          "const": false
+        },
+        "tracker_specific_ids_allowed": {
+          "const": false
+        }
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/input_ref"
+      }
+    },
+    "expected_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "validation_commands": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "touched_areas": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "work_items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/work_item"
+      }
+    },
+    "non_claims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "input_ref": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["role", "path", "source_type"],
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Relative path only."
+        },
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "synthetic",
+            "synthetic_demo_note",
+            "public_literature",
+            "public_protocol",
+            "vendor_public",
+            "sanitized_reference"
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "work_item": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "title"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "depends_on": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expected_artifacts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,3 @@
+constraint_id,type,description
+ph_window,hard,pH must remain in the declared operating window.
+no_glycerol_low_ph,forbidden_combination,Avoid glycerol at low pH in first-batch.

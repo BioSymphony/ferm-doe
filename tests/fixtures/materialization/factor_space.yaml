@@ -1,0 +1,14 @@
+schema_version: 1
+factors:
+  - id: oxygen_pct
+    name: Dissolved oxygen
+    type: continuous
+    unit: percent
+    min: 20
+    max: 60
+    phase: production
+responses:
+  - id: titer_mg_l
+    name: Titer
+    unit: mg/L
+    direction: maximize

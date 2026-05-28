@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "request_kind": "ferm_doe_task_request",
+  "task_request_id": "TASK-001",
+  "campaign_id": "REPLACE_ME",
+  "title": "Prepare public-safe Ferm DoE planning artifact",
+  "summary": "Bounded planning task for a synthetic or public-source campaign.",
+  "claim_level": "public_synthetic_demo",
+  "priority": "normal",
+  "status": "ready",
+  "public_safety": {
+    "privacy": "synthetic_or_public_only",
+    "private_data_allowed": false,
+    "provider_mutation_allowed": false,
+    "tracker_specific_ids_allowed": false
+  },
+  "inputs": [
+    {
+      "role": "campaign_manifest",
+      "path": "examples/demo-xylanase-public/campaign_manifest.json",
+      "source_type": "synthetic",
+      "notes": "Relative public demo path; replace for a new campaign."
+    }
+  ],
+  "expected_artifacts": [
+    "expected/readiness_summary.json",
+    "expected/AGENTS.md"
+  ],
+  "acceptance_criteria": [
+    "Artifacts use synthetic or public-source data only.",
+    "Readiness verdict is GREEN, YELLOW, or RED with explicit caveats.",
+    "No physical-execution validation, production readiness, or execution approval is claimed."
+  ],
+  "validation_commands": [
+    "PYTHONPATH=src python3 -m biosymphony_ferm_doe.cli validate examples/demo-xylanase-public --summary",
+    "PYTHONPATH=src python3 -m biosymphony_ferm_doe.cli check-dossier examples/demo-xylanase-public",
+    "PYTHONPATH=src python3 -m biosymphony_ferm_doe.cli audit ."
+  ],
+  "touched_areas": [
+    "examples/demo-xylanase-public/",
+    "docs/"
+  ],
+  "work_items": [
+    {
+      "id": "TASK-001-A",
+      "title": "Validate the campaign contract",
+      "depends_on": [],
+      "expected_artifacts": [
+        "expected/readiness_summary.json"
+      ]
+    }
+  ],
+  "non_claims": [
+    "No validated optimization claim.",
+    "No physical-execution approval.",
+    "No GxP batch-record claim."
+  ]
+}

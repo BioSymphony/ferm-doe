@@ -1,0 +1,3 @@
+evidence_id,source_type,source_ref,source_url,claim,confidence,review_status,decision_impact,reuse_notes,transformation_notes
+EV-001,synthetic_demo_note,public demo fixture,not_applicable,"Synthetic demo rows are not validation data.",high,accepted,keeps readiness at YELLOW,synthetic row note,no private or unpublished data used
+EV-002,public_literature,"general fermentation screening practice",not_applicable,"Plackett-Burman screens with 7 factors typically use 8 runs (Williams construction, resolution III) before deciding on RSM follow-up.",medium,accepted,supports the family choice,citation metadata only,generalized into demo design rationale

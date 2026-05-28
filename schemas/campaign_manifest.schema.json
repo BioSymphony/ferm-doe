@@ -1,0 +1,529 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/BioSymphony/ferm-doe/main/schemas/campaign_manifest.schema.json",
+  "title": "BioSymphony Ferm DoE Campaign Manifest",
+  "description": "Flexible manifest for fermentation and upstream bioprocess pre-experiment DoE planning. Optional slots are intentional: long-running agents fill them as the campaign matures. Validators on this manifest emit guidance, not rejection, except when the manifest is structurally incoherent.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["campaign_id", "claim_level"],
+  "properties": {
+    "campaign_id": {
+      "type": "string",
+      "description": "Stable identifier; used for artifact paths."
+    },
+    "claim_level": {
+      "type": "string",
+      "description": "Free-form label. Public demos use 'public_synthetic_demo'. Private campaigns use whatever taxonomy you maintain. Validators recognize 'public_synthetic_demo' for the public-safety profile.",
+      "examples": ["public_synthetic_demo", "internal_planning", "physical_execution_planning"]
+    },
+    "objective": {"type": "string"},
+    "profiles": {
+      "description": "Composable profiles. A campaign can claim multiple (e.g. ['screening','scale_down_qualification']). If absent, validators apply the permissive default.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "screening",
+          "optimization_rsm",
+          "mixture",
+          "split_plot_fed_batch",
+          "scale_up_bridge",
+          "scale_down_qualification",
+          "confirmation",
+          "sequential_augmentation",
+          "custom"
+        ]
+      }
+    },
+    "system": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "organism_label": {"type": "string"},
+        "product_class": {"type": "string"},
+        "scale": {"type": "string"},
+        "privacy": {"type": "string", "enum": ["synthetic_or_public_only", "internal", "confidential"]}
+      }
+    },
+    "responses": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/response"}
+    },
+    "factors": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/factor"}
+    },
+    "constraints": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/constraint"}
+    },
+    "arms": {
+      "description": "Optional. Multi-arm campaigns (plate + flask + reactor; or pilot + benchtop) declare arms here. If absent, the top-level factors/responses define a single implicit arm.",
+      "type": "array",
+      "items": {"$ref": "#/$defs/arm"}
+    },
+    "scale_context": {
+      "description": "Optional. Required-by-warning when 'scale_up_bridge' or 'scale_down_qualification' profile is declared.",
+      "$ref": "#/$defs/scale_context"
+    },
+    "doe": {
+      "description": "Optional. Declared DoE design family and its parameters. Validators check identifiability/replication/randomization against the family.",
+      "$ref": "#/$defs/doe"
+    },
+    "decision_rules": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/decision_rule"}
+    },
+    "stop_rules": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/stop_rule"}
+    },
+    "risk_register": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/risk"}
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/assumption"}
+    },
+    "readiness": {
+      "$ref": "#/$defs/readiness"
+    },
+    "readiness_expectation": {
+      "type": "string",
+      "enum": ["GREEN", "YELLOW", "RED"],
+      "description": "Optional. Validator checks that the emitted readiness summary matches this."
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": {"type": "string"},
+      "description": "Map of input role -> relative file path."
+    },
+    "adaptive_wave2": {
+      "description": "Optional. Public-safe planning contract for turning first-batch results into an auditable follow-up recommendation.",
+      "$ref": "#/$defs/adaptive_wave2"
+    },
+    "waves": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/wave"}
+    }
+  },
+  "$defs": {
+    "response": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["response_id"],
+      "properties": {
+        "response_id": {"type": "string"},
+        "class": {"type": "string", "examples": ["activity", "titer", "biomass", "yield", "productivity", "time", "metabolite", "quality_attribute"]},
+        "measurement_type": {"type": "string", "enum": ["assayed", "instrument", "clock", "derived", "human_observation"]},
+        "direction": {"type": "string", "enum": ["maximize", "minimize", "target", "constrain"]},
+        "assay_required": {"type": "boolean"},
+        "assay_method": {"type": ["string", "null"]},
+        "sample_fraction": {"type": "string"},
+        "standard_curve": {"type": ["object", "string", "null"]},
+        "matrix_effects_policy": {"type": ["object", "string", "null"]},
+        "assay_power_policy": {"$ref": "#/$defs/assay_power_policy"},
+        "controls": {"type": "array", "items": {"type": "string"}},
+        "acceptance_criteria": {"type": ["object", "string"]}
+      }
+    },
+    "factor": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["factor_id", "type"],
+      "properties": {
+        "factor_id": {"type": "string"},
+        "type": {
+          "type": "string",
+          "enum": ["numeric", "categorical", "ordinal", "mixture", "temporal_profile", "block", "hard_constraint"]
+        },
+        "low": {"type": "number"},
+        "high": {"type": "number"},
+        "unit": {"type": "string"},
+        "levels": {"type": "array"},
+        "components": {
+          "description": "Used by mixture factors. List of component ids whose values sum to 1.0 ± tolerance.",
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "mixture_tolerance": {"type": "number", "default": 0.01},
+        "profile_keys": {
+          "description": "Used by temporal_profile factors. Time keys in hours.",
+          "type": "array",
+          "items": {"type": "number"}
+        },
+        "expression": {
+          "description": "Used by hard_constraint factors. Restricted boolean expression over factor ids; design rows must satisfy.",
+          "type": "string"
+        },
+        "hard_to_change": {
+          "description": "If true, this factor is treated as a whole-plot factor in split-plot designs.",
+          "type": "boolean"
+        }
+      }
+    },
+    "constraint": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["constraint_id"],
+      "properties": {
+        "constraint_id": {"type": "string"},
+        "kind": {"type": "string", "examples": ["data_policy", "measurement_readiness", "feasibility", "safety", "regulatory"]},
+        "description": {"type": "string"}
+      }
+    },
+    "arm": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["arm_id"],
+      "properties": {
+        "arm_id": {"type": "string"},
+        "scale_tier": {"type": "string", "examples": ["plate_96", "microtiter_24", "shake_flask", "ambr_15ml", "ambr_250ml", "biolector", "bench_500ml", "bench_2L", "pilot_50L", "pilot_300L", "manufacturing"]},
+        "factors": {"type": "array", "items": {"$ref": "#/$defs/factor"}},
+        "responses": {"type": "array", "items": {"$ref": "#/$defs/response"}},
+        "doe": {"$ref": "#/$defs/doe"},
+        "sample_plan": {"type": ["object", "string"]},
+        "bridge_to": {
+          "description": "Optional cross-arm reference. Declares this arm bridges to another arm via the named scale-bridge strategy.",
+          "type": "object",
+          "properties": {
+            "arm_id": {"type": "string"},
+            "criterion": {"type": "string"},
+            "rationale": {"type": "string"}
+          }
+        },
+        "purpose": {"type": "string", "examples": ["screening", "qualification", "confirmation", "reference", "downscale_target", "upscale_target"]}
+      }
+    },
+    "scale_endpoint": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "label": {"type": "string"},
+        "vessel": {"type": "string"},
+        "working_volume_l": {"type": "number"},
+        "geometry": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "h_over_d": {"type": "number"},
+            "impeller_d_over_t": {"type": "number"},
+            "n_impellers": {"type": "integer"},
+            "impeller_type": {"type": "string"},
+            "sparger_type": {"type": "string"}
+          }
+        },
+        "engineering_targets": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "kLa_per_hour": {"type": "number"},
+            "p_per_v_w_per_m3": {"type": "number"},
+            "tip_speed_m_per_s": {"type": "number"},
+            "mix_time_s": {"type": "number"},
+            "do_setpoint_pct": {"type": "number"},
+            "our_mmol_per_l_per_h": {"type": "number"},
+            "rq": {"type": "number"},
+            "vvm": {"type": "number"},
+            "shear_indicator": {"type": "number"}
+          }
+        },
+        "operating_window": {
+          "type": "object",
+          "description": "Min/max of any engineering target the agent considers a constraint, not a setpoint."
+        }
+      }
+    },
+    "scale_context": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "direction": {"type": "string", "enum": ["scale_up", "scale_down", "round_trip", "lateral"]},
+        "from_scale": {"$ref": "#/$defs/scale_endpoint"},
+        "to_scale": {"$ref": "#/$defs/scale_endpoint"},
+        "bridge_strategy": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "primary_criterion": {
+              "type": "string",
+              "enum": ["kLa", "p_per_v", "tip_speed", "mix_time", "do_control", "our", "rq", "vvm", "geometric_similarity", "custom"]
+            },
+            "secondary_criteria": {"type": "array", "items": {"type": "string"}},
+            "rationale": {"type": "string"}
+          }
+        },
+        "bridge_factors": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "transferable": {"type": "array", "items": {"type": "string"}},
+            "needs_retuning": {"type": "array", "items": {"type": "string"}},
+            "not_applicable": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "known_offsets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "axis": {"type": "string"},
+              "offset_description": {"type": "string"},
+              "magnitude": {"type": ["number", "string"]},
+              "evidence_id": {"type": "string"}
+            }
+          }
+        },
+        "qualification_evidence": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Evidence ids referenced from the evidence_table input."
+        },
+        "recapitulation_criterion": {
+          "description": "Used by scale_down_qualification: the metric and tolerance by which the small scale is judged to recapitulate the large scale.",
+          "type": "object",
+          "properties": {
+            "metric": {"type": "string"},
+            "tolerance": {"type": ["number", "string"]},
+            "status": {"type": "string", "enum": ["planned", "in_progress", "qualified", "qualified_with_caveats", "failed"]}
+          }
+        }
+      }
+    },
+    "doe": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["family"],
+      "properties": {
+        "family": {
+          "type": "string",
+          "enum": [
+            "definitive_screening",
+            "plackett_burman",
+            "fractional_factorial",
+            "full_factorial",
+            "central_composite",
+            "box_behnken",
+            "optimal_d",
+            "optimal_i",
+            "scheffe_mixture",
+            "extreme_vertices_mixture",
+            "split_plot",
+            "custom_constrained",
+            "sequential_augmentation"
+          ]
+        },
+        "resolution": {
+          "type": "string",
+          "enum": ["III", "IV", "V", "VI", "VII", "Full"],
+          "description": "Required for fractional_factorial and plackett_burman."
+        },
+        "n_runs": {"type": "integer"},
+        "n_center_points": {"type": "integer"},
+        "n_replicates": {"type": "integer"},
+        "n_blocks": {"type": "integer"},
+        "block_factor_id": {"type": "string"},
+        "randomized": {"type": "boolean"},
+        "alias_structure": {
+          "description": "Free-form table or text declaring which interactions are confounded with main effects (relevant for fractional/PB).",
+          "type": ["string", "object"]
+        },
+        "model_terms": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Optional. Intended model: main effects, two-factor interactions, quadratic terms."
+        },
+        "intended_effect_size": {
+          "type": ["number", "string"],
+          "description": "Optional. The effect the campaign expects to detect; used by power placeholder."
+        },
+        "previous_wave_ref": {
+          "description": "For sequential_augmentation: reference to the prior design CSV.",
+          "type": "string"
+        },
+        "design_table_path": {
+          "type": "string",
+          "description": "Relative path to the runnable design CSV (often expected/selected_wave_1_design.csv)."
+        },
+        "claim": {
+          "type": "string",
+          "enum": ["exact", "adapter_backed", "approximate", "heuristic"],
+          "description": "Statistical claim level for the emitted design."
+        }
+      }
+    },
+    "decision_rule": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["rule_id", "scope", "comparator", "threshold", "action"],
+      "properties": {
+        "rule_id": {"type": "string"},
+        "scope": {
+          "type": "string",
+          "examples": ["global", "wave", "response:*", "factor:*", "arm:*"]
+        },
+        "comparator": {
+          "type": "string",
+          "enum": ["gt", "ge", "lt", "le", "eq", "ne", "in_range", "not_in_range", "qualitative"]
+        },
+        "threshold": {"type": ["number", "string", "array", "object"]},
+        "action": {
+          "type": "string",
+          "enum": ["advance_to_next_wave", "augment", "pause", "abort", "escalate", "narrow_factor_space", "expand_factor_space", "switch_arm"]
+        },
+        "evidence_required": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "stop_rule": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["rule_id", "condition", "action"],
+      "properties": {
+        "rule_id": {"type": "string"},
+        "condition": {"type": "string"},
+        "action": {"type": "string", "enum": ["pause", "abort", "escalate"]},
+        "owner_role": {"type": "string"}
+      }
+    },
+    "risk": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["risk_id"],
+      "properties": {
+        "risk_id": {"type": "string"},
+        "category": {"type": "string", "examples": ["measurement", "feasibility", "safety", "scale_bridge", "supply", "schedule", "regulatory"]},
+        "likelihood": {"type": "string", "enum": ["low", "medium", "high"]},
+        "impact": {"type": "string", "enum": ["low", "medium", "high"]},
+        "mitigation": {"type": "string"},
+        "owner_role": {"type": "string"},
+        "status": {"type": "string", "enum": ["open", "mitigating", "accepted", "closed"]}
+      }
+    },
+    "assumption": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["assumption_id", "statement"],
+      "properties": {
+        "assumption_id": {"type": "string"},
+        "statement": {"type": "string"},
+        "source": {"type": "string"},
+        "status": {"type": "string", "enum": ["unverified", "inferred", "confirmed", "invalidated"]}
+      }
+    },
+    "readiness_state": {
+      "type": "string",
+      "enum": ["not_started", "planned", "in_progress", "qualified", "qualified_with_caveats", "failed"]
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "axes": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "responses": {"type": "object", "additionalProperties": {"$ref": "#/$defs/readiness_state"}},
+            "factors": {"type": "object", "additionalProperties": {"$ref": "#/$defs/readiness_state"}},
+            "arms": {"type": "object", "additionalProperties": {"$ref": "#/$defs/readiness_state"}},
+            "scale_context": {"$ref": "#/$defs/readiness_state"},
+            "doe": {"$ref": "#/$defs/readiness_state"},
+            "decision_rules": {"$ref": "#/$defs/readiness_state"},
+            "evidence": {"$ref": "#/$defs/readiness_state"},
+            "feasibility": {"$ref": "#/$defs/readiness_state"}
+          }
+        },
+        "overall": {"type": "string", "enum": ["GREEN", "YELLOW", "RED"]},
+        "reasons": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "assay_power_policy": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Response-level wet-assay power assumptions. Derived cost, duration, and calculated responses should not carry fake wet-assay requirements.",
+      "properties": {
+        "minimum_detectable_effect": {"type": ["number", "string"]},
+        "expected_effect_size": {"type": ["number", "string"]},
+        "noise_sd": {"type": ["number", "string"]},
+        "cv_percent": {"type": ["number", "string"]},
+        "replicate_count": {"type": ["integer", "string"]},
+        "target_power": {"type": ["number", "string"]},
+        "lod": {"type": ["number", "string"]},
+        "loq": {"type": ["number", "string"]},
+        "dynamic_range": {"type": ["object", "array", "string"]},
+        "matrix_recovery_min": {"type": ["number", "string"]},
+        "turnaround_h": {"type": ["number", "string"]},
+        "non_claim": {"type": "string"}
+      }
+    },
+    "adaptive_wave2": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Adaptive follow-up planning contract. It labels planned decisions and prevents validated optimization or scale-transfer claims from being implied.",
+      "properties": {
+        "claim_level": {"type": "string", "enum": ["planned_wave2_design"]},
+        "primary_response_id": {"type": "string"},
+        "active_arm_id": {"type": "string"},
+        "result_table_path": {"type": "string"},
+        "selected_design_path": {"type": "string"},
+        "remaining_budget": {"type": "integer"},
+        "require_assay_power": {"type": "boolean"},
+        "recommended_action": {"$ref": "#/$defs/adaptive_action"},
+        "requested_action": {"$ref": "#/$defs/adaptive_action"},
+        "target_action": {"$ref": "#/$defs/adaptive_action"},
+        "allowed_actions": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/adaptive_action"}
+        },
+        "bridge_policy": {"$ref": "#/$defs/arm_bridge_policy"},
+        "self_learning": {"$ref": "#/$defs/self_learning_policy"},
+        "negative_memory_ref": {"type": "string"},
+        "learning_ledger_ref": {"type": "string"},
+        "non_claim": {"type": "string"}
+      }
+    },
+    "adaptive_action": {
+      "type": "string",
+      "enum": ["confirm", "narrow", "expand", "pause", "stop", "scale_or_downscale"]
+    },
+    "arm_bridge_policy": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "source_arm": {"type": "string"},
+        "target_arm": {"type": "string"},
+        "allowed_signal_transfer": {"type": "array", "items": {"type": "string"}},
+        "forbidden_transfer": {"type": ["array", "string", "null"]},
+        "assay_comparability": {"type": "string"},
+        "minimum_evidence": {"type": ["array", "object", "string"]},
+        "decision_authority": {"type": "string"},
+        "claim_boundary": {"type": "string"}
+      }
+    },
+    "self_learning_policy": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "learning_ledger_path": {"type": "string"},
+        "hiccup_review_path": {"type": "string"},
+        "negative_memory_scope": {"type": "string", "enum": ["arm", "campaign", "custom"]},
+        "review_cadence": {"type": "string"},
+        "closeout_rule": {"type": "string"}
+      }
+    },
+    "wave": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["wave_id"],
+      "properties": {
+        "wave_id": {"type": "string"},
+        "status": {"type": "string", "enum": ["planned", "running", "complete", "blocked", "skipped"]},
+        "design_table_path": {"type": "string"},
+        "result_table_path": {"type": "string"},
+        "summary": {"type": "string"},
+        "decisions_applied": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

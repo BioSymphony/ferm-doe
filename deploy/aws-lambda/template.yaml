@@ -1,0 +1,119 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  biosymphony-ferm-doe lightweight (stdlib) subcommands behind API Gateway.
+  Single dispatch Lambda. Cold start ~200 ms; warm calls <50 ms.
+  Heavy (BoTorch) endpoint lives in deploy/modal/.
+
+Globals:
+  Function:
+    Runtime: python3.11
+    MemorySize: 256
+    Timeout: 60
+    Environment:
+      Variables:
+        PYTHONPATH: /var/task
+
+Resources:
+  FermDoeApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Auth:
+        ApiKeyRequired: true
+      MethodSettings:
+        - ResourcePath: "/*"
+          HttpMethod: "*"
+          ThrottlingBurstLimit: 25
+          ThrottlingRateLimit: 5
+
+  FermDoeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: biosymphony-ferm-doe-light
+      CodeUri: ./
+      Handler: handlers.handler.handler
+      Description: Lightweight stdlib subcommands of biosymphony-ferm-doe.
+      Architectures:
+        - arm64
+      Events:
+        ValidateRoute:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FermDoeApi
+            Path: /v1/validate
+            Method: POST
+        GenerateDesignRoute:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FermDoeApi
+            Path: /v1/generate-design
+            Method: POST
+        AnalyzeRoute:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FermDoeApi
+            Path: /v1/analyze
+            Method: POST
+        ScaleRecipeRoute:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FermDoeApi
+            Path: /v1/scale-recipe
+            Method: POST
+        GoalsRoute:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FermDoeApi
+            Path: /v1/goals
+            Method: POST
+        AssayPowerRoute:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FermDoeApi
+            Path: /v1/assay-power
+            Method: POST
+        DoePowerRoute:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FermDoeApi
+            Path: /v1/doe-power
+            Method: POST
+        RecommendFamilyRoute:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FermDoeApi
+            Path: /v1/recommend-family
+            Method: POST
+        BridgeQualificationRoute:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FermDoeApi
+            Path: /v1/bridge-qualification
+            Method: POST
+        SamplingPlanRoute:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FermDoeApi
+            Path: /v1/sampling-plan
+            Method: POST
+        CostRollupRoute:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FermDoeApi
+            Path: /v1/cost-rollup
+            Method: POST
+        PlanFollowUpRoute:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FermDoeApi
+            Path: /v1/plan-wave2
+            Method: POST
+
+Outputs:
+  ApiEndpoint:
+    Description: Base URL for the biosymphony-ferm-doe Light API.
+    Value: !Sub "https://${FermDoeApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/v1"
+  FunctionArn:
+    Description: ARN of the Light dispatch Lambda.
+    Value: !GetAtt FermDoeFunction.Arn

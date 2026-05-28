@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "campaign_id": "doe-fast-path-custom-design-demo",
+  "name": "reference DOE comparable custom design for fermentation titer",
+  "objective": {
+    "primary": "Create a reference DOE-style Custom Design with D-optimal diagnostics, compare-design output, and augment-design path.",
+    "direction": "maximize",
+    "response_id": "titer_mg_l"
+  },
+  "readiness_target": "YELLOW",
+  "product_class": "whole-broth fermentation product",
+  "assay_method": "hplc",
+  "sample_fraction": "whole_broth",
+  "standard_curve": "external standard curve",
+  "matrix_effects_policy": "matrix spike recovery check before accepting response model",
+  "design_policy": {
+    "run_budget": 14,
+    "seed": 17
+  },
+  "factor_model": {
+    "goal": "screen selected main effects with response-surface follow-up"
+  },
+  "model_terms": {
+    "interactions": true,
+    "quadratics": true,
+    "max_interaction_order": 2
+  },
+  "sources": [],
+  "inputs": {
+    "historical_run_ledger": "inputs/historical_run_ledger.csv",
+    "evidence_table": "inputs/evidence_table.csv",
+    "equipment_inventory": "inputs/equipment_inventory.csv",
+    "reagent_inventory": "inputs/reagent_inventory.csv"
+  },
+  "constraints": [
+    {
+      "constraint_id": "run_budget",
+      "type": "run_budget",
+      "description": "14 run budget"
+    },
+    {
+      "constraint_id": "temperature_ph_forbidden_corner",
+      "type": "forbidden_combination",
+      "when": {
+        "temperature_c": {
+          "min": 31
+        },
+        "ph_setpoint": {
+          "max": 5.7
+        }
+      },
+      "description": "Avoid high temperature with low pH during first pass."
+    }
+  ],
+  "responses": [
+    {
+      "response_id": "titer_mg_l",
+      "name": "Product titer",
+      "unit": "mg/L",
+      "direction": "maximize",
+      "class": "titer",
+      "sample_fraction": "whole_broth",
+      "assay_method": "hplc",
+      "calibration": "external_standard_curve",
+      "measurement_type": "assayed",
+      "assay_required": true,
+      "standard_curve": {
+        "status": "planned_demo",
+        "acceptance": "Public example requires calibration before physical execution."
+      },
+      "matrix_effects_policy": {
+        "status": "planned_demo",
+        "note": "Public example requires matrix-effects review before physical execution."
+      }
+    }
+  ],
+  "factors": [
+    {
+      "factor_id": "temperature_c",
+      "name": "Production temperature",
+      "type": "numeric",
+      "unit": "C",
+      "min": 24,
+      "max": 32,
+      "phase": "production",
+      "low": 24,
+      "high": 32
+    },
+    {
+      "factor_id": "ph_setpoint",
+      "name": "pH setpoint",
+      "type": "numeric",
+      "min": 5.5,
+      "max": 6.8,
+      "phase": "production",
+      "low": 5.5,
+      "high": 6.8
+    },
+    {
+      "factor_id": "feed_rate_ml_h",
+      "name": "Feed rate",
+      "type": "numeric",
+      "unit": "mL/h",
+      "min": 1,
+      "max": 6,
+      "phase": "production",
+      "low": 1,
+      "high": 6
+    },
+    {
+      "factor_id": "nitrogen_source",
+      "name": "Nitrogen source",
+      "type": "categorical",
+      "levels": [
+        "yeast_extract",
+        "peptone",
+        "ammonium_sulfate"
+      ],
+      "phase": "growth"
+    }
+  ],
+  "artifacts": [
+    "examples/reference-doe-custom-design/campaign_manifest.json",
+    "templates/reagent-inventory.csv",
+    "templates/equipment-capacity.csv"
+  ],
+  "claim_level": "public_synthetic_demo",
+  "profiles": [
+    "screening"
+  ],
+  "system": {
+    "organism_label": "public_demo_system",
+    "product_class": "whole-broth fermentation product",
+    "scale": "public_demo_scale",
+    "privacy": "synthetic_or_public_only"
+  },
+  "doe": {
+    "family": "custom_constrained",
+    "n_runs": 14,
+    "randomized": true,
+    "claim": "heuristic",
+    "design_table_path": "expected/selected_wave_1_design.csv"
+  },
+  "decision_rules": [
+    {
+      "rule_id": "public-demo-review",
+      "scope": "global",
+      "comparator": "qualitative",
+      "threshold": "readiness remains YELLOW or better",
+      "action": "pause"
+    }
+  ],
+  "stop_rules": [
+    {
+      "rule_id": "stop-on-private-data",
+      "condition": "non-public data would be required",
+      "action": "pause"
+    }
+  ],
+  "risk_register": [
+    {
+      "risk_id": "public-demo-boundary",
+      "category": "claim_boundary",
+      "likelihood": "medium",
+      "impact": "high",
+      "mitigation": "Keep example as synthetic planning fixture only.",
+      "status": "open"
+    }
+  ],
+  "readiness": {
+    "overall": "YELLOW",
+    "reasons": [
+      "Public synthetic example fixture."
+    ]
+  }
+}

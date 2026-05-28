@@ -1,0 +1,2 @@
+evidence_id,source_type,source_ref,source_url,claim,confidence,review_status,decision_impact,reuse_notes,transformation_notes
+EV-001,synthetic_demo_note,public example fixture,not_applicable,Synthetic public example; not physical-execution evidence.,medium,accepted,keeps readiness at YELLOW,no private or unpublished data used,fixture row authored for public validation contract

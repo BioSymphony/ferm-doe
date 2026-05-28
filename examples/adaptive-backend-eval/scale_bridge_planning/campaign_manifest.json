@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "campaign_id": "backend-eval-scale-bridge-planning",
+  "objective": {"primary": "Generate candidate support while keeping scale bridge BioSymphony-owned"},
+  "readiness_expectation": "YELLOW",
+  "campaign_arms": [
+    {"arm_id": "plate", "format": "deep_well_plate", "bridge_role": "low_fidelity"},
+    {"arm_id": "reactor", "format": "2l_bioreactor", "bridge_role": "target_fidelity"}
+  ],
+  "factors": [
+    {"factor_id": "temperature_c", "type": "continuous", "min": 28, "max": 34},
+    {"factor_id": "feed_carbon_g_l", "type": "continuous", "min": 10, "max": 60},
+    {"factor_id": "do_percent", "type": "continuous", "min": 30, "max": 60, "arm_id": "reactor"}
+  ],
+  "constraints": [],
+  "responses": [
+    {"response_id": "titer_mg_l", "direction": "maximize", "measurement_type": "assayed", "assay_required": true},
+    {"response_id": "bridge_confidence", "direction": "maximize", "measurement_type": "derived", "assay_required": false}
+  ],
+  "scale_context": {
+    "from_scale": "plate",
+    "to_scale": "reactor",
+    "claim_boundary": "candidate support only; transferability requires BioSymphony scale bridge checks"
+  },
+  "backend_eval": {"scenario_id": "scale_bridge_planning", "primary_tool": "bofire"}
+}

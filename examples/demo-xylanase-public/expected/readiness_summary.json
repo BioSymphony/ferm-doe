@@ -1,0 +1,10 @@
+{
+  "campaign_id": "demo-xylanase-public",
+  "status": "YELLOW",
+  "claim_level": "public_synthetic_demo",
+  "reasons": [
+    "Historical run rows are synthetic placeholders with low trust scores.",
+    "Activity assay standard curve and matrix-effects checks are planned but not executed.",
+    "Demo is suitable for public workflow illustration, not physical execution."
+  ]
+}

@@ -1,0 +1,63 @@
+schema_version: 1
+pack_id: scientific-swarm-v0
+pack_type: issue_pack
+name: Scientific Swarm Pre-DOE Planner
+activation_policy:
+  default_active_wave: W0
+  max_concurrent_agents: 5
+  keep_downstream_in_backlog: true
+parallelism_policy:
+  W0: 1
+  W1: 5
+  W2: 3
+  W3: 1
+  W4: 1
+labels:
+  - biosymphony-ferm-doe
+  - scientific-swarm
+  - pre-doe
+issues:
+  - id: SW-W0-01
+    file: issues/01-swarm-contract.md
+    wave: W0
+    blocks: [SW-W1-01, SW-W1-02, SW-W1-03, SW-W1-04, SW-W1-05]
+  - id: SW-W1-01
+    file: issues/02-literature-prior-lane.md
+    wave: W1
+    blocks: [SW-W2-01, SW-W2-02]
+  - id: SW-W1-02
+    file: issues/03-prior-data-source-trust-lane.md
+    wave: W1
+    blocks: [SW-W2-01]
+  - id: SW-W1-03
+    file: issues/04-assay-product-class-skeptic-lane.md
+    wave: W1
+    blocks: [SW-W2-02, SW-W2-03]
+  - id: SW-W1-04
+    file: issues/05-process-scale-transfer-lane.md
+    wave: W1
+    blocks: [SW-W2-01, SW-W2-02, SW-W2-03]
+  - id: SW-W1-05
+    file: issues/06-cost-runability-schedule-lane.md
+    wave: W1
+    blocks: [SW-W2-02, SW-W2-03]
+  - id: SW-W2-01
+    file: issues/07-factor-universe-integration.md
+    wave: W2
+    blocks: [SW-W3-01]
+  - id: SW-W2-02
+    file: issues/08-assumption-attack.md
+    wave: W2
+    blocks: [SW-W3-01]
+  - id: SW-W2-03
+    file: issues/09-observability-control-strategy.md
+    wave: W2
+    blocks: [SW-W3-01]
+  - id: SW-W3-01
+    file: issues/10-swarm-adjudication-brief.md
+    wave: W3
+    blocks: [SW-W4-01]
+  - id: SW-W4-01
+    file: issues/11-dossier-wave2-memory.md
+    wave: W4
+    blocks: []

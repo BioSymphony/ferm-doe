@@ -1,0 +1,5 @@
+run_id,run_role,production_temperature_c,induction_time_h,plate_fill_volume_ml,plate_orbital_rpm,reactor_do_setpoint_pct,reactor_feed_rate_ml_h
+DEMO-001,screening,24,18,0.8,650,30,1.0
+DEMO-002,screening,30,26,1.4,950,60,5.0
+DEMO-003,screening,27.0,22.0,1.1,800.0,45.0,3.0
+DEMO-004,control,27.0,22.0,1.1,800.0,45.0,3.0

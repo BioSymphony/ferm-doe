@@ -1,0 +1,12 @@
+run_id,arm_id,run_role,temperature_c,initial_ph,do_setpoint_pct,stir_rpm_bench,feed_rate_ml_per_h
+DSB-001,benchtop_qualification,center,33.5,6.85,30,650,7.0
+DSB-002,benchtop_qualification,vary_temperature,30.0,6.85,30,650,7.0
+DSB-003,benchtop_qualification,vary_temperature,37.0,6.85,30,650,7.0
+DSB-004,benchtop_qualification,vary_ph,33.5,6.5,30,650,7.0
+DSB-005,benchtop_qualification,vary_ph,33.5,7.2,30,650,7.0
+DSB-006,benchtop_qualification,vary_do,33.5,6.85,20,650,7.0
+DSB-007,benchtop_qualification,vary_do,33.5,6.85,40,650,7.0
+DSB-008,benchtop_qualification,vary_rpm,33.5,6.85,30,400,7.0
+DSB-009,benchtop_qualification,vary_rpm,33.5,6.85,30,900,7.0
+DSB-010,benchtop_qualification,vary_feed,33.5,6.85,30,650,4.0
+DSB-011,benchtop_qualification,vary_feed,33.5,6.85,30,650,10.0

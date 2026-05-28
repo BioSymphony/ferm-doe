@@ -1,0 +1,5 @@
+run_id,carbon_g_l,feed_rate_ml_h,temperature_c,titer_mg_l,productivity_mg_l_h,acetate_g_l,cost_usd_l
+CM-001,20,2,30,70,2.2,0.8,0.38
+CM-002,40,4,31,93,2.7,1.6,0.76
+CM-003,55,6,29,100,2.4,2.4,1.07
+CM-004,30,3,33,81,2.5,1.1,0.57

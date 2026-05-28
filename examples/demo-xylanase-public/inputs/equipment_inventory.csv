@@ -1,0 +1,4 @@
+item_id,item_type,capacity,unit,status,notes
+EQ-001,incubator_shaker,3,flasks,available,public demo placeholder
+EQ-002,plate_reader,96,well_plate,available,needed for colorimetric activity assay
+EQ-003,pH_meter,1,unit,available,calibration required

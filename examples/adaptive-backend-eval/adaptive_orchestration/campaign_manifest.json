@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "campaign_id": "backend-eval-adaptive-orchestration",
+  "objective": {"primary": "Evaluate Ax trial lifecycle without replacing the manifest"},
+  "readiness_expectation": "YELLOW",
+  "factors": [
+    {"factor_id": "ph_setpoint", "type": "continuous", "min": 6.4, "max": 7.2},
+    {"factor_id": "do_percent", "type": "continuous", "min": 25, "max": 50},
+    {"factor_id": "feed_policy", "type": "categorical", "levels": ["constant", "exponential"]}
+  ],
+  "constraints": [],
+  "responses": [
+    {"response_id": "titer_mg_l", "direction": "maximize", "measurement_type": "assayed", "assay_required": true}
+  ],
+  "backend_eval": {"scenario_id": "adaptive_orchestration", "primary_tool": "ax"}
+}

@@ -1,0 +1,23 @@
+{
+  "name": "evidence_table",
+  "title": "Evidence table",
+  "description": "Minimum public evidence-row contract. Extra lane-specific fields are allowed.",
+  "fields": [
+    {"name": "evidence_id", "type": "string", "constraints": {"required": true}},
+    {"name": "source_type", "type": "string", "constraints": {"required": true}},
+    {"name": "source_ref", "type": "string", "constraints": {"required": true}},
+    {"name": "source_url", "type": "string"},
+    {"name": "claim", "type": "string", "constraints": {"required": true}},
+    {"name": "confidence", "type": "string", "constraints": {"required": true}},
+    {"name": "review_status", "type": "string", "constraints": {"required": true}},
+    {"name": "decision_impact", "type": "string", "constraints": {"required": true}}
+  ],
+  "primaryKey": "evidence_id",
+  "x-biosymphony": {
+    "allowExtraFields": true,
+    "targets": [
+      "templates/evidence-table.template.csv",
+      "examples/*/inputs/evidence_table.csv"
+    ]
+  }
+}

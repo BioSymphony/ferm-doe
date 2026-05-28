@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "campaign_id": "backend-eval-cardinality-heavy-media",
+  "objective": {"primary": "Select one or two active media components under cardinality constraints"},
+  "readiness_expectation": "YELLOW",
+  "factors": [
+    {"factor_id": "glucose_g_l", "type": "continuous", "min": 0, "max": 40},
+    {"factor_id": "glycerol_g_l", "type": "continuous", "min": 0, "max": 40},
+    {"factor_id": "lactose_g_l", "type": "continuous", "min": 0, "max": 40},
+    {"factor_id": "sucrose_g_l", "type": "continuous", "min": 0, "max": 40}
+  ],
+  "constraints": [
+    {"constraint_id": "one_or_two_carbons", "type": "nchoosek", "features": ["glucose_g_l", "glycerol_g_l", "lactose_g_l", "sucrose_g_l"], "min_count": 1, "max_count": 2}
+  ],
+  "responses": [
+    {"response_id": "titer_mg_l", "direction": "maximize", "measurement_type": "assayed", "assay_required": true}
+  ],
+  "backend_eval": {"scenario_id": "cardinality_heavy_media", "primary_tool": "entmoot"}
+}

@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "campaign_id": "yeast-isoprenoid-2l-fedbatch-demo",
+  "name": "Yeast hydrophobic isoprenoid flask to 2 L fed-batch",
+  "objective": {
+    "primary": "Maximize whole-broth or pellet-associated hydrophobic isoprenoid titer and productivity within 120 hours and 5 USD/L all-inclusive media and control burden.",
+    "direction": "maximize",
+    "response_id": "isoprenoid_titer_mg_l",
+    "secondary": [
+      "productivity_mg_l_h",
+      "cost_usd_l"
+    ]
+  },
+  "readiness_target": "YELLOW",
+  "vessel": "2 L nominal Biostat A benchtop reactor",
+  "inoculum_basis": "OD-normalized seed train from shake flask control",
+  "oxygen_transfer": "DO probe with agitation/aeration cascade; offgas O2 and CO2 observed",
+  "pH_strategy": "acid/base controlled pH during batch and production",
+  "foam_policy": "antifoam allowed as bounded process factor if foam appears",
+  "response_comparability": "shake flask recipe becomes controlled-pH reactor baseline before expansion",
+  "phase_plan": "batch growth followed by induced production feed",
+  "feed_composition": "carbon feed compatible with in-house reagent lake",
+  "feed_rate_policy": "bounded constant or stepped feed after induction",
+  "induction_policy": "induce with ingredient X at production switch",
+  "harvest_policy": "maximum 120 h total; earlier harvest allowed if productivity and cost score wins",
+  "cost_limit": "5 USD/L all-inclusive media, acid/base, antifoam, and routine consumables",
+  "run_duration_limit": "120 h total",
+  "productivity_response": "productivity_mg_l_h",
+  "sampling_burden_policy": "offline biomass every 4 h, product assay at switch, midpoint, endpoint, and selected high-value timepoints",
+  "product_class": "hydrophobic intracellular or pellet-associated isoprenoid",
+  "assay_method": "extractive LC or GC method on whole-broth or pellet-compatible fraction",
+  "sample_fraction": "whole_broth_or_pellet",
+  "standard_curve": "external standard curve required before optimization",
+  "matrix_effects_policy": "matrix spike recovery check before accepting DOE response",
+  "design_policy": {
+    "run_budget": 16,
+    "seed": 23
+  },
+  "sources": [],
+  "inputs": {
+    "historical_run_ledger": "inputs/historical_run_ledger.csv",
+    "evidence_table": "inputs/evidence_table.csv",
+    "equipment_inventory": "inputs/equipment_inventory.csv",
+    "reagent_inventory": "inputs/reagent_inventory.csv"
+  },
+  "constraints": [
+    {
+      "constraint_id": "max_time",
+      "type": "run_duration",
+      "description": "Maximum 120 hours total run time."
+    },
+    {
+      "constraint_id": "max_cost",
+      "type": "cost",
+      "description": "Target 5 USD/L all inclusive media and routine control burden."
+    },
+    {
+      "constraint_id": "feed_temperature_corner",
+      "type": "forbidden_combination",
+      "when": {
+        "feed_rate_ml_h": {
+          "min": 6
+        },
+        "production_temp_c": {
+          "max": 22
+        }
+      },
+      "description": "Avoid high feed at low production temperature in first-batch."
+    }
+  ],
+  "responses": [
+    {
+      "response_id": "isoprenoid_titer_mg_l",
+      "name": "Whole-broth or pellet-associated isoprenoid titer",
+      "unit": "mg/L",
+      "direction": "maximize",
+      "class": "titer",
+      "sample_fraction": "whole_broth_or_pellet",
+      "assay_method": "extractive_lc_gc",
+      "calibration": "external_standard_curve",
+      "measurement_type": "assayed",
+      "assay_required": true,
+      "standard_curve": {
+        "status": "planned_demo",
+        "acceptance": "Public example requires calibration before physical execution."
+      },
+      "matrix_effects_policy": {
+        "status": "planned_demo",
+        "note": "Public example requires matrix-effects review before physical execution."
+      }
+    },
+    {
+      "response_id": "productivity_mg_l_h",
+      "name": "Volumetric productivity",
+      "unit": "mg/L/h",
+      "direction": "maximize",
+      "class": "productivity",
+      "sample_fraction": "whole_broth_or_pellet",
+      "assay_method": "derived_from_titer_time",
+      "calibration": "inherits_titer_calibration",
+      "measurement_type": "derived",
+      "assay_required": false
+    },
+    {
+      "response_id": "cost_usd_l",
+      "name": "All-inclusive cost burden",
+      "unit": "USD/L",
+      "direction": "minimize",
+      "class": "cost",
+      "sample_fraction": "unknown",
+      "assay_method": "calculated",
+      "measurement_type": "calculated",
+      "assay_required": false
+    }
+  ],
+  "factors": [
+    {
+      "factor_id": "production_temp_c",
+      "name": "Production temperature",
+      "type": "numeric",
+      "unit": "C",
+      "min": 20,
+      "max": 30,
+      "phase": "production",
+      "low": 20,
+      "high": 30
+    },
+    {
+      "factor_id": "ph_setpoint",
+      "name": "pH setpoint",
+      "type": "numeric",
+      "min": 5.2,
+      "max": 6.8,
+      "phase": "growth_and_production",
+      "low": 5.2,
+      "high": 6.8
+    },
+    {
+      "factor_id": "inducer_x_g_l",
+      "name": "Inducer X concentration",
+      "type": "numeric",
+      "unit": "g/L",
+      "min": 0.1,
+      "max": 1.0,
+      "phase": "switch",
+      "low": 0.1,
+      "high": 1.0
+    },
+    {
+      "factor_id": "feed_rate_ml_h",
+      "name": "Production feed rate",
+      "type": "numeric",
+      "unit": "mL/h",
+      "min": 1,
+      "max": 7,
+      "phase": "production",
+      "low": 1,
+      "high": 7
+    },
+    {
+      "factor_id": "harvest_time_h",
+      "name": "Harvest time",
+      "type": "numeric",
+      "unit": "h",
+      "min": 72,
+      "max": 120,
+      "phase": "harvest",
+      "low": 72,
+      "high": 120
+    },
+    {
+      "factor_id": "nitrogen_supplement",
+      "name": "Nitrogen supplement",
+      "type": "categorical",
+      "levels": [
+        "none",
+        "yeast_extract",
+        "ammonium_sulfate"
+      ],
+      "phase": "growth"
+    }
+  ],
+  "artifacts": [
+    "examples/yeast-isoprenoid-2l-fedbatch/campaign_manifest.json",
+    "templates/reagent-inventory.csv",
+    "templates/equipment-capacity.csv"
+  ],
+  "claim_level": "public_synthetic_demo",
+  "profiles": [
+    "optimization_rsm"
+  ],
+  "system": {
+    "organism_label": "public_demo_system",
+    "product_class": "hydrophobic intracellular or pellet-associated isoprenoid",
+    "scale": "public_demo_scale",
+    "privacy": "synthetic_or_public_only"
+  },
+  "doe": {
+    "family": "custom_constrained",
+    "n_runs": 16,
+    "randomized": true,
+    "claim": "heuristic",
+    "design_table_path": "expected/selected_wave_1_design.csv"
+  },
+  "decision_rules": [
+    {
+      "rule_id": "public-demo-review",
+      "scope": "global",
+      "comparator": "qualitative",
+      "threshold": "readiness remains YELLOW or better",
+      "action": "pause"
+    }
+  ],
+  "stop_rules": [
+    {
+      "rule_id": "stop-on-private-data",
+      "condition": "non-public data would be required",
+      "action": "pause"
+    }
+  ],
+  "risk_register": [
+    {
+      "risk_id": "public-demo-boundary",
+      "category": "claim_boundary",
+      "likelihood": "medium",
+      "impact": "high",
+      "mitigation": "Keep example as synthetic planning fixture only.",
+      "status": "open"
+    }
+  ],
+  "readiness": {
+    "overall": "YELLOW",
+    "reasons": [
+      "Public synthetic example fixture."
+    ]
+  }
+}

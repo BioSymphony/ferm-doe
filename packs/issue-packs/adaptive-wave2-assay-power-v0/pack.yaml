@@ -1,0 +1,38 @@
+schema_version: 1
+pack_id: adaptive-wave2-assay-power-v0
+pack_type: issue_pack
+name: Adaptive follow-up + Assay Power Campaign
+activation_policy:
+  default_active_wave: wave0
+  max_concurrent_agents: 3
+  keep_downstream_in_backlog: true
+labels:
+  - biosymphony-ferm-doe
+  - adaptive-wave2
+  - assay-power
+issues:
+  - id: baseline-contract
+    file: issues/01-baseline-contract.md
+    wave: wave0
+    blocks:
+      - result-ingestion-and-assay-noise
+      - power-policy-and-readiness
+  - id: result-ingestion-and-assay-noise
+    file: issues/02-result-ingestion-and-assay-noise.md
+    wave: wave1
+    blocks:
+      - adaptive-wave2-plan-and-dossier
+  - id: power-policy-and-readiness
+    file: issues/03-power-policy-and-readiness.md
+    wave: wave1
+    blocks:
+      - adaptive-wave2-plan-and-dossier
+  - id: adaptive-wave2-plan-and-dossier
+    file: issues/04-adaptive-wave2-plan-and-dossier.md
+    wave: wave2
+    blocks:
+      - self-learning-closeout
+  - id: self-learning-closeout
+    file: issues/05-self-learning-closeout.md
+    wave: wave2
+    blocks: []

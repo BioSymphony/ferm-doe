@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "campaign_id": "backend-eval-low-data-hybrid-transfer",
+  "objective": {"primary": "Recommend synthetic candidates from sparse prior campaign rows"},
+  "readiness_expectation": "YELLOW",
+  "factors": [
+    {"factor_id": "host_line", "type": "categorical", "levels": ["H1", "H2", "H3"]},
+    {"factor_id": "feed_blend", "type": "categorical", "levels": ["A", "B", "C"]},
+    {"factor_id": "temperature_c", "type": "continuous", "min": 28, "max": 34},
+    {"factor_id": "induction_hours", "type": "discrete", "levels": [4, 8, 12]}
+  ],
+  "constraints": [
+    {"constraint_id": "exclude_h3_feed_c", "type": "categorical_exclude", "features": ["host_line", "feed_blend"], "excluded_combinations": [{"host_line": "H3", "feed_blend": "C"}]}
+  ],
+  "responses": [
+    {"response_id": "titer_mg_l", "direction": "maximize", "measurement_type": "assayed", "assay_required": true}
+  ],
+  "backend_eval": {"scenario_id": "low_data_hybrid_transfer", "primary_tool": "baybe"}
+}

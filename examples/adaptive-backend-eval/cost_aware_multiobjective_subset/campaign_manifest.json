@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "campaign_id": "backend-eval-cost-aware-multiobjective-subset-2resp",
+  "objective": {
+    "primary": "Trade off titer, productivity, acetate, and cost"
+  },
+  "readiness_expectation": "YELLOW",
+  "factors": [
+    {
+      "factor_id": "carbon_g_l",
+      "type": "continuous",
+      "min": 10,
+      "max": 60
+    },
+    {
+      "factor_id": "feed_rate_ml_h",
+      "type": "continuous",
+      "min": 1,
+      "max": 8
+    },
+    {
+      "factor_id": "temperature_c",
+      "type": "continuous",
+      "min": 27,
+      "max": 34
+    }
+  ],
+  "constraints": [
+    {
+      "constraint_id": "cost_lte_1_50",
+      "type": "linear",
+      "coefficients": {
+        "carbon_g_l": 0.015,
+        "feed_rate_ml_h": 0.04
+      },
+      "operator": "<=",
+      "rhs": 1.5
+    }
+  ],
+  "responses": [
+    {
+      "response_id": "titer_mg_l",
+      "direction": "maximize",
+      "measurement_type": "assayed",
+      "assay_required": true
+    },
+    {
+      "response_id": "acetate_g_l",
+      "direction": "minimize",
+      "measurement_type": "assayed",
+      "assay_required": true
+    }
+  ],
+  "backend_eval": {
+    "scenario_id": "cost_aware_multiobjective_subset",
+    "primary_tool": "botorch"
+  }
+}

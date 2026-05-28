@@ -1,0 +1,56 @@
+{
+  "scenario_id": "cardinality_heavy_media",
+  "primary_tool": "entmoot",
+  "purpose": "Use ENTMOOT for exact cardinality-heavy NChooseK behavior where BoFire SoboStrategy can stall.",
+  "inputs": [
+    {
+      "path": "campaign_manifest.json",
+      "role": "BioSymphony manifest"
+    },
+    {
+      "path": "inputs/prior_runs.csv",
+      "role": "synthetic cardinality observations"
+    }
+  ],
+  "commands": [
+    "python3 skills/biosymphony-ferm-doe/scripts/preflight_check.py examples/adaptive-backend-eval/cardinality_heavy_media/campaign_manifest.json",
+    "python3 examples/entmoot-nchoosek-smoke/smoke.py"
+  ],
+  "expected_artifacts": [
+    ".runtime/adaptive-backend-eval/cardinality_heavy_media/entmoot_report.json",
+    ".runtime/adaptive-backend-eval/cardinality_heavy_media/candidate_table.csv",
+    ".runtime/adaptive-backend-eval/cardinality_heavy_media/constraint_check.json"
+  ],
+  "acceptance_checks": [
+    "every candidate respects min_count",
+    "every candidate respects max_count",
+    "solver name and version are recorded",
+    "BoFire comparison is optional and non-blocking"
+  ],
+  "contract_version": "1.0.0",
+  "contract_schema": "docs/schemas/smoke-artifact-contract.json",
+  "batch_sizes": [
+    1,
+    16
+  ],
+  "closed_loop_rounds": 1,
+  "negative_controls": [
+    {
+      "scenario": "infeasible_constraints",
+      "perturbation": "set NChooseK k > number of candidate components",
+      "expect": "fail_closed_with_route_report"
+    }
+  ],
+  "contract_artifacts": [
+    ".runtime/adaptive-backend-eval/cardinality_heavy_media/result.json",
+    ".runtime/adaptive-backend-eval/cardinality_heavy_media/route_report.json",
+    ".runtime/adaptive-backend-eval/cardinality_heavy_media/candidate_table.csv",
+    ".runtime/adaptive-backend-eval/cardinality_heavy_media/constraint_check.json",
+    ".runtime/adaptive-backend-eval/cardinality_heavy_media/fallback_report.json",
+    ".runtime/adaptive-backend-eval/cardinality_heavy_media/closed_loop_replay.json",
+    ".runtime/adaptive-backend-eval/cardinality_heavy_media/negative_control_report.json",
+    ".runtime/adaptive-backend-eval/cardinality_heavy_media/artifact_hashes.json",
+    ".runtime/adaptive-backend-eval/cardinality_heavy_media/license_note.md",
+    ".runtime/adaptive-backend-eval/cardinality_heavy_media/planning_boundary.md"
+  ]
+}

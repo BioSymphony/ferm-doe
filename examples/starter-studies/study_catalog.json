@@ -1,0 +1,607 @@
+{
+  "schema_version": 1,
+  "catalog_id": "starter-fermentation-studies-v0",
+  "curation_policy": {
+    "numeric_extraction_requires": [
+      "clear reuse license",
+      "source attribution",
+      "table availability",
+      "transformation notes"
+    ],
+    "private_data_policy": "Use sanitized ledgers or secure-store references; never copy private process records into the repo or Linear."
+  },
+  "studies": [
+    {
+      "study_id": "xylanase-wxz1-2012",
+      "rank": 1,
+      "year": 2012,
+      "title": "Optimization of Xylanase Production from Penicillium sp. WX-Z1 by a Two-Step Statistical Strategy: Plackett-Burman and Box-Behnken Experimental Design",
+      "organism_or_system": "Penicillium sp. WX-Z1",
+      "product": "xylanase",
+      "problem_class": "enzyme_titer",
+      "method": [
+        "Plackett-Burman",
+        "Box-Behnken",
+        "RSM"
+      ],
+      "factors": [
+        "wheat bran",
+        "yeast extract",
+        "sodium nitrate",
+        "magnesium sulfate",
+        "calcium chloride"
+      ],
+      "responses": [
+        "xylanase activity"
+      ],
+      "doi": "10.3390/ijms130810630",
+      "url": "https://www.mdpi.com/1422-0067/13/8/10630",
+      "license_status": "CC BY 3.0",
+      "table_status": "normalized_in_repo",
+      "recommended_goal_pack": "enzyme-titer-maximization",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "eps-zunongwangia-2011",
+      "rank": 2,
+      "year": 2011,
+      "title": "Optimization of Fermentation Conditions and Rheological Properties of Exopolysaccharide Produced by Deep-Sea Bacterium Zunongwangia profunda SM-A87",
+      "organism_or_system": "Zunongwangia profunda SM-A87",
+      "product": "exopolysaccharide",
+      "problem_class": "eps_rheology",
+      "method": [
+        "Plackett-Burman",
+        "steepest ascent",
+        "central composite design",
+        "RSM"
+      ],
+      "factors": [
+        "lactose",
+        "peptone",
+        "temperature"
+      ],
+      "responses": [
+        "EPS yield",
+        "broth viscosity"
+      ],
+      "doi": "10.1371/journal.pone.0026825",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0026825",
+      "license_status": "PLOS CC BY",
+      "table_status": "extract_ready",
+      "recommended_goal_pack": "multi-response-product-quality",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "protease-pseudomonas-skg1-2011",
+      "rank": 3,
+      "year": 2011,
+      "title": "Comparative one-factor-at-a-time, response surface (statistical) and bench-scale bioreactor level optimization of thermoalkaline protease production from a psychrotrophic Pseudomonas putida SKG-1 isolate",
+      "organism_or_system": "Pseudomonas putida SKG-1",
+      "product": "thermoalkaline protease",
+      "problem_class": "enzyme_titer",
+      "method": [
+        "RSM",
+        "bench-scale bioreactor validation"
+      ],
+      "factors": [
+        "glucose",
+        "yeast extract",
+        "MgSO4",
+        "pH"
+      ],
+      "responses": [
+        "protease activity"
+      ],
+      "doi": "10.1186/1475-2859-10-114",
+      "url": "https://microbialcellfactories.biomedcentral.com/articles/10.1186/1475-2859-10-114",
+      "license_status": "CC BY 2.0",
+      "table_status": "extract_ready",
+      "recommended_goal_pack": "enzyme-titer-maximization",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "pcps-paecilomyces-2014",
+      "rank": 4,
+      "year": 2014,
+      "title": "Optimization of the Solid-state Fermentation and Properties of a Polysaccharide from Paecilomyces cicadae and Its Antioxidant Activities In Vitro",
+      "organism_or_system": "Paecilomyces cicadae",
+      "product": "polysaccharide",
+      "problem_class": "solid_state",
+      "method": [
+        "Plackett-Burman",
+        "steepest ascent",
+        "Box-Behnken",
+        "RSM"
+      ],
+      "factors": [
+        "relative humidity",
+        "inoculum",
+        "temperature"
+      ],
+      "responses": [
+        "PCPS yield"
+      ],
+      "doi": "10.1371/journal.pone.0087578",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0087578",
+      "license_status": "PLOS CC BY",
+      "table_status": "extract_ready",
+      "recommended_goal_pack": "solid-state-yield-optimization",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "vanillin-ecoli-2007",
+      "rank": 5,
+      "year": 2007,
+      "title": "Vanillin production using metabolically engineered Escherichia coli under non-growing conditions",
+      "organism_or_system": "engineered Escherichia coli",
+      "product": "vanillin",
+      "problem_class": "secondary_metabolite",
+      "method": [
+        "RSM"
+      ],
+      "factors": [
+        "biomass",
+        "ferulic acid"
+      ],
+      "responses": [
+        "vanillin molar yield",
+        "specific productivity"
+      ],
+      "doi": "10.1186/1475-2859-6-13",
+      "url": "https://microbialcellfactories.biomedcentral.com/articles/10.1186/1475-2859-6-13",
+      "license_status": "CC BY 2.0",
+      "table_status": "extract_ready",
+      "recommended_goal_pack": "bioactivity-titer-maximization",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "biohydrogen-potato-waste-2016",
+      "rank": 6,
+      "year": 2016,
+      "title": "Modelling and Optimization of Operational Setpoint Parameters for Maximum Fermentative Biohydrogen Production Using Box-Behnken Design",
+      "organism_or_system": "mixed anaerobic sludge",
+      "product": "biohydrogen",
+      "problem_class": "biofuel_waste",
+      "method": [
+        "Box-Behnken",
+        "RSM"
+      ],
+      "factors": [
+        "potato-waste concentration",
+        "pH",
+        "temperature",
+        "fermentation time"
+      ],
+      "responses": [
+        "hydrogen yield"
+      ],
+      "doi": "10.3390/fermentation2030015",
+      "url": "https://www.mdpi.com/2311-5637/2/3/15",
+      "license_status": "MDPI open access; verify exact license on extraction",
+      "table_status": "extract_ready",
+      "recommended_goal_pack": "waste-to-product-optimization",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "biosurfactant-candida-2017",
+      "rank": 7,
+      "year": 2017,
+      "title": "Response Surface Methodology for Optimizing the Production of Biosurfactant by Candida tropicalis on Industrial Waste Substrates",
+      "organism_or_system": "Candida tropicalis UCP0996",
+      "product": "biosurfactant",
+      "problem_class": "waste_feedstock_multi_response",
+      "method": [
+        "central composite rotational design",
+        "RSM",
+        "scale-up validation"
+      ],
+      "factors": [
+        "sugarcane molasses",
+        "corn steep liquor",
+        "waste frying oil",
+        "inoculum size"
+      ],
+      "responses": [
+        "surface tension",
+        "biosurfactant yield"
+      ],
+      "doi": "10.3389/fmicb.2017.00157",
+      "url": "https://www.frontiersin.org/journals/microbiology/articles/10.3389/fmicb.2017.00157/full",
+      "license_status": "Frontiers CC BY",
+      "table_status": "extract_ready",
+      "recommended_goal_pack": "multi-response-product-quality",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "dha-thraustochytrium-2018",
+      "rank": 8,
+      "year": 2018,
+      "title": "Application of the Response Surface Methodology to Optimize the Fermentation Parameters for Enhanced Docosahexaenoic Acid (DHA) Production by Thraustochytrium sp. ATCC 26185",
+      "organism_or_system": "Thraustochytrium sp. ATCC 26185",
+      "product": "DHA",
+      "problem_class": "lipid_high_value_product",
+      "method": [
+        "Plackett-Burman",
+        "Box-Behnken",
+        "RSM"
+      ],
+      "factors": [
+        "fermentation volume",
+        "inoculum volume",
+        "initial pH"
+      ],
+      "responses": [
+        "DHA concentration"
+      ],
+      "doi": "10.3390/molecules23040974",
+      "url": "https://www.mdpi.com/1420-3049/23/4/974",
+      "license_status": "CC BY 4.0",
+      "table_status": "extract_ready",
+      "recommended_goal_pack": "multi-response-product-quality",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "streptomyces-antibacterial-2018",
+      "rank": 9,
+      "year": 2018,
+      "title": "Optimization of fermentation conditions through response surface methodology for enhanced antibacterial metabolite production by Streptomyces sp. 1-14 from cassava rhizosphere",
+      "organism_or_system": "Streptomyces sp. 1-14",
+      "product": "antibacterial metabolites",
+      "problem_class": "secondary_metabolite",
+      "method": [
+        "Plackett-Burman",
+        "steepest ascent",
+        "Box-Behnken",
+        "RSM"
+      ],
+      "factors": [
+        "starch",
+        "soybean meal",
+        "NaCl"
+      ],
+      "responses": [
+        "inhibition zone or antibacterial activity"
+      ],
+      "doi": "10.1371/journal.pone.0206497",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0206497",
+      "license_status": "PLOS CC BY",
+      "table_status": "extract_ready_with_supplement",
+      "recommended_goal_pack": "bioactivity-titer-maximization",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "glucoamylase-humicola-2014",
+      "rank": 10,
+      "year": 2014,
+      "title": "Sequential Statistical Optimization of Media Components for Glucoamylase Production by Thermophilic Humicola grisea MTCC 352",
+      "organism_or_system": "Humicola grisea MTCC 352",
+      "product": "glucoamylase",
+      "problem_class": "enzyme_titer",
+      "method": [
+        "Plackett-Burman",
+        "steepest ascent",
+        "central composite design",
+        "RSM"
+      ],
+      "factors": [
+        "soluble starch",
+        "yeast extract",
+        "K2HPO4",
+        "MgSO4"
+      ],
+      "responses": [
+        "glucoamylase activity"
+      ],
+      "doi": "10.1155/2014/317940",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4120784/",
+      "license_status": "CC BY",
+      "table_status": "extract_ready",
+      "recommended_goal_pack": "enzyme-titer-maximization",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "rpdt-ecoli-2018",
+      "rank": 11,
+      "year": 2018,
+      "title": "Optimization of rPDT fusion protein expression by Escherichia coli in pilot scale fermentation: a statistical experimental design approach",
+      "organism_or_system": "engineered Escherichia coli",
+      "product": "rPDT fusion protein",
+      "problem_class": "recombinant_expression",
+      "method": [
+        "Box-Behnken"
+      ],
+      "factors": [
+        "temperature",
+        "dissolved oxygen",
+        "IPTG"
+      ],
+      "responses": [
+        "rPDT band intensity"
+      ],
+      "doi": "10.1186/s13568-018-0667-3",
+      "url": "https://amb-express.springeropen.com/articles/10.1186/s13568-018-0667-3",
+      "license_status": "SpringerOpen open access; verify exact license on extraction",
+      "table_status": "extract_ready",
+      "recommended_goal_pack": "recombinant-expression-titer",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "alpha-galactosidase-fusarium-2016",
+      "rank": 12,
+      "year": 2016,
+      "title": "Response surface methodology-based optimization of production media and purification of alpha-galactosidase in solid-state fermentation by Fusarium moniliforme NCIM 1099",
+      "organism_or_system": "Fusarium moniliforme NCIM 1099",
+      "product": "alpha-galactosidase",
+      "problem_class": "solid_state",
+      "method": [
+        "Plackett-Burman",
+        "central composite rotatable design",
+        "RSM"
+      ],
+      "factors": [
+        "wheat bran",
+        "peptone",
+        "FeSO4.7H2O"
+      ],
+      "responses": [
+        "enzyme activity"
+      ],
+      "doi": "10.1007/s13205-016-0575-7",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5148754/",
+      "license_status": "CC BY 4.0",
+      "table_status": "extract_ready",
+      "recommended_goal_pack": "solid-state-yield-optimization",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "dna-vaccine-ecoli-2018",
+      "rank": 13,
+      "year": 2018,
+      "title": "Optimization of fermentation conditions for an Escherichia coli strain engineered using the response surface method to produce a novel therapeutic DNA vaccine for rheumatoid arthritis",
+      "organism_or_system": "engineered Escherichia coli DH5alpha",
+      "product": "plasmid DNA vaccine",
+      "problem_class": "plasmid_dna",
+      "method": [
+        "Plackett-Burman",
+        "steepest ascent",
+        "Box-Behnken",
+        "RSM"
+      ],
+      "factors": [
+        "peptone",
+        "mannitol",
+        "inoculum concentration"
+      ],
+      "responses": [
+        "plasmid yield"
+      ],
+      "doi": "10.1186/s13036-018-0110-y",
+      "url": "https://jbioleng.biomedcentral.com/articles/10.1186/s13036-018-0110-y",
+      "license_status": "BMC open access; verify exact license on extraction",
+      "table_status": "extract_ready",
+      "recommended_goal_pack": "biopharma-yield-quality",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "cowdung-ssf-cmcase-protease-2016",
+      "rank": 14,
+      "year": 2016,
+      "title": "Statistical optimization of cellulase and protease production from cow dung substrate by Bacillus sp. in solid-state fermentation",
+      "organism_or_system": "Bacillus sp. on cow dung substrate",
+      "product": "CMCase and protease",
+      "problem_class": "solid_state_multi_response",
+      "method": [
+        "two-level factorial screening",
+        "central composite design"
+      ],
+      "factors": [
+        "pH",
+        "peptone",
+        "NaH2PO4"
+      ],
+      "responses": [
+        "cellulase activity",
+        "protease activity"
+      ],
+      "doi": "10.1186/s13068-016-0481-6",
+      "url": "https://biotechnologyforbiofuels.biomedcentral.com/articles/10.1186/s13068-016-0481-6",
+      "license_status": "CC BY 4.0; data CC0 unless stated otherwise",
+      "table_status": "extract_ready",
+      "recommended_goal_pack": "multi-response-product-quality",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "pha-ralstonia-2019",
+      "rank": 15,
+      "year": 2019,
+      "title": "Optimization of Ralstonia solanacearum cell growth using a central composite rotational design for the P(3HB) production: Effect of agitation and aeration",
+      "organism_or_system": "Ralstonia solanacearum RS",
+      "product": "P(3HB)",
+      "problem_class": "biopolymer",
+      "method": [
+        "central composite rotational design"
+      ],
+      "factors": [
+        "agitation",
+        "aeration"
+      ],
+      "responses": [
+        "OD600",
+        "dry cell weight",
+        "P(3HB) yield"
+      ],
+      "doi": "10.1371/journal.pone.0211211",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0211211",
+      "license_status": "PLOS CC BY",
+      "table_status": "extract_ready",
+      "recommended_goal_pack": "bioreactor-multi-response",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "citric-acid-ccd-data-2017",
+      "rank": 16,
+      "year": 2017,
+      "title": "Experimental design data for the biosynthesis of citric acid using Central Composite Design method",
+      "organism_or_system": "Aspergillus niger NCIM 705",
+      "product": "citric acid",
+      "problem_class": "organic_acid",
+      "method": [
+        "Plackett-Burman",
+        "central composite design"
+      ],
+      "factors": [
+        "sucrose",
+        "pH",
+        "stirrer speed",
+        "incubation time",
+        "temperature",
+        "oxygen flow"
+      ],
+      "responses": [
+        "citric acid yield"
+      ],
+      "doi": "10.1016/j.dib.2017.03.049",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5397574/",
+      "license_status": "open access; verify exact CC license before import",
+      "table_status": "extract_ready_verify_license",
+      "recommended_goal_pack": "organic-acid-titer",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "gsh-lactobacillus-2017",
+      "rank": 17,
+      "year": 2017,
+      "title": "Optimization of Reduced Glutathione Production by a Lactobacillus plantarum Isolate Using Plackett-Burman and Box-Behnken Designs",
+      "organism_or_system": "Lactobacillus plantarum",
+      "product": "reduced glutathione",
+      "problem_class": "intracellular_product",
+      "method": [
+        "Plackett-Burman",
+        "Box-Behnken"
+      ],
+      "factors": [
+        "precursor amino acids",
+        "urea",
+        "temperature"
+      ],
+      "responses": [
+        "GSH yield"
+      ],
+      "doi": "10.3389/fmicb.2017.00772",
+      "url": "https://www.frontiersin.org/articles/10.3389/fmicb.2017.00772/full",
+      "license_status": "Frontiers open access; verify exact license on extraction",
+      "table_status": "extract_ready",
+      "recommended_goal_pack": "stress-induced-product-optimization",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "eps-pseudoalteromonas-2019",
+      "rank": 18,
+      "year": 2019,
+      "title": "Isolation, Optimization of Fermentation Conditions, and Characterization of an Exopolysaccharide from Pseudoalteromonas agarivorans Hao 2018",
+      "organism_or_system": "Pseudoalteromonas agarivorans Hao 2018",
+      "product": "exopolysaccharide",
+      "problem_class": "eps_rheology",
+      "method": [
+        "Plackett-Burman",
+        "Box-Behnken",
+        "RSM"
+      ],
+      "factors": [
+        "culture time",
+        "seed volume",
+        "shaker speed"
+      ],
+      "responses": [
+        "polysaccharide production"
+      ],
+      "doi": "10.3390/md17120703",
+      "url": "https://www.mdpi.com/1660-3397/17/12/703",
+      "license_status": "CC BY 4.0",
+      "table_status": "extract_ready",
+      "recommended_goal_pack": "multi-response-product-quality",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "bioflocculant-mixed-culture-2014",
+      "rank": 19,
+      "year": 2014,
+      "title": "Mixed Culture Fermentation and Media Optimization by Response Surface Model: Streptomyces and Brachybacterium Species in Bioflocculant Production",
+      "organism_or_system": "Streptomyces and Brachybacterium consortium",
+      "product": "bioflocculant",
+      "problem_class": "mixed_culture_low_fit",
+      "method": [
+        "Plackett-Burman",
+        "central composite design",
+        "RSM"
+      ],
+      "factors": [
+        "glucose",
+        "ammonium nitrate",
+        "calcium sulfate"
+      ],
+      "responses": [
+        "flocculation activity",
+        "bioflocculant yield"
+      ],
+      "doi": "10.3390/molecules190811131",
+      "url": "https://www.mdpi.com/1420-3049/19/8/11131",
+      "license_status": "CC BY 3.0",
+      "table_status": "extract_ready",
+      "recommended_goal_pack": "multi-response-product-quality",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "pha-methylosinus-2018",
+      "rank": 20,
+      "year": 2018,
+      "title": "Optimizing methane-based polyhydroxybutyrate production by Methylosinus trichosporium OB3b",
+      "organism_or_system": "Methylosinus trichosporium OB3b",
+      "product": "PHB",
+      "problem_class": "biopolymer",
+      "method": [
+        "second-order regression",
+        "RSM"
+      ],
+      "factors": [
+        "methane",
+        "oxygen",
+        "nitrogen or nutrient variables"
+      ],
+      "responses": [
+        "growth",
+        "PHB production"
+      ],
+      "doi": "10.3389/fmicb.2018.01513",
+      "url": "https://www.frontiersin.org/journals/microbiology/articles/10.3389/fmicb.2018.01513/full",
+      "license_status": "Frontiers CC BY",
+      "table_status": "extract_ready_partial_product_tables",
+      "recommended_goal_pack": "bioreactor-multi-response",
+      "recommended_input_pack": "public-paper-derived"
+    },
+    {
+      "study_id": "pyruvic-acid-2007",
+      "rank": 21,
+      "year": 2007,
+      "title": "Application of response surface methodology in medium optimization for pyruvic acid production by Torulopsis glabrata TP19",
+      "organism_or_system": "Torulopsis glabrata TP19",
+      "product": "pyruvic acid",
+      "problem_class": "organic_acid",
+      "method": [
+        "response surface methodology"
+      ],
+      "factors": [
+        "medium components"
+      ],
+      "responses": [
+        "pyruvic acid"
+      ],
+      "doi": "10.1631/jzus.2007.B0098",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1791061/",
+      "license_status": "free-to-read PMC; reuse license not confirmed",
+      "table_status": "candidate_metadata_only",
+      "recommended_goal_pack": "organic-acid-titer",
+      "recommended_input_pack": "source-metadata-only"
+    }
+  ]
+}

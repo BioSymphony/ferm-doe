@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BoFire campaign report — demo-media-cost-bofire-v0</title>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      line-height: 1.5;
+      color: #1a1a1a;
+      background: #fafafa;
+    }
+    h1, h2 { font-weight: 600; }
+    h1 { margin: 0 0 .25rem; font-size: 1.4rem; }
+    h2 { margin: 2rem 0 .5rem; font-size: 1.1rem; border-bottom: 1px solid #ddd; padding-bottom: .25rem; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .9em; }
+    pre { background: #f0f0f0; padding: .75rem; overflow-x: auto; border-radius: 4px; }
+    table { border-collapse: collapse; width: 100%; margin: .5rem 0; font-size: .85rem; }
+    th, td { border: 1px solid #ddd; padding: .25rem .5rem; text-align: left; }
+    th { background: #efefef; font-weight: 600; }
+    tr:nth-child(even) td { background: #f7f7f7; }
+    td.ok { background: #e7f5e7; color: #1a5d1a; font-weight: 500; }
+    td.bad { background: #ffe7e7; color: #8a1a1a; font-weight: 600; }
+    .non-claim {
+      background: #fff4ec;
+      border-left: 4px solid #c44;
+      padding: .5rem .75rem;
+      margin: .75rem 0 1rem;
+      font-size: .9rem;
+    }
+    .claim { color: #555; font-size: .85rem; margin-bottom: .25rem; }
+    .dim { color: #888; }
+    dl.kv { display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1rem; margin: .5rem 0 1rem; } /* audit-skip: runpod_identifier css grid template-columns false positive */
+    dl.kv dt { color: #666; }
+    dl.kv dd { margin: 0; }
+    .issues { background: #fff7e0; border-left: 4px solid #d99e00; padding: .5rem .75rem; margin: .5rem 0; }
+    details { margin-top: .5rem; }
+    details > summary { cursor: pointer; color: #555; font-size: .85rem; }
+    .status-executed { color: #1a5d1a; }
+    .status-not_available, .status-not_routed, .status-translation_blocked, .status-execution_failed { color: #8a1a1a; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>demo-media-cost-bofire-v0</h1>
+  <div class="claim">claim_level: <code>bofire_adapter_planning</code></div>
+  <div class="non-claim" role="alert">
+    <strong>Non-claim:</strong> BoFire-backed candidates are planned model-based suggestions. They do not validate assay readiness, scale transfer, or physical execution; BioSymphony readiness gates and dossier checks remain authoritative.
+  </div>
+</header>
+
+
+<section id="strategy">
+  <h2>Strategy decision</h2>
+  <dl class="kv">
+    <dt>Strategy kind</dt><dd><code>constrained_doe</code></dd>
+    <dt>Adapter status</dt><dd><code class="status-not_available">not_available</code></dd>
+    <dt>Route reasons</dt><dd>operator_requested_bofire, non_box_constraints</dd>
+    <dt>Remaining run budget</dt><dd>12</dd>
+  </dl>
+  <div class='issues'><strong>Issues:</strong><ul><li>BoFire is not installed; stdlib augment-design fallback remains authoritative.</li></ul></div>
+</section>
+
+
+<section id="factors">
+  <h2>Factors (9)</h2>
+  <table>
+    <thead><tr><th>Factor</th><th>Type</th><th>Range / values</th></tr></thead>
+    <tbody><tr><td><code>glucose</code></td><td>continuous</td><td>[0.0 – 50.0]</td></tr>
+<tr><td><code>glycerol</code></td><td>continuous</td><td>[0.0 – 50.0]</td></tr>
+<tr><td><code>lactose</code></td><td>continuous</td><td>[0.0 – 50.0]</td></tr>
+<tr><td><code>sucrose</code></td><td>continuous</td><td>[0.0 – 50.0]</td></tr>
+<tr><td><code>xylose</code></td><td>continuous</td><td>[0.0 – 50.0]</td></tr>
+<tr><td><code>ammonium_sulfate</code></td><td>continuous</td><td>[0.5 – 10.0]</td></tr>
+<tr><td><code>corn_steep_liquor</code></td><td>continuous</td><td>[0.0 – 30.0]</td></tr>
+<tr><td><code>yeast_extract</code></td><td>continuous</td><td>[0.0 – 25.0]</td></tr>
+<tr><td><code>tryptone</code></td><td>continuous</td><td>[0.0 – 20.0]</td></tr></tbody>
+  </table>
+</section>
+
+
+<section id="constraints">
+  <h2>Constraints (3)</h2>
+  <table>
+    <thead><tr><th>ID</th><th>Type</th><th>Detail</th></tr></thead>
+    <tbody><tr><td><code>total_carbon_lte_100</code></td><td>linear</td><td><code>1·glucose + 1·glycerol + 1·lactose + 1·sucrose + 1·xylose &lt;= 100.0</code></td></tr>
+<tr><td><code>at_most_two_carbons</code></td><td>nchoosek</td><td>min_count=1, max_count=2, features = [glucose, glycerol, lactose, sucrose, xylose]</td></tr>
+<tr><td><code>media_cost_lte_080_per_L</code></td><td>linear</td><td><code>0.0007·glucose + 0.0017·glycerol + 0.0009·lactose + 0.0011·sucrose + 0.002·xylose + 0.00025·ammonium_sulfate + 0.0008·corn_steep_liquor + 0.0035·yeast_extract + 0.012·tryptone &lt;= 0.8</code></td></tr></tbody>
+  </table>
+</section>
+
+
+<section id="candidates">
+  <h2>Candidate design (0 rows)</h2>
+  <p><em>No candidate rows. Check the strategy decision section for issues.</em></p>
+</section>
+
+
+<section id="provenance">
+  <h2>Provenance</h2>
+  <dl class="kv"><dt>Campaign ID</dt><dd><code>demo-media-cost-bofire-v0</code></dd>
+<dt>Adapter kind</dt><dd><code>bofire_strategy</code></dd>
+<dt>Schema version</dt><dd><code>1</code></dd>
+<dt>Rendered at (UTC)</dt><dd><code>2026-05-15T14:52:50+00:00</code></dd>
+<dt>Manifest claim level</dt><dd><code>public_synthetic_demo</code></dd>
+<dt>Manifest authored</dt><dd><code>2026-05-15</code></dd></dl>
+  <details>
+    <summary>Raw report JSON</summary>
+    <pre><code>{
+  &quot;schema_version&quot;: 1,
+  &quot;adapter_kind&quot;: &quot;bofire_strategy&quot;,
+  &quot;claim_level&quot;: &quot;bofire_adapter_planning&quot;,
+  &quot;non_claim&quot;: &quot;BoFire-backed candidates are planned model-based suggestions. They do not validate assay readiness, scale transfer, or physical execution; BioSymphony readiness gates and dossier checks remain authoritative.&quot;,
+  &quot;campaign_id&quot;: &quot;demo-media-cost-bofire-v0&quot;,
+  &quot;route&quot;: {
+    &quot;schema_version&quot;: 1,
+    &quot;route_kind&quot;: &quot;bofire_adapter_route&quot;,
+    &quot;backend_requested&quot;: &quot;bofire&quot;,
+    &quot;should_route&quot;: true,
+    &quot;adapter_available&quot;: false,
+    &quot;reasons&quot;: [
+      &quot;operator_requested_bofire&quot;,
+      &quot;non_box_constraints&quot;
+    ],
+    &quot;strategy_kind&quot;: &quot;constrained_doe&quot;,
+    &quot;fallback&quot;: &quot;stdlib_augment_design&quot;
+  },
+  &quot;strategy_kind&quot;: &quot;constrained_doe&quot;,
+  &quot;remaining_run_budget&quot;: 12,
+  &quot;domain_spec&quot;: {
+    &quot;inputs&quot;: [
+      {
+        &quot;key&quot;: &quot;glucose&quot;,
+        &quot;type&quot;: &quot;continuous&quot;,
+        &quot;low&quot;: 0.0,
+        &quot;high&quot;: 50.0,
+        &quot;allow_zero&quot;: true
+      },
+      {
+        &quot;key&quot;: &quot;glycerol&quot;,
+        &quot;type&quot;: &quot;continuous&quot;,
+        &quot;low&quot;: 0.0,
+        &quot;high&quot;: 50.0,
+        &quot;allow_zero&quot;: true
+      },
+      {
+        &quot;key&quot;: &quot;lactose&quot;,
+        &quot;type&quot;: &quot;continuous&quot;,
+        &quot;low&quot;: 0.0,
+        &quot;high&quot;: 50.0,
+        &quot;allow_zero&quot;: true
+      },
+      {
+        &quot;key&quot;: &quot;sucrose&quot;,
+        &quot;type&quot;: &quot;continuous&quot;,
+        &quot;low&quot;: 0.0,
+        &quot;high&quot;: 50.0,
+        &quot;allow_zero&quot;: true
+      },
+      {
+        &quot;key&quot;: &quot;xylose&quot;,
+        &quot;type&quot;: &quot;continuous&quot;,
+        &quot;low&quot;: 0.0,
+        &quot;high&quot;: 50.0,
+        &quot;allow_zero&quot;: true
+      },
+      {
+        &quot;key&quot;: &quot;ammonium_sulfate&quot;,
+        &quot;type&quot;: &quot;continuous&quot;,
+        &quot;low&quot;: 0.5,
+        &quot;high&quot;: 10.0,
+        &quot;allow_zero&quot;: false
+      },
+      {
+        &quot;key&quot;: &quot;corn_steep_liquor&quot;,
+        &quot;type&quot;: &quot;continuous&quot;,
+        &quot;low&quot;: 0.0,
+        &quot;high&quot;: 30.0,
+        &quot;allow_zero&quot;: true
+      },
+      {
+        &quot;key&quot;: &quot;yeast_extract&quot;,
+        &quot;type&quot;: &quot;continuous&quot;,
+        &quot;low&quot;: 0.0,
+        &quot;high&quot;: 25.0,
+        &quot;allow_zero&quot;: true
+      },
+      {
+        &quot;key&quot;: &quot;tryptone&quot;,
+        &quot;type&quot;: &quot;continuous&quot;,
+        &quot;low&quot;: 0.0,
+        &quot;high&quot;: 20.0,
+        &quot;allow_zero&quot;: true
+      }
+    ],
+    &quot;outputs&quot;: [
+      {
+        &quot;key&quot;: &quot;specific_titer_g_per_L&quot;,
+        &quot;direction&quot;: &quot;maximize&quot;,
+        &quot;unit&quot;: &quot;g/L&quot;
+      }
+    ],
+    &quot;constraints&quot;: [
+      {
+        &quot;id&quot;: &quot;total_carbon_lte_100&quot;,
+        &quot;type&quot;: &quot;linear&quot;,
+        &quot;features&quot;: [
+          &quot;glucose&quot;,
+          &quot;glycerol&quot;,
+          &quot;lactose&quot;,
+          &quot;sucrose&quot;,
+          &quot;xylose&quot;
+        ],
+        &quot;coefficients&quot;: [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        &quot;rhs&quot;: 100.0,
+        &quot;operator&quot;: &quot;&lt;=&quot;
+      },
+      {
+        &quot;id&quot;: &quot;at_most_two_carbons&quot;,
+        &quot;type&quot;: &quot;nchoosek&quot;,
+        &quot;features&quot;: [
+          &quot;glucose&quot;,
+          &quot;glycerol&quot;,
+          &quot;lactose&quot;,
+          &quot;sucrose&quot;,
+          &quot;xylose&quot;
+        ],
+        &quot;min_count&quot;: 1,
+        &quot;max_count&quot;: 2,
+        &quot;none_also_valid&quot;: false
+      },
+      {
+        &quot;id&quot;: &quot;media_cost_lte_080_per_L&quot;,
+        &quot;type&quot;: &quot;linear&quot;,
+        &quot;features&quot;: [
+          &quot;glucose&quot;,
+          &quot;glycerol&quot;,
+          &quot;lactose&quot;,
+          &quot;sucrose&quot;,
+          &quot;xylose&quot;,
+          &quot;ammonium_sulfate&quot;,
+          &quot;corn_steep_liquor&quot;,
+          &quot;yeast_extract&quot;,
+          &quot;tryptone&quot;
+        ],
+        &quot;coefficients&quot;: [
+          0.0007,
+          0.0017,
+          0.0009,
+          0.0011,
+          0.002,
+          0.00025,
+          0.0008,
+          0.0035,
+          0.012
+        ],
+        &quot;rhs&quot;: 0.8,
+        &quot;operator&quot;: &quot;&lt;=&quot;
+      }
+    ],
+    &quot;fidelity&quot;: {},
+    &quot;unsupported_constraints&quot;: []
+  },
+  &quot;candidate_design&quot;: [],
+  &quot;candidate_design_count&quot;: 0,
+  &quot;adapter_status&quot;: &quot;not_available&quot;,
+  &quot;issues&quot;: [
+    &quot;BoFire is not installed; stdlib augment-design fallback remains authoritative.&quot;
+  ]
+}</code></pre>
+  </details>
+</section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "biosymphony-ferm-doe BoFire campaign report",
+  "campaignId": "demo-media-cost-bofire-v0",
+  "claimLevel": "bofire_adapter_planning",
+  "nonClaim": "BoFire-backed candidates are planned model-based suggestions. They do not validate assay readiness, scale transfer, or physical execution; BioSymphony readiness gates and dossier checks remain authoritative.",
+  "dateCreated": "2026-05-15T14:52:50+00:00",
+  "strategyKind": "constrained_doe",
+  "adapterStatus": "not_available"
+}
+</script>
+</body>
+</html>

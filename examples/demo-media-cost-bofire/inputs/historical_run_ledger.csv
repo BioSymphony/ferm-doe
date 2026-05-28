@@ -1,0 +1,4 @@
+run_id,source_type,trust_score,notes,glucose,glycerol,lactose,sucrose,xylose,ammonium_sulfate,corn_steep_liquor,yeast_extract,tryptone,specific_titer_g_per_L
+SYN-001,synthetic_demo,0.4,public synthetic fixture row,0.0,0.0,0.0,0.0,0.0,0.5,0.0,0.0,0.0,100
+SYN-002,synthetic_demo,0.4,public synthetic fixture row,50.0,50.0,50.0,50.0,50.0,10.0,30.0,25.0,20.0,110
+SYN-003,synthetic_demo,0.4,public synthetic fixture row,25.0,25.0,25.0,25.0,25.0,5.25,15.0,12.5,10.0,120

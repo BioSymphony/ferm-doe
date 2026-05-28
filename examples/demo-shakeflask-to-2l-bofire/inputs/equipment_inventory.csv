@@ -1,0 +1,3 @@
+item_id,item_type,scale,capacity,unit,status,notes
+EQ-SF-001,shake_flask,shake_flask_10ml,24,flask,available,public demo placeholder
+EQ-BR-001,stirred_tank_bioreactor,bioreactor_2l,2,liter,available,public demo placeholder

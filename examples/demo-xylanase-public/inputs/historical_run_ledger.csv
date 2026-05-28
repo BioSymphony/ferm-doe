@@ -1,0 +1,4 @@
+run_id,source_type,temperature_c,initial_ph,carbon_source,xylanase_activity_u_ml,run_duration_h,trust_score,notes
+SYN-001,synthetic_demo,30,6.5,glucose,120,48,0.4,synthetic placeholder row for public demo
+SYN-002,synthetic_demo,34,7.0,glycerol,150,48,0.4,synthetic placeholder row for public demo
+SYN-003,synthetic_demo,37,6.0,xylose_mix,135,36,0.4,synthetic placeholder row for public demo

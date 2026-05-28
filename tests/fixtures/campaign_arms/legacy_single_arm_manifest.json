@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "campaign_id": "legacy-single-arm-demo",
+  "name": "Legacy single arm demo",
+  "objective": {
+    "primary": "Keep legacy flat manifests executable.",
+    "direction": "maximize",
+    "response_id": "titer_mg_l"
+  },
+  "readiness_target": "YELLOW",
+  "sources": [],
+  "inputs": [],
+  "constraints": [
+    {
+      "constraint_id": "six_run_budget",
+      "type": "hard",
+      "description": "Keep the first wave within six runs."
+    }
+  ],
+  "responses": [
+    {
+      "response_id": "titer_mg_l",
+      "name": "Titer",
+      "unit": "mg/L",
+      "direction": "maximize",
+      "class": "titer",
+      "sample_fraction": "whole_broth",
+      "assay_method": "HPLC",
+      "calibration": "external standard",
+      "matrix_effects_policy": "spike recovery before execution"
+    }
+  ],
+  "factors": [
+    {
+      "factor_id": "temperature_c",
+      "type": "continuous",
+      "unit": "C",
+      "min": 24,
+      "max": 32
+    },
+    {
+      "factor_id": "ph_setpoint",
+      "type": "continuous",
+      "unit": "pH",
+      "min": 5.8,
+      "max": 7.0
+    }
+  ],
+  "design_policy": {
+    "design_intent": "space_filling_scout",
+    "run_budget": 6
+  }
+}

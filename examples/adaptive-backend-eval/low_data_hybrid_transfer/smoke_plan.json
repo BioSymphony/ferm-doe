@@ -1,0 +1,56 @@
+{
+  "scenario_id": "low_data_hybrid_transfer",
+  "primary_tool": "baybe",
+  "purpose": "Pilot BayBE on low-data hybrid transfer without making BayBE state the manifest.",
+  "inputs": [
+    {
+      "path": "campaign_manifest.json",
+      "role": "BioSymphony manifest"
+    },
+    {
+      "path": "inputs/prior_runs.csv",
+      "role": "small cross-campaign prior ledger"
+    }
+  ],
+  "commands": [
+    "python3 skills/biosymphony-ferm-doe/scripts/preflight_check.py examples/adaptive-backend-eval/low_data_hybrid_transfer/campaign_manifest.json",
+    "nox -s adaptive_backend_live_imports"
+  ],
+  "expected_artifacts": [
+    ".runtime/adaptive-backend-eval/low_data_hybrid_transfer/baybe_report.json",
+    ".runtime/adaptive-backend-eval/low_data_hybrid_transfer/candidate_table.csv",
+    ".runtime/adaptive-backend-eval/low_data_hybrid_transfer/serialized_state.json"
+  ],
+  "acceptance_checks": [
+    "prior rows can be ingested",
+    "candidate rows are planning suggestions",
+    "serialized backend state is not the campaign manifest",
+    "fallback is explicit when BayBE is unavailable"
+  ],
+  "contract_version": "1.0.0",
+  "contract_schema": "docs/schemas/smoke-artifact-contract.json",
+  "batch_sizes": [
+    1,
+    16
+  ],
+  "closed_loop_rounds": 1,
+  "negative_controls": [
+    {
+      "scenario": "missing_assay_semantics",
+      "perturbation": "drop response_semantics from prior_runs.csv",
+      "expect": "fail_closed_with_route_report"
+    }
+  ],
+  "contract_artifacts": [
+    ".runtime/adaptive-backend-eval/low_data_hybrid_transfer/result.json",
+    ".runtime/adaptive-backend-eval/low_data_hybrid_transfer/route_report.json",
+    ".runtime/adaptive-backend-eval/low_data_hybrid_transfer/candidate_table.csv",
+    ".runtime/adaptive-backend-eval/low_data_hybrid_transfer/constraint_check.json",
+    ".runtime/adaptive-backend-eval/low_data_hybrid_transfer/fallback_report.json",
+    ".runtime/adaptive-backend-eval/low_data_hybrid_transfer/closed_loop_replay.json",
+    ".runtime/adaptive-backend-eval/low_data_hybrid_transfer/negative_control_report.json",
+    ".runtime/adaptive-backend-eval/low_data_hybrid_transfer/artifact_hashes.json",
+    ".runtime/adaptive-backend-eval/low_data_hybrid_transfer/license_note.md",
+    ".runtime/adaptive-backend-eval/low_data_hybrid_transfer/planning_boundary.md"
+  ]
+}

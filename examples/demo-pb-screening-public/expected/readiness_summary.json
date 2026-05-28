@@ -1,0 +1,9 @@
+{
+  "campaign_id": "demo-pb-screening-public",
+  "claim_level": "public_synthetic_demo",
+  "status": "YELLOW",
+  "error_count": 0,
+  "warning_count": 0,
+  "worst_axis": null,
+  "non_claim": "Stub readiness summary; produced by the agent during the long-agent loop. Run `ferm-doe validate --summary` for the live verdict."
+}

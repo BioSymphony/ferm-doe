@@ -1,0 +1,15 @@
+{
+  "profiles": ["split_plot_fed_batch"],
+  "factors": [
+    {"factor_id": "REPLACE_ME_HARD", "type": "numeric", "low": 0, "high": 1, "unit": "REPLACE_ME", "hard_to_change": true},
+    {"factor_id": "REPLACE_ME_EASY", "type": "numeric", "low": 0, "high": 1, "unit": "REPLACE_ME"}
+  ],
+  "doe": {
+    "family": "split_plot",
+    "n_runs": 16,
+    "n_replicates": 2,
+    "randomized": true,
+    "claim": "heuristic",
+    "design_table_path": "expected/selected_wave_1_design.csv"
+  }
+}

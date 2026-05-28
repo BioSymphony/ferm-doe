@@ -1,0 +1,996 @@
+{
+  "schema_version": 1,
+  "registry_kind": "biosymphony_ferm_doe_tool_registry",
+  "generated_on": "2026-05-16",
+  "maintainer_note": "Curated repo knowledge for optional tools, sidecars, and watchlist repos. Refresh before adding dependencies, launching paid remote work, or making current-version claims. Last refresh 2026-05-16 included (ENTMOOT design), (BoFire constraint-strategy audit), (PubMed MCP adapter), and BO framework alternatives (BoTorch direct, Atlas). Last refresh 2026-05-16 reflected 4-corpus BO-tools research swarm: added 8 entries (BayBe, obsidian, estim8, bletl, processoptimizer, TabPFN v2, LLAMBO, OMLT) and elevated entmoot to adopted_optional after in-repo adapter delivery (src/biosymphony_ferm_doe/adapters/entmoot_strategy.py with 12 passing tests, all 3 risks closed at adapter layer).",
+  "refresh_policy": {
+    "default_refresh_days": 90,
+    "refresh_before": [
+      "adding or changing optional dependencies",
+      "launching a paid RunPod smoke that installs a tool",
+      "claiming a package is current, active, deprecated, or archived",
+      "turning a watchlist or sidecar tool into an adapter"
+    ]
+  },
+  "source_notes": [
+    "logs/2026-05-15-open-source-doe-adaptive-library-survey.md",
+    "docs/open-source-bioprocess-tool-survey-2026-05-15.md",
+    "logs/2026-05-15-open-tooling-survey.md",
+    "docs/BOFIRE_POSITIONING.md",
+    "pyproject.toml",
+    "",
+    "docs/ENTMOOT_SWAP_DESIGN.md",
+    "docs/BOFIRE_CONSTRAINT_PATTERNS.md",
+    "src/biosymphony_ferm_doe/adapters/pubmed_mcp.py",
+    "docs/research/bo-tools-survey-2026-05-16.md",
+    ".runtime/research-swarm/bo-tools-2026/EVIDENCE/llm-and-foundation-bo.md",
+    ".runtime/research-swarm/bo-tools-2026/EVIDENCE/constrained-bo-2024-2026.md",
+    ".runtime/research-swarm/bo-tools-2026/EVIDENCE/bioprocess-bo-2024-2026.md",
+    ".runtime/research-swarm/bo-tools-2026/EVIDENCE/bo-framework-landscape-2026.md"
+  ],
+  "decision_rules": [
+    {
+      "rule_id": "stdlib_core_first",
+      "description": "Core engine remains stdlib-first; heavy scientific tools are optional adapters or sidecars."
+    },
+    {
+      "rule_id": "bofire_route",
+      "description": "Use BoFire only for non-box constraints, multi-objective optimization, multi-fidelity scale structure, or explicit operator request."
+    },
+    {
+      "rule_id": "license_boundary",
+      "description": "GPL and AGPL tools are boundary-only or avoid unless repository distribution posture is explicitly changed."
+    },
+    {
+      "rule_id": "no_platform_pileup",
+      "description": "Do not add workflow platforms that duplicate Symphony/Linear unless repeated computational DAGs justify another workflow language."
+    }
+  ],
+  "tools": [
+    {
+      "tool_id": "bofire",
+      "name": "BoFire",
+      "category": "adaptive_design",
+      "priority": "P0",
+      "status": "adopted_optional",
+      "posture": "primary optional adaptive adapter",
+      "package": "bofire>=0.3.1,<0.4",
+      "pyproject_extra": "bofire",
+      "license": "BSD-3-Clause",
+      "links": {
+        "repo": "https://github.com/experimental-design/bofire",
+        "docs": "https://experimental-design.github.io/bofire/"
+      },
+      "docs_in_repo": [
+        "docs/BOFIRE_POSITIONING.md",
+        "docs/BOFIRE_CONSTRAINT_PATTERNS.md"
+      ],
+      "last_checked": "2026-05-16",
+      "current_signal": "GitHub active in May 2026; PyPI 0.3.1 was the compatible release inspected for current adapter symbols. audit (2026-05-16) confirmed BoFire 0.3.1 + main-branch constraint-strategy compatibility matrix; see docs/BOFIRE_CONSTRAINT_PATTERNS.md. Per docs/research/bo-tools-survey-2026-05-16.md: 0.4 not imminent (no release branch, three NChooseK PRs still in review). Watch PRs: #693 (MCTS ACQF for NChooseK), #747 (BONSAI pruning), #740 (nonlinear constraints), #731 (PFN surrogate), #705 (multi-output multi-fidelity, merged 2026-05-11 \u2014 crashes on non-box constraints per our issue #761), #749 (LLM Strategy, merged 2026-04-30, research-grade per author).",
+      "fit": "Constrained media optimization, mixed spaces, multi-objective BO, and future scale-fidelity planning.",
+      "risks": "Heavy Torch/BoTorch stack; pre-1.0 API; fermentation phase/feed semantics remain BioSymphony-owned. found NChooseK + SoboStrategy combination stalls indefinitely on.ask(upstream issue #450); use DoEStrategy+IPOPT or enforce cardinality post-hoc for BO. MultiFidelityVarianceBasedStrategy throws ConstraintNotFulfilledError on.askwith non-box constraints (issue #761 filed 2026-05-16).",
+      "route": [
+        "non_box_constraints",
+        "multi_objective_responses",
+        "scale_fidelity_structure",
+        "operator_requested_bofire"
+      ],
+      "claim_level": "bofire_adapter_planning",
+      "fail_closed_behavior": "Write bofire_strategy_report.json and fall back to stdlib planning when missing or untranslated.",
+      "local_lane": "nox -s adaptive_smoke",
+      "live_lane": "nox -s adaptive_live"
+    },
+    {
+      "tool_id": "pydoe",
+      "name": "pydoe",
+      "category": "classical_doe",
+      "priority": "P1",
+      "status": "watch",
+      "posture": "lightweight DOE-family backend resumed at v1.0.x after pyDOE3 archival",
+      "package": "pydoe>=1.0.1",
+      "pyproject_extra": "",
+      "license": "BSD-3-Clause",
+      "links": {
+        "pypi": "https://pypi.org/project/pyDOE/",
+        "docs": "https://pydoe.github.io/pydoe/"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Current pydoe package had 2026 release signal; the public package currently ships the pyDOE3 fork via the pydoe3 extra.",
+      "fit": "Plackett-Burman, factorial, RSM, and Latin-hypercube style fast paths.",
+      "risks": "No bioprocess constraints, adaptive posterior, or scale-bridge semantics.",
+      "route": [
+        "screening",
+        "rsm_fit",
+        "space_filling_scout"
+      ],
+      "claim_level": "adapter_backed_classical_doe",
+      "fail_closed_behavior": "Report dependency missing and use stdlib design family where available."
+    },
+    {
+      "tool_id": "pydoe3",
+      "name": "pyDOE3",
+      "category": "classical_doe",
+      "priority": "P1",
+      "status": "compatibility_only",
+      "posture": "compatibility adapter for extended Box-Behnken and maximin LHS paths",
+      "package": "pyDOE3>=1.0",
+      "pyproject_extra": "pydoe3",
+      "license": "BSD-3-Clause",
+      "links": {
+        "pypi": "https://pypi.org/project/pyDOE3/",
+        "docs": "https://pydoe3.readthedocs.io/"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "PyPI 1.6.2 checked; docs say active development has moved back to pyDOE, so keep this as compatibility-only.",
+      "fit": "Existing pyDOE3-specific adapter for larger Box-Behnken coverage and maximin Latin-hypercube generation.",
+      "risks": "Documentation says pyDOE3 is no longer actively maintained; do not make it the primary current DOE dependency.",
+      "route": [
+        "extended_box_behnken",
+        "latin_hypercube_maximin",
+        "legacy_pydoe3_adapter"
+      ],
+      "claim_level": "compatibility_adapter",
+      "fail_closed_behavior": "Report pyDOE3 missing and use pydoe or stdlib design family where available."
+    },
+    {
+      "tool_id": "salib",
+      "name": "SALib",
+      "category": "sensitivity",
+      "priority": "P0",
+      "status": "adopted_optional",
+      "posture": "optional diagnostics adapter",
+      "package": "SALib>=1.5.2",
+      "pyproject_extra": "sensitivity",
+      "license": "MIT",
+      "links": {
+        "repo": "https://github.com/SALib/SALib",
+        "docs": "https://salib.readthedocs.io/"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Active 2026 repository signal; PyPI 1.5.2 checked in the survey.",
+      "fit": "Sobol/Morris/FAST-style sensitivity, factor prioritization, and assumption attack.",
+      "risks": "Not an optimizer; precision depends on declared ranges and response models.",
+      "route": [
+        "sensitivity_screening",
+        "assumption_attack",
+        "scale_recipe_uncertainty"
+      ],
+      "claim_level": "sensitivity_screening",
+      "fail_closed_behavior": "Skip optional sensitivity outputs and preserve the base dossier."
+    },
+    {
+      "tool_id": "frictionless",
+      "name": "Frictionless Framework",
+      "category": "data_contracts",
+      "priority": "P0",
+      "status": "adopted_optional",
+      "posture": "CSV/table schema reference; stdlib validator remains default",
+      "package": "frictionless>=5,<6",
+      "pyproject_extra": "contracts",
+      "license": "MIT",
+      "links": {
+        "repo": "https://github.com/frictionlessdata/frictionless-py",
+        "docs": "https://frictionlessdata.io/"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Recommended as a table-schema contract spine in the tooling survey.",
+      "fit": "CSV/table contracts for ledgers, evidence tables, result templates, inventories, and run sheets.",
+      "risks": "Table-shape validation is not scientific semantics.",
+      "route": [
+        "table_contracts"
+      ],
+      "claim_level": "contract_validation",
+      "fail_closed_behavior": "Stdlib table_contracts validator remains authoritative when the package is absent."
+    },
+    {
+      "tool_id": "ro_crate",
+      "name": "RO-Crate",
+      "category": "provenance",
+      "priority": "P0",
+      "status": "adopted_optional",
+      "posture": "minimal dossier provenance envelope",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "Apache-2.0 docs/spec materials; verify implementation package if added",
+      "links": {
+        "docs": "https://www.researchobject.org/ro-crate/",
+        "spec_repo": "https://github.com/ResearchObject/ro-crate"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Chosen as a FAIR-ish metadata envelope for generated dossiers.",
+      "fit": "Dossier metadata, file inventory, hashes, source refs, license, and claim boundaries.",
+      "risks": "JSON-LD can become overbuilt; keep a minimal crate profile.",
+      "route": [
+        "compile_dossier"
+      ],
+      "claim_level": "provenance_metadata",
+      "fail_closed_behavior": "Dossier check fails if required ro-crate-metadata.json is missing."
+    },
+    {
+      "tool_id": "nox",
+      "name": "Nox",
+      "category": "execution_lanes",
+      "priority": "P0",
+      "status": "adopted_optional",
+      "posture": "repo task lane runner",
+      "package": "nox>=2026.4.10",
+      "pyproject_extra": "dev",
+      "license": "Apache-2.0",
+      "links": {
+        "repo": "https://github.com/wntrblm/nox",
+        "docs": "https://nox.thea.codes/"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Selected for Python-native local, optional, release, and RunPod-smoke lanes.",
+      "fit": "Stable command surface for unit, table_contracts, dossier_smoke, adaptive_smoke, adaptive_live, and release checks.",
+      "risks": "Not an environment lock by itself.",
+      "route": [
+        "local_validation",
+        "optional_lanes"
+      ],
+      "claim_level": "execution_lane",
+      "fail_closed_behavior": "Direct Python scripts remain callable without Nox."
+    },
+    {
+      "tool_id": "botorch",
+      "name": "BoTorch",
+      "category": "adaptive_design",
+      "priority": "P1",
+      "status": "adopted_optional",
+      "posture": "low-level expert backend",
+      "package": "botorch>=0.9",
+      "pyproject_extra": "botorch",
+      "license": "MIT",
+      "links": {
+        "repo": "https://github.com/meta-pytorch/botorch",
+        "docs": "https://botorch.org/"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Active May 2026; used directly only for intentionally narrow expert adapters.",
+      "fit": "Custom acquisition experiments when BoFire abstractions block a needed route.",
+      "risks": "Too low-level for campaign-facing contracts and easy to overfit into research code.",
+      "route": [
+        "experimental_adaptive_adapter"
+      ],
+      "claim_level": "experimental_adapter",
+      "fail_closed_behavior": "Prefer BoFire; if direct BoTorch route fails, write route report and fall back."
+    },
+    {
+      "tool_id": "pymoo",
+      "name": "pymoo",
+      "category": "pareto_tournament",
+      "priority": "P2",
+      "status": "evaluate_next",
+      "posture": "candidate-table Pareto and tournament sidecar",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "Apache-2.0",
+      "links": {
+        "docs": "https://pymoo.org/"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Active enough in 2026 survey; rich constrained and mixed-variable multi-objective algorithms.",
+      "fit": "Posthoc Pareto sorting, hypervolume diagnostics, and design-tournament scoring.",
+      "risks": "Evolutionary optimizer rather than Bayesian sample-efficient planning; use for diagnostics, not as the primary refinement loop.",
+      "route": [
+        "pareto_report",
+        "design_tournament"
+      ],
+      "claim_level": "candidate_table_diagnostic",
+      "fail_closed_behavior": "Keep existing stdlib tournament and emit no pymoo report when unavailable."
+    },
+    {
+      "tool_id": "smt",
+      "name": "SMT",
+      "category": "surrogate_modeling",
+      "priority": "P2",
+      "status": "evaluate_next",
+      "posture": "scale-bridge surrogate diagnostic candidate",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "BSD-3-Clause",
+      "links": {
+        "repo": "https://github.com/SMTorg/smt",
+        "docs": "https://smt.readthedocs.io/"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Active May 2026; PyPI 2.14.0 checked in survey.",
+      "fit": "Co-kriging and multi-fidelity surrogate diagnostics for plate/flask/reactor bridges.",
+      "risks": "Surrogate toolbox, not campaign optimizer; requires careful adapter design.",
+      "route": [
+        "scale_bridge_diagnostic"
+      ],
+      "claim_level": "surrogate_diagnostic",
+      "fail_closed_behavior": "Keep scale_recipe and BoFire route reports; do not block dossier compilation."
+    },
+    {
+      "tool_id": "pyomo_dae",
+      "name": "Pyomo.DAE",
+      "category": "dynamic_feasibility",
+      "priority": "P1",
+      "status": "evaluate_next",
+      "posture": "advanced feed/profile feasibility sidecar",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "BSD-style",
+      "links": {
+        "docs": "https://pyomo.readthedocs.io/en/stable/explanation/modeling/dae.html"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Recommended for dynamic fed-batch/feed-control feasibility checks.",
+      "fit": "Continuous feed profile optimization, volume/substrate/oxygen constraints, and dynamic feasibility.",
+      "risks": "Solver stack and initialization can become site-specific and heavy.",
+      "route": [
+        "fed_batch_feasibility",
+        "dynamic_constraints"
+      ],
+      "claim_level": "deterministic_feasibility_sidecar",
+      "fail_closed_behavior": "Do not run dynamic optimization; preserve static feasibility warnings."
+    },
+    {
+      "tool_id": "pyplate",
+      "name": "PyPlate",
+      "category": "plate_execution",
+      "priority": "P1",
+      "status": "evaluate_next",
+      "posture": "plate/deep-well recipe sidecar candidate",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "Apache-2.0",
+      "links": {
+        "docs": "https://pyplate-hte.readthedocs.io/"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Relevant to high-throughput chemistry and biology experiment design/execution.",
+      "fit": "Plate recipe exports, well-volume checks, reagent transforms, and liquid-handling artifacts.",
+      "risks": "Plate-centric; not a fermentation scale-bridge model.",
+      "route": [
+        "plate_arm_manifest",
+        "plate_recipe_export"
+      ],
+      "claim_level": "execution_recipe_sidecar",
+      "fail_closed_behavior": "Emit BioSymphony plate manifest only; do not claim liquid-handler readiness."
+    },
+    {
+      "tool_id": "fedbatchdesigner",
+      "name": "FedBatchDesigner",
+      "category": "fed_batch_modeling",
+      "priority": "P1",
+      "status": "evaluate_next",
+      "posture": "reference model/example candidate",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "MIT",
+      "links": {
+        "repo": "https://github.com/julibeg/FedBatchDesigner",
+        "paper": "https://pubs.acs.org/doi/abs/10.1021/acssynbio.5c00357"
+      },
+      "last_checked": "2026-05-16",
+      "current_signal": "Per docs/research/bo-tools-survey-2026-05-16.md: Publication snapshot release 2025-07-11 added pre-loaded E. coli and S. cerevisiae parameters and three case studies (valine, ethanol, mevalonic acid). Stack is Shiny for Python + Plotly. Repo activity remains low (5 stars / 1 fork as of 2026-05) but tied to ACS Synth. Biol. publication (DOI 10.1021/acssynbio.5c00357). Supports constant and exponential feeding; growth-arrested production stage modeling; CSV/PNG export; Jupyter notebooks for parameter fitting per case study.",
+      "fit": "Feed-volume/time stage math and growth-arrested fed-batch planning references.",
+      "risks": "Low adoption signal; may not cover ordinary microbial or mammalian fed-batch oxygen limits.",
+      "route": [
+        "fed_batch_reference_example"
+      ],
+      "claim_level": "reference_sidecar",
+      "fail_closed_behavior": "Keep BioSymphony feed policy fields and skip reference comparison."
+    },
+    {
+      "tool_id": "biosteam",
+      "name": "BioSTEAM",
+      "category": "process_economics",
+      "priority": "P1",
+      "status": "evaluate_next",
+      "posture": "cost/downstream sidecar",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "University of Illinois/NCSA Open Source License",
+      "links": {
+        "repo": "https://github.com/BioSTEAMDevelopmentGroup/biosteam",
+        "docs": "https://biosteam.readthedocs.io/"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Bioprocess and TEA/LCA package relevant to fermentation-derived product economics.",
+      "fit": "Cost/L, downstream context, feedstock/media cost projections, TEA/LCA examples.",
+      "risks": "Biorefinery scope can distract from upstream executability.",
+      "route": [
+        "cost_rollup_sidecar",
+        "downstream_context"
+      ],
+      "claim_level": "economic_context_sidecar",
+      "fail_closed_behavior": "Use existing cost_rollup with declared assumptions."
+    },
+    {
+      "tool_id": "sbml_runtime_stack",
+      "name": "SBML runtime stack (libRoadRunner/Tellurium/AMICI)",
+      "category": "mechanistic_model_sidecar",
+      "priority": "P1",
+      "status": "evaluate_next",
+      "posture": "model import/export sidecar",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "Apache-2.0/BSD-3-Clause mix; verify per runtime",
+      "links": {
+        "roadrunner": "https://github.com/sys-bio/roadrunner",
+        "tellurium": "https://github.com/sys-bio/tellurium",
+        "amici": "https://pypi.org/project/amici/"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Recommended for mechanistic model sidecars, sensitivity, and parameter-estimation interchange.",
+      "fit": "Growth/substrate/product kinetics, parameter tables, event/feed schedules, and model provenance.",
+      "risks": "Public SBML models rarely encode full vessel/feed/oxygen-transfer semantics.",
+      "route": [
+        "mechanistic_model_sidecar"
+      ],
+      "claim_level": "simulation_sidecar",
+      "fail_closed_behavior": "Record model as external evidence and skip runtime execution."
+    },
+    {
+      "tool_id": "pixi",
+      "name": "Pixi",
+      "category": "dependency_lanes",
+      "priority": "P1",
+      "status": "watch",
+      "posture": "future multi-environment lock/task candidate",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "BSD-3-Clause",
+      "links": {
+        "repo": "https://github.com/prefix-dev/pixi"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Useful if optional dependency lanes multiply beyond simple venv/Nox handling.",
+      "fit": "Named environments for stdlib, contracts, adaptive, release, and RunPod smoke profiles.",
+      "risks": "Adds another environment manager.",
+      "route": [
+        "dependency_locking"
+      ],
+      "claim_level": "developer_tooling",
+      "fail_closed_behavior": "Continue using direct Python scripts and Nox."
+    },
+    {
+      "tool_id": "cwl",
+      "name": "Common Workflow Language / cwltool provenance",
+      "category": "remote_handoff",
+      "priority": "P1",
+      "status": "watch",
+      "posture": "portable provider handoff candidate",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "Apache-2.0",
+      "links": {
+        "docs": "https://www.commonwl.org/",
+        "provenance": "https://cwltool.readthedocs.io/en/latest/CWLProv.html"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Useful only when RunPod handoff commands need portable declared inputs and outputs.",
+      "fit": "Narrow remote execution bundles with explicit command provenance.",
+      "risks": "Verbose for simple scripts; not a replacement for Symphony orchestration.",
+      "route": [
+        "provider_handoff_bundle"
+      ],
+      "claim_level": "workflow_provenance_sidecar",
+      "fail_closed_behavior": "Use Nox plus explicit JSON provider handoff."
+    },
+    {
+      "tool_id": "dwsim",
+      "name": "DWSIM",
+      "category": "external_flowsheet",
+      "priority": "P2",
+      "status": "boundary_only",
+      "posture": "external export/import only",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "GPL-3.0",
+      "links": {
+        "site": "https://dwsim.org/",
+        "repo": "https://github.com/DanWBR/dwsim"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Relevant broad process simulator but GPL and heavy runtime.",
+      "fit": "Downstream, biorefinery, and process-economics reference simulations.",
+      "risks": "GPL embedding risk and GUI/heavy runtime.",
+      "route": [
+        "external_flowsheet_export"
+      ],
+      "claim_level": "external_reference",
+      "fail_closed_behavior": "Do not import as dependency; export assumptions only."
+    },
+    {
+      "tool_id": "cadet",
+      "name": "CADET",
+      "category": "downstream_modeling",
+      "priority": "P2",
+      "status": "boundary_only",
+      "posture": "external downstream sidecar only",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "GPL-3.0",
+      "links": {
+        "repo": "https://github.com/cadet"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Useful for downstream unit-operation modeling; not a core upstream DoE planner.",
+      "fit": "Chromatography/filtration sidecars when dossiers grow downstream.",
+      "risks": "GPL embedding risk and uncertain upstream fermentation fit.",
+      "route": [
+        "downstream_external_sidecar"
+      ],
+      "claim_level": "external_reference",
+      "fail_closed_behavior": "Keep downstream assumptions as evidence rows."
+    },
+    {
+      "tool_id": "cobrapy",
+      "name": "COBRApy",
+      "category": "metabolic_evidence",
+      "priority": "P2",
+      "status": "boundary_only",
+      "posture": "evidence sidecar only",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "GPL-2.0",
+      "links": {
+        "repo": "https://github.com/opencobra/cobrapy",
+        "docs": "https://cobrapy.readthedocs.io/"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Constraint-based metabolic modeling package; useful only if strain/model priors enter evidence layer.",
+      "fit": "Substrate/product feasibility priors and yield-bound sanity checks.",
+      "risks": "GEM predictions are not process readiness; GPL and model-license variance.",
+      "route": [
+        "metabolic_evidence_sidecar"
+      ],
+      "claim_level": "evidence_sidecar",
+      "fail_closed_behavior": "Represent model conclusions as reviewed evidence rows only."
+    },
+    {
+      "tool_id": "snakemake",
+      "name": "Snakemake",
+      "category": "workflow_platform",
+      "priority": "P2",
+      "status": "watch",
+      "posture": "defer unless repeated computational DAGs dominate",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "MIT",
+      "links": {
+        "docs": "https://snakemake.github.io/"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Strong scientific workflow engine but not needed for current contract/dossier orchestration.",
+      "fit": "Benchmark sweeps or repeated simulation campaigns.",
+      "risks": "Another DSL and execution model competing with existing orchestration.",
+      "route": [
+        "batch_benchmark_dag"
+      ],
+      "claim_level": "workflow_sidecar",
+      "fail_closed_behavior": "Keep Symphony/Linear and Nox lanes."
+    },
+    {
+      "tool_id": "nextflow",
+      "name": "Nextflow",
+      "category": "workflow_platform",
+      "priority": "P2",
+      "status": "watch",
+      "posture": "defer unless large cloud/HPC workflows appear",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "Apache-2.0",
+      "links": {
+        "docs": "https://www.nextflow.io/"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Excellent for scalable containerized pipelines; overkill for this repo today.",
+      "fit": "Large computational analysis pipelines.",
+      "risks": "Groovy DSL and cloud-pipeline posture do not align with current Python/stdlib repo shape.",
+      "route": [
+        "large_compute_pipeline"
+      ],
+      "claim_level": "workflow_sidecar",
+      "fail_closed_behavior": "Keep Symphony/Linear and Nox lanes."
+    },
+    {
+      "tool_id": "scikit_optimize",
+      "name": "scikit-optimize",
+      "category": "avoid",
+      "priority": "Avoid",
+      "status": "avoid",
+      "posture": "do not add",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "BSD-3-Clause",
+      "links": {
+        "repo": "https://github.com/scikit-optimize/scikit-optimize"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Original repository archived in 2024; stale relative to current scientific Python stack. Maintained continuation: ProcessOptimizer (Novo Nordisk Research, BSD-3, J. Chem. Inf. Model. 2025) \u2014 see tool_id 'processoptimizer'.",
+      "fit": "None for new integration.",
+      "risks": "Stale dependency and limited fit for constrained multi-objective scale-bridge work.",
+      "route": [],
+      "claim_level": "not_applicable",
+      "fail_closed_behavior": "Do not integrate; keep any legacy references as historical only."
+    },
+    {
+      "tool_id": "pysamoo",
+      "name": "pysamoo",
+      "category": "avoid",
+      "priority": "Avoid",
+      "status": "avoid",
+      "posture": "do not add without explicit license decision",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "AGPL",
+      "links": {
+        "repo": "https://github.com/anyoptimization/pysamoo"
+      },
+      "last_checked": "2026-05-15",
+      "current_signal": "Potentially interesting surrogate-assisted multi-objective extension but AGPL posture is unsuitable by default.",
+      "fit": "None for current repo.",
+      "risks": "AGPL distribution obligations.",
+      "route": [],
+      "claim_level": "not_applicable",
+      "fail_closed_behavior": "Do not integrate."
+    },
+    {
+      "tool_id": "entmoot",
+      "name": "ENTMOOT v2",
+      "category": "adaptive_design",
+      "priority": "P1",
+      "status": "adopted_optional",
+      "posture": "in-repo adapter wraps ENTMOOT v2; min_count, min-active coupling, tie-cycle handling, and HiGHS fallback are adapter-enforced",
+      "package": "entmoot==2.1.1",
+      "pyproject_extra": "entmoot",
+      "license": "BSD-3-Clause",
+      "links": {
+        "repo": "https://github.com/cog-imperial/entmoot",
+        "design_doc": "https://github.com/cog-imperial/entmoot"
+      },
+      "docs_in_repo": [
+        "docs/ENTMOOT_SWAP_DESIGN.md",
+        "src/biosymphony_ferm_doe/adapters/entmoot_strategy.py",
+        "tests/test_entmoot_adapter.py"
+      ],
+      "last_checked": "2026-05-23",
+      "current_signal": "Public adapter includes adapter-side min_count emission, min-active lower coupling for NChooseK indicators, HiGHS default solver support, and tie-cycle handling. Unit tests cover routed/not-available reports and strictly positive min-active amount calculation without requiring ENTMOOT at import time.",
+      "fit": "MIP-encoded NChooseK cardinality first-class; addresses BoFire NChooseK+SoboStrategy stall (issue #450). In-repo adapter exposes adapter_backed_nchoosek BO route with HiGHS default solver.",
+      "risks": "Raw upstream ENTMOOT APIs can still mislead if used directly; use the in-repo adapter so min_count, min-active coupling, solver fallback, and fail-closed route reports are preserved.",
+      "route": [
+        "nchoosek_cardinality_bo",
+        "tree_based_surrogate",
+        "in_repo_adapter"
+      ],
+      "claim_level": "adapter_backed_nchoosek_bo",
+      "fail_closed_behavior": "Adapter raises RuntimeError at instantiation if entmoot or chosen solver not available; degrades to \"not_available\" in plan reports without raising."
+    },
+    {
+      "tool_id": "pubmed_mcp_adapter",
+      "name": "PubMed MCP Adapter",
+      "category": "evidence_enrichment",
+      "priority": "P0",
+      "status": "adopted_optional",
+      "posture": "in-repo adapter normalises PubMed records into the CITATIONS.json schema. Fixture mode is the primary integration path; the direct MCP hook (_try_mcp_fetch) is a stub awaiting an in-process bridge. Live enrichment is harness-mediated and fed in via fixtures.",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "MIT",
+      "links": {
+        "source": "https://github.com/BioSymphony/ferm-doe",
+        "mcp_server": "https://pubmed.ncbi.nlm.nih.gov/"
+      },
+      "docs_in_repo": [
+        "src/biosymphony_ferm_doe/adapters/pubmed_mcp.py",
+        "tests/test_pubmed_adapter.py"
+      ],
+      "last_checked": "2026-05-16",
+      "current_signal": "Unit tests green for fixture-mode normalization and fallback behavior; harness-mediated PubMed harvest is the live-enrichment path (operator runs PubMed search via their coding-agent harness, hands records to the adapter through the fixture interface). Direct in-process MCP calls are not wired in the adapter; the harvest path runs out-of-band.",
+      "fit": "Fixture-driven PubMed citation enrichment, dossier BibTeX export, --use-pubmed-fixture CLI flag for deterministic test mode. A direct in-process MCP hook is reserved (_try_mcp_fetch).",
+      "risks": "Direct MCP mode is currently a stub; the practical path for live enrichment is harness-mediated harvest plus fixture handoff. Fixture mode required for offline/CI runs.",
+      "route": [
+        "dossier_citation_enrichment",
+        "bibtex_export"
+      ],
+      "claim_level": "live_citation_enrichment",
+      "fail_closed_behavior": "When MCP unreachable, adapter falls back to fixture mode or empty enrichment with explicit warning."
+    },
+    {
+      "tool_id": "ax",
+      "name": "Ax",
+      "category": "adaptive_design",
+      "priority": "P1",
+      "status": "evaluate_next",
+      "posture": "adaptive experimentation infrastructure and custom-generation-strategy candidate; not default static DoE route",
+      "package": "ax-platform==1.2.4",
+      "pyproject_extra": "backend-eval",
+      "license": "MIT",
+      "links": {
+        "repo": "https://github.com/facebook/Ax",
+        "docs": "https://ax.dev/"
+      },
+      "docs_in_repo": [
+        "docs/BIOMANUFACTURING_ADAPTIVE_BACKENDS.md",
+        "docs/adaptive-backend-evaluation.json"
+      ],
+      "last_checked": "2026-05-23",
+      "current_signal": "PyPI ax-platform 1.2.4 verified 2026-05-23; MIT license. Position is infrastructure/custom-modeling pilot only: trial lifecycle, generation strategies, storage/resume, and BoTorch-backed custom paths. Not a replacement for BioSymphony campaign manifest, readiness gates, or lab handoff packet.",
+      "fit": "Production adaptive-experiment orchestration, custom GenerationStrategy/BoTorch routing, trial lifecycle and resume semantics when a campaign outgrows a simple ask/tell adapter.",
+      "risks": "Heavier translation surface than BoFire/BayBE; not chemistry-first or bioprocess-first; can duplicate Symphony/Linear orchestration if adopted too early.",
+      "route": [
+        "adaptive_orchestration_pilot",
+        "custom_generation_strategy",
+        "botorch_infrastructure"
+      ],
+      "claim_level": "not_yet_evaluated",
+      "fail_closed_behavior": "Do not block dossier compilation; if Ax is unavailable or cannot preserve the manifest boundary, write an evaluation report and fall back to BoFire, direct BoTorch, or stdlib planning.",
+      "local_lane": "nox -s adaptive_backend_surface"
+    },
+    {
+      "tool_id": "botorch_direct",
+      "name": "BoTorch (direct usage, EIpu)",
+      "category": "adaptive_design",
+      "priority": "P2",
+      "status": "watch",
+      "posture": "alternative cost-aware BO path bypassing BoFire abstraction",
+      "package": "botorch>=0.10",
+      "pyproject_extra": "",
+      "license": "MIT",
+      "links": {
+        "repo": "https://github.com/pytorch/botorch",
+        "docs": "https://botorch.org/"
+      },
+      "last_checked": "2026-05-16",
+      "current_signal": "Per docs/research/bo-tools-survey-2026-05-16.md: BoTorch direct is the only path for true cost-aware BO. BoFire has no ExpectedImprovementWithCost; Ax exposes only via BoTorch passthrough. Recommendation is a sibling adapter (adapters/botorch_cost_aware.py) when manifest declares responses with cost as a primary direction \u2014 NOT a displacement of the BoFire route. BoTorch 0.17.2 (Meta, 2026-03-05) ships PFN surrogates, classifier-based constraint feasibility, EI-per-cost, qLogNEHVI.",
+      "fit": "Expected Improvement per unit cost (EIpu) for cost-aware Pareto front; direct surrogate control without BoFire constraint-translation overhead.",
+      "risks": "Reimplements problem encoding from scratch; loses BoFire's data-model + factor-space scaffolding.",
+      "route": [
+        "cost_aware_acquisition",
+        "direct_surrogate_control"
+      ],
+      "claim_level": "not_yet_evaluated",
+      "fail_closed_behavior": "N/A \u2014 not wired."
+    },
+    {
+      "tool_id": "atlas",
+      "name": "Atlas (gryffin/golem successor)",
+      "category": "adaptive_design",
+      "priority": "P2",
+      "status": "watch",
+      "posture": "tree-based BO with categorical-aware kernels",
+      "package": "matter-atlas",
+      "pyproject_extra": "",
+      "license": "MIT",
+      "links": {
+        "repo": "https://github.com/aspuru-guzik-group/atlas"
+      },
+      "last_checked": "2026-05-16",
+      "current_signal": "Per docs/research/bo-tools-survey-2026-05-16.md: Atlas's NChooseK support is not MIP-encoded and not exercised in upstream tutorials. Reclassified from 'NChooseK candidate' to 'unknown-feasibility candidate' \u2014 Atlas + Anubis (sibling) are best-in-class for learning a feasibility classifier from failed runs. v0.0.1 January 2025 release, 174 commits, 50 stars, Vector Institute / Acceleration Consortium maintained. Python 3.9-3.10 only.",
+      "fit": "Unknown-feasibility BO via Anubis variational GP classifier. Multi-fidelity also supported. NOT a NChooseK fix \u2014 use ENTMOOT (via BoFire EntingStrategy) for cardinality.",
+      "risks": "Smaller community than BoFire/BoTorch; chemistry-first not bioprocess-first.",
+      "route": [
+        "categorical_aware_bo"
+      ],
+      "claim_level": "not_yet_evaluated",
+      "fail_closed_behavior": "N/A \u2014 not wired."
+    },
+    {
+      "tool_id": "baybe",
+      "name": "BayBe (Bayesian Back End)",
+      "category": "adaptive_design",
+      "priority": "P1",
+      "status": "evaluate_next",
+      "posture": "low-data/hybrid/transfer-learning BO comparison target next to BoFire; Apache-2.0",
+      "package": "baybe==0.14.3; python_version < '3.14'",
+      "pyproject_extra": "backend-eval",
+      "license": "Apache-2.0",
+      "links": {
+        "repo": "https://github.com/emdgroup/baybe",
+        "docs": "https://emdgroup.github.io/baybe/",
+        "paper": "https://pubs.rsc.org/en/content/articlehtml/2025/dd/d5dd00050e"
+      },
+      "docs_in_repo": [
+        "docs/BIOMANUFACTURING_ADAPTIVE_BACKENDS.md",
+        "docs/adaptive-backend-evaluation.json",
+        "examples/adaptive-backend-eval/README.md"
+      ],
+      "last_checked": "2026-05-23",
+      "current_signal": "PyPI baybe 0.14.3 verified with Python 3.11 on 2026-05-23; requires Python >=3.10,<3.14. Public evaluation target for low-data, discrete/hybrid, transfer-learning, async, and categorical/substance workflows. Fixture use must preserve BioSymphony manifest, scale-bridge, assay, cost-stack, and handoff boundaries.",
+      "fit": "Compare next to BoFire for low-data-regime design, discrete/hybrid campaign surfaces, transfer-learning across related campaigns, asynchronous result arrival, and substance/categorical encodings. Good match to cumulative-dossier learning if kept behind a manifest boundary.",
+      "risks": "Smaller classical constrained-DoE/IPOPT surface than BoFire; pre-1.0 API; Merck KGaA roadmap priorities may differ from ours; must prove it can preserve BioSymphony's manifest, scale-bridge, assay, cost-stack, and handoff boundaries.",
+      "route": [
+        "bofire_alternative_adapter",
+        "categorical_substance_encoding",
+        "transfer_learning_across_campaigns",
+        "low_data_regime_design"
+      ],
+      "claim_level": "not_yet_evaluated",
+      "fail_closed_behavior": "Do not materialize BayBE candidates as authoritative designs until a fixture route report exists. If BayBE is missing or cannot preserve the manifest boundary, write an evaluation report and fall back to BoFire or stdlib planning.",
+      "local_lane": "nox -s adaptive_backend_surface"
+    },
+    {
+      "tool_id": "obsidian_apo",
+      "name": "obsidian (Algorithmic Process Optimization)",
+      "category": "adaptive_design",
+      "priority": "P2",
+      "status": "boundary_only",
+      "posture": "GPL-3.0 boundary-only; documented as Dash UI + SHAP pattern exemplar",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "GPL-3.0",
+      "links": {
+        "repo": "https://github.com/MSDLLCpapers/obsidian",
+        "docs": "https://msdllcpapers.github.io/obsidian/",
+        "pypi": "https://pypi.org/project/obsidian-apo/"
+      },
+      "last_checked": "2026-05-16",
+      "current_signal": "v0.8.6 released 2025-03-20; 46 stars, 9 forks, 278 commits. Author: Kevin Stone, Merck & Co. Dash UI deployable via 'pip install obsidian-apo[app]'. BayesianOptimizer central object with GP+EI default, batch + parallel evaluation, SHAP integration.",
+      "fit": "Reference for Dash UI patterns and SHAP-based explainability for process development scientists. Not embeddable due to GPL-3.0.",
+      "risks": "GPL-3.0 embedding risk per registry license_boundary decision rule. Closed-source corporate-affiliated maintainer (Merck & Co.).",
+      "route": [
+        "dash_ui_reference",
+        "shap_explanation_reference"
+      ],
+      "claim_level": "external_reference",
+      "fail_closed_behavior": "Do not import as dependency; document patterns only."
+    },
+    {
+      "tool_id": "estim8",
+      "name": "estim8 (JuBiotech parameter estimation)",
+      "category": "mechanistic_model_sidecar",
+      "priority": "P2",
+      "status": "boundary_only",
+      "posture": "AGPL-3.0 boundary-only; FMI bridge for Modelica parameter estimation",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "AGPL-3.0",
+      "links": {
+        "repo": "https://github.com/JuBiotech/estim8",
+        "org": "https://github.com/JuBiotech"
+      },
+      "last_checked": "2026-05-16",
+      "current_signal": "v0.1.5 released 2026-05-12; 4 stars, 5 watchers; six releases over two years. Active development from Forschungszentrum J\u00fclich's JuBiotech ecosystem. Parameter estimation for dynamic bioprocess models compliant with FMI (Functional Mockup Interface). scipy + pygmo optimization backends. Replicate-aware modeling and measurement noise modeling.",
+      "fit": "First-class FMI bridge \u2014 can ingest Modelica models from external upstream model authors and run estimation in Python. Useful when a campaign sponsor brings Modelica vessel/control models.",
+      "risks": "AGPL-3.0 prohibits embedding per registry license_boundary decision rule. Academic-scale signal (4 stars). Maintenance horizon uncertain.",
+      "route": [
+        "fmi_modelica_parameter_estimation",
+        "external_bioprocess_model_ingest"
+      ],
+      "claim_level": "external_reference",
+      "fail_closed_behavior": "Do not import; treat operator-run results as external evidence rows."
+    },
+    {
+      "tool_id": "bletl",
+      "name": "bletl (JuBiotech BioLector parser)",
+      "category": "data_contracts",
+      "priority": "P2",
+      "status": "boundary_only",
+      "posture": "AGPL-3.0 boundary-only; BioLector raw-file parser with PyMC inference",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "AGPL-3.0",
+      "links": {
+        "repo": "https://github.com/JuBiotech/bletl",
+        "org": "https://github.com/JuBiotech"
+      },
+      "last_checked": "2026-05-16",
+      "current_signal": "v1.7.1 released 2026-04-15; 8 stars, 2 forks, 431 commits, 29 releases. JuBiotech (Forschungszentrum J\u00fclich). BioLector I/II/Pro raw file parsing; PyMC-backed uncertainty quantification on time-variable growth rates; switch-point Bayesian inference.",
+      "fit": "Canonical Python ingest path for BioLector microbioreactor data. Operator runs externally; biosymphony ingests CSV output.",
+      "risks": "AGPL-3.0 prohibits embedding per registry license_boundary decision rule. Previous survey did not flag the AGPL license; this entry exists to make the boundary explicit.",
+      "route": [
+        "external_biolector_ingest"
+      ],
+      "claim_level": "external_reference",
+      "fail_closed_behavior": "Do not import; ingest CSV exports as evidence rows."
+    },
+    {
+      "tool_id": "processoptimizer",
+      "name": "ProcessOptimizer (Novo Nordisk scikit-optimize fork)",
+      "category": "adaptive_design",
+      "priority": "P2",
+      "status": "watch",
+      "posture": "scikit-optimize maintained continuation; pharma-affiliated maintainer",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "BSD-3-Clause",
+      "links": {
+        "repo": "https://github.com/novonordisk-research/ProcessOptimizer",
+        "paper": "https://pubs.acs.org/doi/10.1021/acs.jcim.4c02240"
+      },
+      "last_checked": "2026-05-16",
+      "current_signal": "Pharma-affiliated maintainer (Novo Nordisk Research). J. Chem. Inf. Model. 2025 publication (DOI 10.1021/acs.jcim.4c02240). Bayesian optimization with GP surrogates, multi-objective, batch mode, noise add/remove, comprehensive plotting. Active fork of archived scikit-optimize.",
+      "fit": "Migration target when campaign sponsor brings scikit-optimize code. Lighter than BoFire/BayBe; keeps the scikit-optimize lineage alive.",
+      "risks": "Smaller ecosystem signal than BoFire/BayBe. Inherits scikit-optimize's pre-existing limitations (no NChooseK first-class, no cost-aware).",
+      "route": [
+        "scikit_optimize_migration_target"
+      ],
+      "claim_level": "not_yet_evaluated",
+      "fail_closed_behavior": "N/A \u2014 not wired."
+    },
+    {
+      "tool_id": "tabpfn_v2",
+      "name": "TabPFN v3 (foundation-model surrogate)",
+      "category": "surrogate_modeling",
+      "priority": "P2",
+      "status": "adopted_optional",
+      "posture": "optional token-gated low-data surrogate adapter; runtime token required and never stored",
+      "package": "tabpfn>=8,<9",
+      "pyproject_extra": "tabpfn",
+      "license": "Apache-2.0",
+      "links": {
+        "repo": "https://github.com/PriorLabs/TabPFN",
+        "paper": "https://www.nature.com/articles/s41586-024-08328-6",
+        "pypi": "https://pypi.org/project/tabpfn/"
+      },
+      "last_checked": "2026-05-23",
+      "current_signal": "PyPI tabpfn 8.0.3 verified 2026-05-23. Public adapter is token-gated via TABPFN_TOKEN and remains inactive without an operator-supplied runtime token. It routes only as a planning surrogate for low-data/small-factor-count campaigns and preserves BioSymphony constraint, assay, scale, cost, and readiness gates.",
+      "fit": "Low-data tabular regression surrogate for sequential planning when n<20 or the operator explicitly requests a TabPFN-backed planning experiment.",
+      "risks": "Token-gated and non-commercial terms require operator review. No native NChooseK ownership; constraints are handled by the BioSymphony/Botorch wrapper and post-hoc validation. Predictions are model suggestions, not lab validation.",
+      "route": [
+        "foundation_model_surrogate_pilot",
+        "small_data_tabular_regression",
+        "optional_in_repo_adapter"
+      ],
+      "claim_level": "tabpfn_adapter_planning",
+      "fail_closed_behavior": "Adapter remains importable without token or package; plan reports degrade to not_available and stdlib fallback remains authoritative.",
+      "docs_in_repo": [
+        "src/biosymphony_ferm_doe/adapters/tabpfn_strategy.py",
+        "tests/test_tabpfn_strategy.py",
+        "docs/TOOL_REGISTRY.md"
+      ]
+    },
+    {
+      "tool_id": "llambo",
+      "name": "LLAMBO (LLM-warmstart sampler)",
+      "category": "adaptive_design",
+      "priority": "P2",
+      "status": "watch",
+      "posture": "LLM warmstart pilot candidate via OptunaHub; warmstart-only scope",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "MIT",
+      "links": {
+        "repo": "https://github.com/tennisonliu/LLAMBO",
+        "paper": "https://arxiv.org/abs/2402.03921",
+        "optunahub": "https://hub.optuna.org/samplers/llambo/"
+      },
+      "last_checked": "2026-05-16",
+      "current_signal": "ICLR 2024 paper (arXiv:2402.03921). OptunaHub sampler verified with Optuna 4.1.0, last update 2025-03-28, langchain >=0.3 + openai >=1.41. 108 stars on reference repo. Three independent LLM modules: zero-shot warmstart, in-context-regression surrogate, candidate sampler.",
+      "fit": "Warmstart-only \u2014 beats random init at trial 1-10 because the LLM has read the literature. After that ~GP-equivalent. Strong scoping due to Gupta 2024 negative result on LLM-in-the-inner-loop.",
+      "risks": "Gupta et al. arXiv:2509.21403 demonstrated LLM-only BO agents show no sensitivity to experimental feedback (label permutation test). Must NEVER replace inner BO loop. OpenAI API tax per acquisition if used outside warmstart scope. OptunaHub sampler delegates categorical to random search.",
+      "route": [
+        "llm_warmstart_first_batch",
+        "optuna_sampler_pilot"
+      ],
+      "claim_level": "not_yet_evaluated",
+      "fail_closed_behavior": "N/A \u2014 not wired."
+    },
+    {
+      "tool_id": "omlt",
+      "name": "OMLT (Optimization & Machine Learning Toolkit)",
+      "category": "surrogate_modeling",
+      "priority": "P1",
+      "status": "adopted_optional",
+      "posture": "optional in-repo adapter for MIP-optimized surrogate planning with explicit linear and NChooseK constraints",
+      "package": "omlt>=1.2.2,<2",
+      "pyproject_extra": "omlt",
+      "license": "BSD-3-Clause",
+      "links": {
+        "repo": "https://github.com/cog-imperial/OMLT",
+        "paper": "https://jmlr.org/papers/v23/22-0277.html"
+      },
+      "last_checked": "2026-05-23",
+      "current_signal": "PyPI omlt 1.2.2 verified 2026-05-23. Public optional adapter is import-safe without heavy dependencies and emits not_available/solver_unavailable reports unless OMLT, Pyomo, HiGHS, LightGBM, and ONNX tooling are installed.",
+      "fit": "MIP-backed surrogate optimization for linear, categorical, and NChooseK-heavy candidate generation when a fitted surrogate plus hard constraints is the right planning surface.",
+      "risks": "Surrogate quality bounds candidate quality; solver stack is heavier than stdlib/BoFire. It must not bypass BioSymphony readiness, assay, evidence, cost, or scale-transfer gates.",
+      "route": [
+        "mip_surrogate_optimization",
+        "nchoosek_cardinality_bo",
+        "optional_in_repo_adapter"
+      ],
+      "claim_level": "omlt_adapter_planning",
+      "fail_closed_behavior": "Adapter remains importable without optional dependencies; plan reports degrade to not_available or solver_unavailable without raising.",
+      "docs_in_repo": [
+        "src/biosymphony_ferm_doe/adapters/omlt_strategy.py",
+        "tests/test_omlt_strategy.py",
+        "docs/TOOL_REGISTRY.md"
+      ]
+    }
+  ]
+}

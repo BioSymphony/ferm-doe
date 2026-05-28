@@ -1,0 +1,113 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "biosymphony-ferm-doe"
+version = "0.1.0a0"
+description = "AI-agent-ready DoE planning for fermentation and biomanufacturing: choose design families, check scale-up/down criteria, route BO backends, and produce run packets."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "BioSymphony contributors" }]
+keywords = [
+  "fermentation",
+  "bioprocess",
+  "biomanufacturing",
+  "upstream-bioprocess",
+  "cell-culture",
+  "fed-batch",
+  "perfusion",
+  "design-of-experiments",
+  "experimental-design",
+  "doe",
+  "bayesian-optimization",
+  "optimization",
+  "scale-up",
+  "scale-down",
+  "downscale-qualification",
+  "scale-bridge",
+  "kla",
+  "bioreactor",
+  "biosafety",
+  "python",
+  "readiness",
+  "planning",
+  "ai-agents",
+  "claude-code",
+  "openai-agents",
+  "agentic-ai",
+  "pre-experiment-planning",
+  "computational-planning",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+  "Topic :: Scientific/Engineering :: Chemistry",
+  "Topic :: Scientific/Engineering :: Information Analysis",
+]
+dependencies = [
+  "tomli>=2.0; python_version < '3.11'",
+]
+
+[project.optional-dependencies]
+scipy = ["scipy>=1.11"]
+pydoe3 = ["pyDOE3>=1.0"]
+botorch = ["torch>=2.0", "botorch>=0.9", "gpytorch>=1.11"]
+bofire = ["bofire>=0.3.1,<0.4", "botorch>=0.9", "torch>=2.0"]
+adaptive = ["bofire>=0.3.1,<0.4", "botorch>=0.9", "torch>=2.0"]
+backend-eval = ["baybe==0.14.3; python_version < '3.14'", "ax-platform==1.2.4"]
+entmoot = ["entmoot==2.1.1", "highspy>=1.7", "pyomo>=6.7,<7", "lightgbm~=4.6.0"]
+omlt = [
+  "omlt>=1.2.2,<2",
+  "highspy>=1.7",
+  "pyomo>=6.7,<7",
+  "lightgbm>=4.6,<5",
+  "onnxmltools>=1.13",
+  "scikit-learn>=1.4",
+]
+tabpfn = ["tabpfn>=8,<9", "torch>=2.0", "botorch>=0.9", "gpytorch>=1.11"]
+sensitivity = ["SALib>=1.5.2"]
+report = ["plotly>=6.0"]
+contracts = ["frictionless>=5,<6"]
+dev = ["pytest>=8.0", "nox>=2024.4"]
+all = [
+  "scipy>=1.11",
+  "pyDOE3>=1.0",
+  "torch>=2.0",
+  "botorch>=0.9",
+  "gpytorch>=1.11",
+  "bofire>=0.3.1,<0.4",
+  "SALib>=1.5.2",
+  "plotly>=6.0",
+  "frictionless>=5,<6",
+]
+
+[project.urls]
+Homepage = "https://github.com/BioSymphony/ferm-doe"
+Repository = "https://github.com/BioSymphony/ferm-doe"
+Issues = "https://github.com/BioSymphony/ferm-doe/issues"
+Documentation = "https://github.com/BioSymphony/ferm-doe#documentation"
+Changelog = "https://github.com/BioSymphony/ferm-doe/blob/main/CHANGELOG.md"
+Schema = "https://github.com/BioSymphony/ferm-doe/blob/main/schemas/campaign_manifest.schema.json"
+
+[project.scripts]
+ferm-doe = "biosymphony_ferm_doe.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"biosymphony_ferm_doe" = ["py.typed"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

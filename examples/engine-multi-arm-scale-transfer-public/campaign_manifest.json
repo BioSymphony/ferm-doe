@@ -1,0 +1,655 @@
+{
+  "schema_version": 1,
+  "campaign_id": "flagship-scale-transfer-v0",
+  "name": "Synthetic multi-arm scale transfer DOE demo",
+  "claim_level": "public_synthetic_demo",
+  "profiles": [
+    "screening",
+    "scale_up_bridge",
+    "optimization_rsm"
+  ],
+  "readiness_target": "YELLOW",
+  "current_format": "96 well deep-well plate scout",
+  "current_scale": "1.2 mL working volume",
+  "source_format": "96 well deep-well plate scout",
+  "source_scale": "1.2 mL working volume",
+  "target_format": "ambr250 controlled fed-batch reactor",
+  "target_scale": "250 mL working volume",
+  "desired_format": "reactor bridge plus plate downscale model",
+  "desired_scale": "1.2 mL downscale and 250 mL reactor",
+  "scale_direction": "coupled_scale_up_downscale",
+  "source_vessel": "synthetic deep-well plate",
+  "target_vessel": "synthetic ambr250 vessel",
+  "mixing_proxy": "kLa, fill volume, orbital speed, and reactor P/V",
+  "oxygen_transfer_proxy": "planned kLa_per_hour",
+  "reference_reactor_behavior": "Synthetic reactor reference envelope for bridge qualification only.",
+  "plate_geometry": "Synthetic 96 well deep-well geometry, 1.2 mL working volume.",
+  "evaporation_policy": "Use perimeter controls and mass-loss correction before any physical run.",
+  "vessel": "ambr250 and 96 well deep-well plate",
+  "working_volume_ml": 250,
+  "duration_h": 72,
+  "inoculum_basis": "normalized seed train optical density at induction start",
+  "oxygen_transfer": "match planned kLa where feasible; reactor DO cascade remains arm-specific",
+  "pH_strategy": "reactor pH controlled; plate pH buffered and audited as a downscale caveat",
+  "foam_policy": "antifoam policy must be locked before execution",
+  "phase_plan": "growth, induction, fed-batch production, harvest",
+  "feed_composition": "synthetic carbon-limited feed for public planning examples",
+  "feed_rate_policy": "reactor feed is arm-specific and retuned after bridge qualification",
+  "induction_policy": "shared induction timing factor across arms",
+  "harvest_policy": "fixed 72 h harvest unless stop rules trigger earlier",
+  "cost_limit": "synthetic planning cost ceiling of 50 USD per planned run",
+  "run_duration_limit": "72 h planned run duration",
+  "productivity_response": "specific_productivity_mg_g_h",
+  "sampling_burden_policy": "do not exceed 6 analytical samples per planned run without operator approval",
+  "product_class": "secreted public-demo protein",
+  "assay_method": "HPLC concentration assay",
+  "sample_fraction": "clarified supernatant",
+  "standard_curve": "external synthetic standard curve",
+  "matrix_effects_policy": "per-arm spike recovery before execution",
+  "experimental_setup": {
+    "setup_id": "flagship_scale_transfer_setup_v0",
+    "target_scale": "1.2 mL downscale and 250 mL reactor",
+    "vessel_format": "96 well deep-well plate plus ambr250",
+    "selected_design": "per-arm design tournament",
+    "operator_boundary": "planning dossier only; no physical execution approval"
+  },
+  "optimization_goals": [
+    {
+      "goal_id": "maximize_titer",
+      "response_id": "soluble_titer_mg_l",
+      "direction": "maximize",
+      "description": "Increase soluble titer without crossing acetate or cost limits."
+    },
+    {
+      "goal_id": "maximize_productivity",
+      "response_id": "specific_productivity_mg_g_h",
+      "direction": "maximize",
+      "description": "Prefer earlier productive expression over late high-titer drift."
+    },
+    {
+      "goal_id": "minimize_cost",
+      "response_id": "media_cost_usd_l",
+      "direction": "minimize",
+      "description": "Keep synthetic media cost low enough for follow-up expansion."
+    },
+    {
+      "goal_id": "control_acetate",
+      "response_id": "acetate_g_l",
+      "direction": "minimize",
+      "description": "Treat acetate as a bridge and process-health constraint."
+    },
+    {
+      "goal_id": "qualify_bridge",
+      "response_id": "bridge_delta_pct",
+      "direction": "minimize",
+      "description": "Minimize plate-to-reactor response delta before claiming scale transfer."
+    }
+  ],
+  "objective": {
+    "primary": "Plan per-arm DOE conditions that can support a later scale-up or downscale decision.",
+    "direction": "maximize",
+    "response_id": "soluble_titer_mg_l",
+    "secondary": [
+      {
+        "goal_id": "productivity",
+        "response_id": "specific_productivity_mg_g_h",
+        "direction": "maximize",
+        "description": "Keep productivity high enough to justify follow-up confirmation."
+      },
+      {
+        "goal_id": "cost",
+        "response_id": "media_cost_usd_l",
+        "direction": "minimize",
+        "description": "Avoid expensive media settings unless titer and bridge confidence improve."
+      },
+      {
+        "goal_id": "bridge_delta",
+        "response_id": "bridge_delta_pct",
+        "direction": "minimize",
+        "description": "Prefer conditions that reduce downscale-to-reactor mismatch."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "synthetic-flagship-design",
+      "source_type": "synthetic_demo",
+      "license": "repo_synthetic",
+      "description": "Synthetic example created for contract and dossier regression testing."
+    }
+  ],
+  "inputs": {
+    "historical_run_ledger": "inputs/historical_run_ledger.csv",
+    "evidence_table": "inputs/evidence_table.csv",
+    "equipment_inventory": "inputs/equipment_inventory.csv",
+    "reagent_inventory": "inputs/reagent_inventory.csv"
+  },
+  "campaign_arms": [
+    {
+      "arm_id": "plate_downscale",
+      "name": "Plate downscale model",
+      "kind": "96_well_deep_well_plate",
+      "scale_tier": "downscale_model",
+      "purpose": "Scout transferable factors cheaply while preserving a downscale caveat.",
+      "vessel": "96 well deep-well plate",
+      "working_volume_ml": 1.2,
+      "duration_h": 72,
+      "run_budget": 8,
+      "factor_ids": [
+        "production_temperature_c",
+        "induction_time_h",
+        "plate_fill_volume_ml",
+        "plate_orbital_rpm"
+      ],
+      "response_ids": [
+        "soluble_titer_mg_l",
+        "specific_productivity_mg_g_h",
+        "media_cost_usd_l",
+        "acetate_g_l",
+        "bridge_delta_pct"
+      ],
+      "execution_policy": {
+        "physical_execution_allowed": false,
+        "requires_bridge_review": true
+      },
+      "notes": [
+        "Plate rows are downscale planning conditions, not execution approval."
+      ]
+    },
+    {
+      "arm_id": "ambr_reactor",
+      "name": "Controlled reactor bridge",
+      "kind": "ambr250_fed_batch",
+      "scale_tier": "bench_reactor",
+      "purpose": "Bridge plate winners into controlled reactor conditions before scale-up.",
+      "vessel": "ambr250",
+      "working_volume_ml": 250,
+      "duration_h": 72,
+      "run_budget": 8,
+      "factor_ids": [
+        "production_temperature_c",
+        "induction_time_h",
+        "reactor_do_setpoint_pct",
+        "reactor_feed_rate_ml_h"
+      ],
+      "response_ids": [
+        "soluble_titer_mg_l",
+        "specific_productivity_mg_g_h",
+        "media_cost_usd_l",
+        "acetate_g_l",
+        "bridge_delta_pct"
+      ],
+      "bridge_to": {
+        "arm_id": "plate_downscale",
+        "criterion": "kLa_per_hour"
+      },
+      "execution_policy": {
+        "physical_execution_allowed": false,
+        "requires_bridge_review": true
+      },
+      "notes": [
+        "Reactor rows are controlled bridge plans, not production-ready recipes."
+      ]
+    }
+  ],
+  "arm_bridge_policy": {
+    "description": "Synthetic bidirectional bridge policy for adaptive scale_or_downscale testing.",
+    "shared_concepts": [
+      "production_temperature_c",
+      "induction_time_h",
+      "soluble_titer_mg_l",
+      "specific_productivity_mg_g_h"
+    ],
+    "bridges": [
+      {
+        "source_arm_id": "plate_downscale",
+        "target_arm_id": "ambr_reactor",
+        "bridge_kind": "scale_up_candidate",
+        "eligibility_status": "passed",
+        "minimum_evidence": {
+          "status": "PASS",
+          "basis": "synthetic prior for regression testing"
+        },
+        "assay_comparability": {
+          "status": "PASS",
+          "basis": "same synthetic assay policy across arms"
+        },
+        "decision_authority": "human_scientific_review",
+        "claim_boundary": "planned_transfer_prior_only"
+      },
+      {
+        "source_arm_id": "ambr_reactor",
+        "target_arm_id": "plate_downscale",
+        "bridge_kind": "downscale_model_check",
+        "eligibility_status": "passed",
+        "minimum_evidence": {
+          "status": "PASS",
+          "basis": "synthetic prior for regression testing"
+        },
+        "assay_comparability": {
+          "status": "PASS",
+          "basis": "same synthetic assay policy across arms"
+        },
+        "decision_authority": "human_scientific_review",
+        "claim_boundary": "planned_downscale_prior_only"
+      }
+    ]
+  },
+  "scale_context": {
+    "direction": "coupled_scale_up_downscale",
+    "organism_class": "microbial_coalescing",
+    "from_scale": {
+      "scale_id": "plate_downscale",
+      "working_volume_l": 0.0012,
+      "geometry": {
+        "h_over_d": 1.4,
+        "impeller_d_over_t": 0.35,
+        "n_impellers": 1,
+        "impeller_type": "marine"
+      },
+      "engineering_targets": {
+        "kLa_per_hour": 120,
+        "vvm": 1.0
+      }
+    },
+    "to_scale": {
+      "scale_id": "ambr_reactor",
+      "working_volume_l": 0.25,
+      "geometry": {
+        "h_over_d": 2.0,
+        "impeller_d_over_t": 0.42,
+        "n_impellers": 1,
+        "impeller_type": "pitched_blade"
+      },
+      "engineering_targets": {
+        "kLa_per_hour": 120,
+        "vvm": 1.0
+      }
+    },
+    "bridge_strategy": {
+      "primary_criterion": "kLa_per_hour",
+      "secondary_criteria": [
+        "p_per_v",
+        "mix_time"
+      ]
+    },
+    "bridge_factors": {
+      "transferable": [
+        "production_temperature_c",
+        "induction_time_h"
+      ],
+      "needs_retuning": [
+        "reactor_do_setpoint_pct",
+        "reactor_feed_rate_ml_h"
+      ],
+      "not_applicable": [
+        "plate_fill_volume_ml",
+        "plate_orbital_rpm"
+      ]
+    },
+    "recapitulation_criterion": {
+      "metric": "bridge_delta_pct",
+      "tolerance": 15,
+      "status": "planned_not_executed"
+    }
+  },
+  "responses": [
+    {
+      "response_id": "soluble_titer_mg_l",
+      "name": "Soluble titer",
+      "unit": "mg/L",
+      "direction": "maximize",
+      "class": "titer",
+      "sample_fraction": "clarified_supernatant",
+      "assay_method": "hplc",
+      "calibration": "external synthetic standard",
+      "matrix_effects_policy": "per-arm spike recovery before execution",
+      "assay_power_policy": {
+        "minimum_detectable_effect": 25,
+        "expected_effect_size": 100,
+        "noise_sd": 20,
+        "replicate_count": 4,
+        "target_power": 0.8,
+        "lod": 2,
+        "loq": 5,
+        "dynamic_range": [
+          5,
+          1000
+        ],
+        "matrix_recovery_min": 90,
+        "turnaround_h": 24
+      },
+      "measurement_type": "assayed",
+      "assay_required": true,
+      "standard_curve": {
+        "status": "planned_demo",
+        "acceptance": "Public example requires calibration before physical execution."
+      }
+    },
+    {
+      "response_id": "specific_productivity_mg_g_h",
+      "name": "Specific productivity",
+      "unit": "mg/g/h",
+      "direction": "maximize",
+      "class": "productivity",
+      "sample_fraction": "clarified_supernatant",
+      "assay_method": "hplc_plus_biomass",
+      "calibration": "external synthetic standard",
+      "matrix_effects_policy": "per-arm recovery and biomass normalization",
+      "assay_power_policy": {
+        "minimum_detectable_effect": 2,
+        "expected_effect_size": 8,
+        "noise_sd": 1.5,
+        "replicate_count": 4,
+        "target_power": 0.8,
+        "lod": 0.2,
+        "loq": 0.5,
+        "dynamic_range": [
+          0.5,
+          100
+        ],
+        "matrix_recovery_min": 90,
+        "turnaround_h": 24
+      },
+      "measurement_type": "assayed",
+      "assay_required": true,
+      "standard_curve": {
+        "status": "planned_demo",
+        "acceptance": "Public example requires calibration before physical execution."
+      }
+    },
+    {
+      "response_id": "media_cost_usd_l",
+      "name": "Media cost",
+      "unit": "USD/L",
+      "direction": "minimize",
+      "class": "cost",
+      "measurement_type": "calculated",
+      "assay_required": false,
+      "definition": "Synthetic cost model for planning only.",
+      "assay_method": "calculated",
+      "sample_fraction": "not_applicable"
+    },
+    {
+      "response_id": "acetate_g_l",
+      "name": "Acetate",
+      "unit": "g/L",
+      "direction": "minimize",
+      "class": "byproduct",
+      "sample_fraction": "clarified_supernatant",
+      "assay_method": "hplc",
+      "calibration": "external synthetic standard",
+      "matrix_effects_policy": "per-arm spike recovery before execution",
+      "assay_power_policy": {
+        "minimum_detectable_effect": 0.3,
+        "expected_effect_size": 1.2,
+        "noise_sd": 0.2,
+        "replicate_count": 4,
+        "target_power": 0.8,
+        "lod": 0.05,
+        "loq": 0.1,
+        "dynamic_range": [
+          0.1,
+          10
+        ],
+        "matrix_recovery_min": 90,
+        "turnaround_h": 24
+      },
+      "measurement_type": "assayed",
+      "assay_required": true,
+      "standard_curve": {
+        "status": "planned_demo",
+        "acceptance": "Public example requires calibration before physical execution."
+      }
+    },
+    {
+      "response_id": "bridge_delta_pct",
+      "name": "Bridge response delta",
+      "unit": "percent",
+      "direction": "minimize",
+      "class": "derived",
+      "measurement_type": "calculated",
+      "assay_required": true,
+      "derived_from": [
+        "soluble_titer_mg_l",
+        "specific_productivity_mg_g_h"
+      ],
+      "assay_method": "planned_public_demo_assay",
+      "sample_fraction": "declared_public_demo_fraction",
+      "standard_curve": {
+        "status": "planned_demo",
+        "acceptance": "Public example requires calibration before physical execution."
+      },
+      "matrix_effects_policy": {
+        "status": "planned_demo",
+        "note": "Public example requires matrix-effects review before physical execution."
+      }
+    }
+  ],
+  "factors": [
+    {
+      "factor_id": "production_temperature_c",
+      "name": "Production temperature",
+      "type": "numeric",
+      "unit": "C",
+      "min": 24,
+      "max": 30,
+      "phase": "production",
+      "low": 24,
+      "high": 30
+    },
+    {
+      "factor_id": "induction_time_h",
+      "name": "Induction time",
+      "type": "numeric",
+      "unit": "h",
+      "min": 18,
+      "max": 26,
+      "phase": "induction",
+      "low": 18,
+      "high": 26
+    },
+    {
+      "factor_id": "plate_fill_volume_ml",
+      "name": "Plate fill volume",
+      "type": "numeric",
+      "unit": "mL",
+      "min": 0.8,
+      "max": 1.4,
+      "phase": "growth",
+      "arm_id": "plate_downscale",
+      "low": 0.8,
+      "high": 1.4
+    },
+    {
+      "factor_id": "plate_orbital_rpm",
+      "name": "Plate orbital speed",
+      "type": "numeric",
+      "unit": "rpm",
+      "min": 650,
+      "max": 950,
+      "phase": "production",
+      "arm_id": "plate_downscale",
+      "low": 650,
+      "high": 950
+    },
+    {
+      "factor_id": "reactor_do_setpoint_pct",
+      "name": "Reactor DO setpoint",
+      "type": "numeric",
+      "unit": "percent air saturation",
+      "min": 30,
+      "max": 60,
+      "phase": "production",
+      "arm_id": "ambr_reactor",
+      "low": 30,
+      "high": 60
+    },
+    {
+      "factor_id": "reactor_feed_rate_ml_h",
+      "name": "Reactor feed rate",
+      "type": "numeric",
+      "unit": "mL/h",
+      "min": 1.0,
+      "max": 5.0,
+      "phase": "feed",
+      "arm_id": "ambr_reactor",
+      "low": 1.0,
+      "high": 5.0
+    }
+  ],
+  "constraints": [
+    {
+      "constraint_id": "no_chimeric_runs",
+      "type": "hard",
+      "description": "Plate-only and reactor-only controls must not be merged into one executable DOE table."
+    },
+    {
+      "constraint_id": "bridge_claim_boundary",
+      "type": "hard",
+      "description": "Scale up and downscale claims remain planned until bridge runs satisfy the recapitulation criterion."
+    },
+    {
+      "constraint_id": "run_cost_ceiling",
+      "type": "soft",
+      "description": "Prefer conditions compatible with the synthetic planning cost ceiling."
+    }
+  ],
+  "design_policy": {
+    "design_intent": "scale_transfer_screening_with_bridge_controls",
+    "run_budget": 10,
+    "campaign_arm_mode": "per_arm",
+    "requested_next_action": "scale_or_downscale",
+    "require_assay_power": true,
+    "execution_policy": {
+      "physical_execution_allowed": false,
+      "requires_human_review": true
+    },
+    "random_seed": 17
+  },
+  "swarm_policy": {
+    "enabled": false,
+    "activation": "task_request_or_manifest_only",
+    "max_parallel_w1_agents": 5,
+    "lanes": [
+      "literature_prior",
+      "protocol_vendor_methods",
+      "assay_product_class_skeptic",
+      "process_engineering_scale_transfer",
+      "cost_runability_schedule"
+    ]
+  },
+  "system": {
+    "organism_label": "public_demo_system",
+    "product_class": "secreted public-demo protein",
+    "scale": "1.2 mL working volume",
+    "privacy": "synthetic_or_public_only"
+  },
+  "doe": {
+    "family": "custom_constrained",
+    "n_runs": 10,
+    "randomized": true,
+    "claim": "heuristic",
+    "design_table_path": "expected/selected_wave_1_design.csv"
+  },
+  "decision_rules": [
+    {
+      "rule_id": "public-demo-review",
+      "scope": "global",
+      "comparator": "qualitative",
+      "threshold": "readiness remains YELLOW or better",
+      "action": "pause"
+    }
+  ],
+  "stop_rules": [
+    {
+      "rule_id": "stop-on-private-data",
+      "condition": "non-public data would be required",
+      "action": "pause"
+    }
+  ],
+  "risk_register": [
+    {
+      "risk_id": "public-demo-boundary",
+      "category": "claim_boundary",
+      "likelihood": "medium",
+      "impact": "high",
+      "mitigation": "Keep example as synthetic planning fixture only.",
+      "status": "open"
+    }
+  ],
+  "readiness": {
+    "overall": "YELLOW",
+    "reasons": [
+      "Public synthetic example fixture."
+    ]
+  },
+  "arms": [
+    {
+      "arm_id": "plate_downscale",
+      "name": "Plate downscale model",
+      "kind": "96_well_deep_well_plate",
+      "scale_tier": "downscale_model",
+      "purpose": "Scout transferable factors cheaply while preserving a downscale caveat.",
+      "vessel": "96 well deep-well plate",
+      "working_volume_ml": 1.2,
+      "duration_h": 72,
+      "run_budget": 8,
+      "factor_ids": [
+        "production_temperature_c",
+        "induction_time_h",
+        "plate_fill_volume_ml",
+        "plate_orbital_rpm"
+      ],
+      "response_ids": [
+        "soluble_titer_mg_l",
+        "specific_productivity_mg_g_h",
+        "media_cost_usd_l",
+        "acetate_g_l",
+        "bridge_delta_pct"
+      ],
+      "execution_policy": {
+        "physical_execution_allowed": false,
+        "requires_bridge_review": true
+      },
+      "notes": [
+        "Plate rows are downscale planning conditions, not execution approval."
+      ]
+    },
+    {
+      "arm_id": "ambr_reactor",
+      "name": "Controlled reactor bridge",
+      "kind": "ambr250_fed_batch",
+      "scale_tier": "bench_reactor",
+      "purpose": "Bridge plate winners into controlled reactor conditions before scale-up.",
+      "vessel": "ambr250",
+      "working_volume_ml": 250,
+      "duration_h": 72,
+      "run_budget": 8,
+      "factor_ids": [
+        "production_temperature_c",
+        "induction_time_h",
+        "reactor_do_setpoint_pct",
+        "reactor_feed_rate_ml_h"
+      ],
+      "response_ids": [
+        "soluble_titer_mg_l",
+        "specific_productivity_mg_g_h",
+        "media_cost_usd_l",
+        "acetate_g_l",
+        "bridge_delta_pct"
+      ],
+      "bridge_to": {
+        "arm_id": "plate_downscale",
+        "criterion": "kLa_per_hour"
+      },
+      "execution_policy": {
+        "physical_execution_allowed": false,
+        "requires_bridge_review": true
+      },
+      "notes": [
+        "Reactor rows are controlled bridge plans, not production-ready recipes."
+      ]
+    }
+  ]
+}

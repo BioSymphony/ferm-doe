@@ -1,0 +1,111 @@
+[
+  {
+    "id": "gecse2024",
+    "type": "article",
+    "title": "Minimizing acetate formation from overflow metabolism in E. coli: comparison of genetic engineering strategies to improve robustness toward sugar gradients in large-scale fermentation processes",
+    "authors": [
+      "Gecse, Gergo",
+      "Labunskaite, Ruta",
+      "Pedersen, Michael",
+      "Kilstrup, Mogens",
+      "Johanson, Ted"
+    ],
+    "year": 2024,
+    "venue": "Frontiers in Bioengineering and Biotechnology",
+    "doi": "10.3389/fbioe.2024.1339054",
+    "url": "https://doi.org/10.3389/fbioe.2024.1339054",
+    "phase_used": [0, 1, 2],
+    "claim_supported": "Industrial study comparing three E. coli metabolic strategies to mitigate acetate overflow under sugar gradients in fed-batch. Confirms that acetate accumulation under excess glucose is a real productivity penalty and provides candidate mathematical forms (acetate formation rate proportional to glucose pulse magnitude in carbon-limited cells). Useful as a literature anchor when a campaign manifest declares carbon-source type and concentration as load-bearing design factors.",
+    "non_claim": "Gecse et al. address genetic engineering strategies (pathway knockouts, TCA flux increase) not accessible without strain modification. The acetate kinetic forms are illustrative of the class; specific coefficients for a given campaign system must be measured or fitted to historical data before being used as simulator inputs."
+  },
+  {
+    "id": "studier2005",
+    "type": "article",
+    "title": "Protein production by auto-induction in high density shaking cultures",
+    "authors": [
+      "Studier, F. William"
+    ],
+    "year": 2005,
+    "venue": "Protein Expression and Purification",
+    "doi": "10.1016/j.pep.2005.01.016",
+    "url": "https://doi.org/10.1016/j.pep.2005.01.016",
+    "phase_used": [0, 1, 4],
+    "claim_supported": "Public protein-expression reference for lactose autoinduction and high-density shake-flask culture. Useful as a source-metadata fixture when a public demo needs to discuss induction timing, carbon-source policy, or the IPTG-to-lactose planning lever.",
+    "non_claim": "Studier reports a specific autoinduction system and expression context. This fixture does not recommend a feed recipe, induction policy, or harvest time for unrelated organisms, products, or equipment."
+  },
+  {
+    "id": "cui2012",
+    "type": "article",
+    "title": "Optimization of Xylanase Production from Penicillium sp. WX-Z1 by a Two-Step Statistical Strategy: Plackett-Burman and Box-Behnken Experimental Design",
+    "authors": [
+      "Cui, F. J.",
+      "Zhao, L. M."
+    ],
+    "year": 2012,
+    "venue": "International Journal of Molecular Sciences",
+    "doi": "10.3390/ijms130810630",
+    "url": "https://doi.org/10.3390/ijms130810630",
+    "phase_used": [0, 1],
+    "claim_supported": "Public CC BY xylanase fermentation study with Plackett-Burman and Box-Behnken tables. Useful as a public-paper-derived fixture for source attribution, historical-run normalization, and response-surface planning.",
+    "non_claim": "Cui and Zhao report one xylanase system under their experimental conditions. The normalized table is a public planning fixture here, not a recommendation for unrelated organisms, assays, or equipment."
+  },
+  {
+    "id": "cosenza2022",
+    "type": "article",
+    "title": "Multi-information source Bayesian optimization of culture media for cellular agriculture",
+    "authors": [
+      "Cosenza, Zachary",
+      "Astudillo, Raul",
+      "Frazier, Peter I.",
+      "Baar, Keith",
+      "Block, David E."
+    ],
+    "year": 2022,
+    "venue": "Biotechnology and Bioengineering",
+    "doi": "10.1002/bit.28132",
+    "url": "https://doi.org/10.1002/bit.28132",
+    "phase_used": [2, 3],
+    "claim_supported": "Multi-information-source (multi-fidelity) BO for 14-component culture media (C2C12 skeletal muscle cells). Reports 181% more cells versus commercial baseline in 38% fewer experiments than DoE alone. Useful as a methodological analog when a campaign exercises multi-fidelity BO over a constrained media space. Frazier (Cornell ORIE, co-author) is widely cited as the BO tutorial reference; this paper extends the same group's work to multi-source fidelity.",
+    "non_claim": "Cosenza et al. optimize mammalian cell culture media, not E. coli defined media; cell growth mechanics and nutrient stoichiometry differ substantially. The 181% improvement figure is for their specific cell line and media formulation and cannot be extrapolated to E. coli periplasmic titer. Cite as a methodology benchmark, not a yield prediction."
+  },
+  {
+    "id": "claes2024",
+    "type": "article",
+    "title": "Bayesian cell therapy process optimization",
+    "authors": [
+      "Claes, Elise",
+      "Heck, Thomas",
+      "Coddens, Kristiaan",
+      "Sonnaert, Maarten",
+      "Schrooten, Johan",
+      "Verwaeren, Jan"
+    ],
+    "year": 2024,
+    "venue": "Biotechnology and Bioengineering",
+    "doi": "10.1002/bit.28669",
+    "url": "https://doi.org/10.1002/bit.28669",
+    "phase_used": [2],
+    "claim_supported": "Noisy parallel BO applied to a bioprocess optimization problem with heteroscedastic observations (biological noise), reporting up to 50% fewer experiments to reach a target performance versus industry state-of-the-art DoE. Useful as a quantitative benchmark when a Phase 2 BO step expects to reduce the follow-up experiment count relative to a pure DoE expansion.",
+    "non_claim": "Claes et al. optimize a cell therapy process (not E. coli media) with a different noise model. The 50% experiment reduction is for their specific problem; the actual reduction in any other system depends on the assay noise level, the number of feasible candidates, and the quality of the Phase 1 GP surrogate seed."
+  },
+  {
+    "id": "siska2026",
+    "type": "article",
+    "title": "A Guide to Bayesian Optimization in Bioprocess Engineering",
+    "authors": [
+      "Siska, Martin",
+      "Pajak, Eryk",
+      "Rosenthal, Kevin",
+      "Del Rio Chanona, Ehecatl Antonio",
+      "von Lieres, Eric",
+      "Helleckes, Lisa Marie"
+    ],
+    "year": 2026,
+    "venue": "Biotechnology and Bioengineering",
+    "doi": "10.1002/bit.70129",
+    "url": "https://doi.org/10.1002/bit.70129",
+    "phase_used": [2, 3],
+    "claim_supported": "2026 practitioner guide to BO for bioprocess engineering from the Sargent Centre at Imperial College London (same group behind ENTMOOT). Covers kernel selection, acquisition functions for noisy biological data, multi-fidelity BO, and heteroscedastic GPs. Useful as the 2026 reference point when a methods note needs to anchor a BoFire-based approach in the current BO-in-bioprocess methodology literature.",
+    "non_claim": "Siska et al. describe general BO principles; specific BoFire-implementation findings (SoboStrategy stall on NChooseK via issue #450, MultiFidelityVarianceBasedStrategy ConstraintNotFulfilledError) live in this repo's docs/BOFIRE_CONSTRAINT_PATTERNS.md and docs/ENTMOOT_SWAP_DESIGN.md, not in the guide."
+  }
+]

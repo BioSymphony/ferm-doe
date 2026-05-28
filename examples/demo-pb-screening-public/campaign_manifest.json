@@ -1,0 +1,165 @@
+{
+  "campaign_id": "demo-pb-screening-public",
+  "claim_level": "public_synthetic_demo",
+  "profiles": ["screening"],
+  "objective": "Identify active fermentation factors with a Plackett-Burman screen, then narrow toward the predicted optimum in follow-up using stdlib first-batch analysis.",
+  "system": {
+    "organism_label": "public_demo_microbe",
+    "product_class": "secreted_protein_demo",
+    "scale": "shake_flask_to_benchtop_planning_demo",
+    "privacy": "synthetic_or_public_only"
+  },
+  "responses": [
+    {
+      "response_id": "titer_g_l",
+      "class": "titer",
+      "measurement_type": "assayed",
+      "direction": "maximize",
+      "assay_required": true,
+      "assay_method": "hplc_or_elisa_planned",
+      "sample_fraction": "clarified_supernatant",
+      "standard_curve": {
+        "status": "planned_demo",
+        "acceptance": "linear range and dilution linearity must be qualified before physical execution"
+      },
+      "matrix_effects_policy": {
+        "status": "planned_demo",
+        "note": "Matrix interference must be bounded for the broth used."
+      },
+      "objective_lower": 0.0,
+      "objective_upper": 30.0,
+      "objective_shape": "linear",
+      "objective_weight": 1.0,
+      "assay_power_policy": {
+        "minimum_detectable_effect": 5,
+        "expected_effect_size": 20,
+        "cv_percent": 12,
+        "replicate_count": 3,
+        "target_power": 0.8,
+        "lod": 0.1,
+        "loq": 0.5,
+        "dynamic_range": {"low": 0.5, "high": 100},
+        "matrix_recovery_min": 85,
+        "turnaround_h": 48
+      }
+    },
+    {
+      "response_id": "run_cost_usd",
+      "class": "cost",
+      "measurement_type": "derived",
+      "direction": "minimize",
+      "assay_required": false,
+      "sample_fraction": "not_applicable",
+      "objective_lower": 100.0,
+      "objective_upper": 1000.0,
+      "objective_weight": 0.5
+    }
+  ],
+  "factors": [
+    {"factor_id": "temperature_c", "type": "numeric", "low": 28, "high": 37, "unit": "C"},
+    {"factor_id": "initial_ph", "type": "numeric", "low": 6.0, "high": 7.5, "unit": "pH"},
+    {"factor_id": "carbon_g_l", "type": "numeric", "low": 10, "high": 40, "unit": "g/L"},
+    {"factor_id": "nitrogen_g_l", "type": "numeric", "low": 2, "high": 10, "unit": "g/L"},
+    {"factor_id": "agitation_rpm", "type": "numeric", "low": 200, "high": 600, "unit": "rpm"},
+    {"factor_id": "do_setpoint_pct", "type": "numeric", "low": 20, "high": 60, "unit": "percent"},
+    {"factor_id": "inoculum_pct", "type": "numeric", "low": 1, "high": 10, "unit": "percent"}
+  ],
+  "constraints": [
+    {"constraint_id": "public_demo_only", "kind": "data_policy", "description": "Use synthetic or public-source rows only."},
+    {"constraint_id": "assay_linearity_required", "kind": "measurement_readiness", "description": "Activity assay linear range must be confirmed before physical execution."}
+  ],
+  "doe": {
+    "family": "plackett_burman",
+    "n_runs": 8,
+    "randomized": true,
+    "claim": "exact",
+    "model_terms": ["main_effects"],
+    "design_table_path": "expected/selected_wave_1_design.csv"
+  },
+  "adaptive_wave2": {
+    "claim_level": "planned_wave2_design",
+    "primary_response_id": "titer_g_l",
+    "allowed_actions": ["confirm", "narrow", "expand", "pause", "stop"],
+    "self_learning": {
+      "enabled": true,
+      "learning_ledger_path": "wave2/learning_ledger.csv",
+      "hiccup_review_path": "wave2/hiccup_review.md",
+      "negative_memory_scope": "arm"
+    }
+  },
+  "decision_rules": [
+    {
+      "rule_id": "advance-on-active-factor",
+      "scope": "global",
+      "comparator": "qualitative",
+      "threshold": "any factor effect outside replicate noise",
+      "action": "advance_to_next_wave",
+      "evidence_required": ["wave_1_results", "assay_qualification_log"]
+    },
+    {
+      "rule_id": "narrow-on-strong-winner",
+      "scope": "response:titer_g_l",
+      "comparator": "ge",
+      "threshold": 20.0,
+      "action": "narrow_factor_space",
+      "evidence_required": ["wave_1_results"]
+    }
+  ],
+  "stop_rules": [
+    {
+      "rule_id": "stop-on-assay-failure",
+      "condition": "Standard curve linearity not established or matrix interference not bounded",
+      "action": "pause",
+      "owner_role": "analytics"
+    }
+  ],
+  "risk_register": [
+    {
+      "risk_id": "assay-readiness",
+      "category": "measurement",
+      "likelihood": "medium",
+      "impact": "high",
+      "mitigation": "Qualify standard curve and matrix interference before physical execution.",
+      "owner_role": "analytics",
+      "status": "open"
+    }
+  ],
+  "assumptions": [
+    {
+      "assumption_id": "factor-space-public-only",
+      "statement": "All factor ranges in this demo are derived from public process literature, not internal data.",
+      "source": "synthetic_demo",
+      "status": "inferred"
+    }
+  ],
+  "readiness": {
+    "axes": {
+      "responses": {
+        "titer_g_l": "planned",
+        "run_cost_usd": "qualified"
+      },
+      "factors": {
+        "temperature_c": "qualified",
+        "initial_ph": "qualified",
+        "carbon_g_l": "qualified",
+        "nitrogen_g_l": "qualified",
+        "agitation_rpm": "qualified",
+        "do_setpoint_pct": "qualified",
+        "inoculum_pct": "qualified"
+      },
+      "doe": "qualified",
+      "decision_rules": "qualified",
+      "evidence": "qualified_with_caveats"
+    },
+    "overall": "YELLOW",
+    "reasons": [
+      "Activity assay readiness is planned but not executed.",
+      "Historical rows are synthetic placeholders."
+    ]
+  },
+  "inputs": {
+    "historical_run_ledger": "inputs/historical_run_ledger.csv",
+    "evidence_table": "inputs/evidence_table.csv"
+  },
+  "readiness_expectation": "YELLOW"
+}

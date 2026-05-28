@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 760" role="img" aria-labelledby="title desc">
+  <title id="title">BioSymphony Ferm DoE public agent loop</title>
+  <desc id="desc">A public-safe workflow showing an agent reading the repo-local skill, updating a campaign manifest, validating readiness, generating designs, analyzing results, and producing a handoff dossier.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="16" markerHeight="16" refX="12" refY="8" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L14,8 L2,14 Z" fill="#23405f"/>
+    </marker>
+    <filter id="shadow" x="-8%" y="-8%" width="116%" height="116%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#0e2435" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .bg { fill: #f6f8f9; }
+      .panel { fill: #ffffff; stroke: #d4dde6; stroke-width: 3; filter: url(#shadow); }
+      .node { fill: #ffffff; stroke: #23405f; stroke-width: 3; }
+      .node-green { fill: #eff9f4; stroke: #138a5b; stroke-width: 3; }
+      .node-blue { fill: #eef6ff; stroke: #2c6ebd; stroke-width: 3; }
+      .node-amber { fill: #fff8e6; stroke: #b57900; stroke-width: 3; }
+      .node-red { fill: #fff1f0; stroke: #b64034; stroke-width: 3; }
+      .guard { fill: #163244; }
+      .guard-item { fill: #ffffff; fill-opacity: 0.12; stroke: #ffffff; stroke-opacity: 0.26; stroke-width: 2; }
+      .title { font: 700 44px Arial, sans-serif; fill: #163244; }
+      .subtitle { font: 400 23px Arial, sans-serif; fill: #506172; }
+      .label { font: 700 25px Arial, sans-serif; fill: #163244; }
+      .small { font: 400 19px Arial, sans-serif; fill: #435364; }
+      .tiny { font: 700 16px Arial, sans-serif; fill: #627180; letter-spacing: 1px; }
+      .guard-label { font: 700 20px Arial, sans-serif; fill: #ffffff; }
+      .guard-copy { font: 400 17px Arial, sans-serif; fill: #d8e8f2; }
+      .arrow { fill: none; stroke: #23405f; stroke-width: 4; marker-end: url(#arrow); }
+      .loop { fill: none; stroke: #b57900; stroke-width: 4; marker-end: url(#arrow); stroke-dasharray: 10 8; }
+      .status { font: 700 18px Arial, sans-serif; fill: #ffffff; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1600" height="760"/>
+  <text class="title" x="80" y="74">BioSymphony Ferm DoE: public agent loop</text>
+  <text class="subtitle" x="80" y="116">Point an agent at the repo-local skill, keep state in a manifest, and let readiness gates decide what happens next.</text>
+
+  <rect class="panel" x="60" y="150" width="1480" height="405" rx="18"/>
+
+  <rect class="node" x="100" y="240" width="215" height="140" rx="14"/>
+  <text class="tiny" x="128" y="270">START</text>
+  <text class="label" x="128" y="309">Question</text>
+  <text class="small" x="128" y="340">fermentation, cell</text>
+  <text class="small" x="128" y="365">culture, scale bridge</text>
+
+  <path class="arrow" d="M315 310 H390"/>
+
+  <rect class="node-blue" x="405" y="240" width="230" height="140" rx="14"/>
+  <text class="tiny" x="433" y="270">AGENT</text>
+  <text class="label" x="433" y="309">Read SKILL.md</text>
+  <text class="small" x="433" y="340">use repo-local rules</text>
+  <text class="small" x="433" y="365">and public boundaries</text>
+
+  <path class="arrow" d="M635 310 H710"/>
+
+  <rect class="node-green" x="725" y="240" width="230" height="140" rx="14"/>
+  <text class="tiny" x="753" y="270">STATE</text>
+  <text class="label" x="753" y="309">Manifest</text>
+  <text class="small" x="753" y="340">profiles, factors,</text>
+  <text class="small" x="753" y="365">assay and scale</text>
+
+  <path class="arrow" d="M955 310 H1030"/>
+
+  <rect class="node-amber" x="1045" y="240" width="230" height="140" rx="14"/>
+  <text class="tiny" x="1073" y="270">GATE</text>
+  <text class="label" x="1073" y="309">Validate</text>
+  <text class="small" x="1073" y="340">RED / YELLOW / GREEN</text>
+  <text class="small" x="1073" y="365">with failed_check_ids</text>
+
+  <path class="arrow" d="M1275 310 H1350"/>
+
+  <rect class="node-green" x="1365" y="240" width="110" height="140" rx="14"/>
+  <text class="tiny" x="1388" y="270">NEXT</text>
+  <text class="label" x="1390" y="309">Plan</text>
+  <text class="small" x="1388" y="340">design</text>
+  <text class="small" x="1388" y="365">follow-up</text>
+
+  <path class="loop" d="M1160 240 C1160 182 860 182 840 240"/>
+  <text class="small" x="882" y="174" fill="#8a5f00">fix blockers, re-run validation</text>
+
+  <rect class="node-blue" x="405" y="420" width="230" height="90" rx="14"/>
+  <text class="label" x="433" y="456">Generate design</text>
+  <text class="small" x="433" y="484">claim-level labeled rows</text>
+
+  <rect class="node-blue" x="725" y="420" width="230" height="90" rx="14"/>
+  <text class="label" x="753" y="456">Analyze results</text>
+  <text class="small" x="753" y="484">OLS, intervals, guidance</text>
+
+  <rect class="node-blue" x="1045" y="420" width="230" height="90" rx="14"/>
+  <text class="label" x="1073" y="456">Finalize packet</text>
+  <text class="small" x="1073" y="484">dossier, handoff, next agent</text>
+
+  <path class="arrow" d="M520 380 V405"/>
+  <path class="arrow" d="M635 465 H710"/>
+  <path class="arrow" d="M955 465 H1030"/>
+
+  <rect class="node-red" x="100" y="420" width="215" height="90" rx="14"/>
+  <text class="label" x="128" y="456">Block unsafe</text>
+  <text class="small" x="128" y="484">no execution approval</text>
+  <path class="arrow" d="M315 465 H390"/>
+
+  <rect class="guard" x="60" y="595" width="1480" height="105" rx="18"/>
+  <rect class="guard-item" x="90" y="620" width="325" height="55" rx="10"/>
+  <text class="guard-label" x="115" y="642">Local-first by default</text>
+  <text class="guard-copy" x="115" y="665">no cloud handoff required for demos</text>
+
+  <rect class="guard-item" x="455" y="620" width="325" height="55" rx="10"/>
+  <text class="guard-label" x="480" y="642">Public fixtures only</text>
+  <text class="guard-copy" x="480" y="665">synthetic or source-metadata rows</text>
+
+  <rect class="guard-item" x="820" y="620" width="325" height="55" rx="10"/>
+  <text class="guard-label" x="845" y="642">Safety gates stay on</text>
+  <text class="guard-copy" x="845" y="665">readiness before design polish</text>
+
+  <rect class="guard-item" x="1185" y="620" width="325" height="55" rx="10"/>
+  <text class="guard-label" x="1210" y="642">Release scanners</text>
+  <text class="guard-copy" x="1210" y="665">audit plus gitleaks before sharing</text>
+</svg>

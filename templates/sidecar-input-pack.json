@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "sidecar_kind": "input_pack",
+  "id": "input-pack-demo-001",
+  "name": "Demo upstream input pack",
+  "interface": {
+    "name": "biosymphony-ferm-doe.sidecar",
+    "version": 1,
+    "slots": [
+      "input_pack"
+    ]
+  },
+  "campaign_goal_ref": {
+    "id": "campaign-goal-demo-001",
+    "path": "templates/sidecar-campaign-goal.json"
+  },
+  "inputs": [
+    {
+      "input_id": "historical_run_ledger",
+      "kind": "csv",
+      "path": "examples/xylanase-wxz1-2012/inputs/historical_run_ledger.csv",
+      "data_classification": "public",
+      "required": true,
+      "source": "public paper-derived demo ledger"
+    },
+    {
+      "input_id": "factor_space",
+      "kind": "yaml",
+      "path": "examples/xylanase-wxz1-2012/inputs/factor_space.yaml",
+      "data_classification": "public",
+      "required": true,
+      "source": "public paper-derived demo factor ranges"
+    },
+    {
+      "input_id": "reagent_inventory",
+      "kind": "csv",
+      "path": "examples/xylanase-wxz1-2012/inputs/reagent_inventory.csv",
+      "data_classification": "synthetic",
+      "required": false,
+      "source": "approximate demo inventory"
+    }
+  ],
+  "normalization": {
+    "source_fields_preserved": true,
+    "inferred_fields_labeled": true,
+    "missing_fields_labeled": true
+  },
+  "provenance": [
+    {
+      "source_id": "demo-source",
+      "license": "record license or secure-store policy before dispatch",
+      "transformation_note": "Keep factual extracted data separate from inferred or synthetic planning fields."
+    }
+  ]
+}
