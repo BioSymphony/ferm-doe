@@ -34,7 +34,7 @@ flowchart TB
   V -->|"RED · blocking"| FIX("fix failed checks"):::block
   FIX --> M
   V -->|"YELLOW · GREEN"| D("generate-design"):::proc --> A("analyze"):::proc --> P("plan-wave2"):::proc --> F("finalize → run packet<br/>+ AGENTS.md handoff"):::go
-  V -.->|"unsafe"| BLK("block — no execution approval"):::block
+  V -.->|"unsafe"| BLK("block: no execution approval"):::block
   classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
   classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
   classDef gate fill:#fffdf8,stroke:#b0892f,color:#8a6a1f,stroke-width:1.5px;
@@ -123,13 +123,13 @@ A first run:
 
 When you have a real campaign, pick a job-to-be-done from [`docs/USE_CASES.md`](docs/USE_CASES.md) and an agent harness from [Agent harnesses](#agent-harnesses).
 
-The readiness gate decides what the agent does next — RED blocks, YELLOW proceeds with caveats, GREEN is worth running:
+The readiness gate decides what the agent does next: RED blocks, YELLOW proceeds with listed limits, GREEN is worth running:
 
 ```mermaid
 flowchart TB
   M[("campaign_manifest.json")]:::hero --> V("validate --summary"):::proc --> W{"worst axis +<br/>failed checks"}:::gate
   W -->|"errors present"| R("RED · do not proceed"):::block
-  W -->|"guidance / synthetic"| Y("YELLOW · proceed with caveats<br/>not 'ready to run'"):::gate
+  W -->|"guidance / synthetic"| Y("YELLOW · proceed with limits<br/>planning only"):::gate
   W -->|"all axes clear"| G("GREEN · worth running"):::go
   R --> FIX("fix failed checks → re-run"):::block --> V
   Y --> N("design · analyze · plan follow-up"):::proc
@@ -326,7 +326,7 @@ flowchart TB
   G4 -->|"no"| X4("not runnable"):::block
   G4 -->|"yes"| G5{"scale bridge<br/>qualified?"}:::gate
   G5 -->|"no"| X5("escalate: bridge gap"):::block
-  G5 -->|"yes"| OK("readiness verdict —<br/>worth running"):::go
+  G5 -->|"yes"| OK("readiness verdict:<br/>worth running"):::go
   classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
   classDef gate fill:#fffdf8,stroke:#b0892f,color:#8a6a1f,stroke-width:1.5px;
   classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
@@ -349,7 +349,7 @@ flowchart TB
   end
   subgraph PROV["C · data provenance"]
     direction LR
-    p1("public_synthetic_demo — hard refuse for 'ready to run'"):::block
+    p1("public_synthetic_demo:<br/>blocks ready-to-run claim"):::block
   end
   GEN ==> STAT ==> PROV
   style GEN fill:#efeadd,stroke:#d9d2c0,color:#1b1b18;
@@ -361,7 +361,7 @@ flowchart TB
   classDef block fill:#fffdf8,stroke:#bf5a3c,color:#a44a2f,stroke-width:1.5px;
 ```
 
-These eight labels are not a single ladder; they live on three axes. **A** is a true rigor ladder for how the design matrix was generated, from `exact` down to `heuristic`: an agent that sees `claim_level: heuristic` surfaces the row to a statistician before sealing the campaign. **B** marks planning and analysis outputs that were computed but not executed (the follow-up plan, the BO plan, the first-batch analysis). **C** is a provenance flag: `public_synthetic_demo` is a hard refuse for any "ready to run" claim.
+These eight labels live on three axes. **A** is a rigor ladder for how the design matrix was generated, from `exact` down to `heuristic`: an agent that sees `claim_level: heuristic` surfaces the row to a statistician before sealing the campaign. **B** marks planning and analysis outputs that were computed but not executed (the follow-up plan, the BO plan, the first-batch analysis). **C** is a provenance flag: `public_synthetic_demo` blocks any ready-to-run claim.
 
 ## How it differs from the alternatives
 
@@ -688,10 +688,10 @@ A. Yes, in planning mode. `ferm-doe plan-wave2` joins trusted, QC-passing result
 flowchart TB
   A("analyze first-batch results<br/>effects · p-values · intervals"):::hero --> Q{"what do the<br/>data say?"}:::gate
   Q -->|"signal clear, one winner"| C("confirm + robustness"):::go
-  Q -->|"strong factor, broad space"| N("narrow — RSM around actives"):::go
+  Q -->|"strong factor, broad space"| N("narrow: RSM around actives"):::go
   Q -->|"actives found, edges untested"| E("expand / augment design"):::proc
-  Q -->|"noise dominates"| P("pause — reproducibility checks"):::gate
-  Q -->|"improvement plateaus"| ST("stop — decision dossier"):::block
+  Q -->|"noise dominates"| P("pause: reproducibility checks"):::gate
+  Q -->|"improvement plateaus"| ST("stop: decision dossier"):::block
   Q -->|"bench solid + bridge ok"| SCp("scale / downscale (bridge-gated)"):::proc
   classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
   classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
@@ -707,7 +707,7 @@ A. See [`docs/BOFIRE_POSITIONING.md`](docs/BOFIRE_POSITIONING.md). Short version
 A. When NChooseK cardinality is load-bearing in Bayesian optimization (not just initial DoE). BoFire's `SoboStrategy` plus `NChooseK` stalls indefinitely (upstream issue #450). ENTMOOT v2 with `min_count` constraints is the documented swap. See [`docs/ENTMOOT_SWAP_DESIGN.md`](docs/ENTMOOT_SWAP_DESIGN.md).
 
 **Q. What about BayBE, Ax, OMLT, and TabPFN?**
-A. They are optional evaluation routes, not replacements for the campaign manifest. See [`docs/BIOMANUFACTURING_ADAPTIVE_BACKENDS.md`](docs/BIOMANUFACTURING_ADAPTIVE_BACKENDS.md). BoFire remains the default constrained static DoE/BO route. BayBE is a low-data and hybrid-space comparison target; Ax/BoTorch is for custom modeling or trial lifecycle pilots; OMLT is a MIP-surrogate route for hard constraints; TabPFN is a token-gated low-data surrogate experiment.
+A. They are optional evaluation routes that keep the campaign manifest as the source of state. See [`docs/BIOMANUFACTURING_ADAPTIVE_BACKENDS.md`](docs/BIOMANUFACTURING_ADAPTIVE_BACKENDS.md). BoFire remains the default constrained static DoE/BO route. BayBE is a low-data and hybrid-space comparison target; Ax/BoTorch is for custom modeling or trial lifecycle pilots; OMLT is a MIP-surrogate route for hard constraints; TabPFN is a token-gated low-data surrogate experiment.
 
 **Q. Why is the verdict YELLOW for the demos?**
 A. The demos use synthetic placeholder data with `readiness_expectation: YELLOW`. The verdict reflects that the demos are pre-experiment plans on synthetic inputs; the schema carries that readiness caveat through to anything consuming the manifest. The diagnostic walkthrough demo additionally exercises the validator's guidance path.
@@ -728,7 +728,7 @@ A. Yes. The CLI runs standalone, and a scientist can call `ferm-doe validate`, `
 A. GxP batch records require a separately-validated execution pipeline. This tool covers the planning step that feeds one. See [`NON_CLAIMS.md`](NON_CLAIMS.md).
 
 **Q. Can I use private data with this skill?**
-A. Yes, but keep private campaigns in a private repo or workspace and do not commit them here. `claim_level` is a provenance label, not a sanitization control; scanners, release checks, and secret checks still apply before anything is shared.
+A. Yes, but keep private campaigns in a separate non-public workspace and do not commit them here. `claim_level` is a provenance label, not a sanitization control; scanners, release checks, and secret checks still apply before anything is shared.
 
 **Q. What does "long-running agent" mean concretely?**
 A. An agent session that spans hours or days, accumulates context, may pause and resume, and may hand off to other agents or humans. Examples: a Claude Code session driving a multi-week design effort; a Codex worker that tracks a Linear project; a custom orchestrator running between waves.
