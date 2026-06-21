@@ -1,4 +1,4 @@
-"""Public release scrub checks for BioSymphony Ferm DoE files.
+"""Public release audit checks for BioSymphony Ferm DoE files.
 
 The scanner is intentionally standard-library only so it can run in a bare
 worker checkout before publishing docs, templates, or generated artifacts.
@@ -158,7 +158,7 @@ def default_rules() -> list[ReleaseRule]:
         ),
         ReleaseRule(
             "runpod_provider_path",
-            "RunPod provider runtime path or mutating bridge command must be scrubbed.",
+            "RunPod provider runtime path or mutating bridge command must be removed before publication.",
             re.compile(
                 r"(?:^|[\s`\"'=:(])(?:"
                 + r"\.runtime/"

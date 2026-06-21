@@ -26,3 +26,6 @@ deploy/aws-lambda/.aws-sam/
 deploy/aws-lambda/packaged*.yaml
 deploy/aws-lambda/*-packaged.yaml
 .serverless/
+
+# Operator-only local notes.
+internal/private/

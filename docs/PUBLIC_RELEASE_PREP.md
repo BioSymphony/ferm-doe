@@ -84,7 +84,7 @@ gitleaks dir . --no-banner --redact --verbose
 
 Use `make secret-scan-optional` only for local diagnostics on machines where `gitleaks` may not be installed. Public release rehearsal should use `make public-ready` and fail closed if the scanner is unavailable.
 
-## Scrub Rules
+## Public Data Rules
 
 Do not publish:
 

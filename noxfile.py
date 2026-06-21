@@ -22,7 +22,7 @@ def quick(session: nox.Session) -> None:
 
 @nox.session(python=False)
 def public_release(session: nox.Session) -> None:
-    """Run public-release scrub checks over the public-facing source areas."""
+    """Run public-release audit checks over the public-facing source areas."""
 
     session.run(sys.executable, "scripts/check_markdown_links.py", ".")
     session.run("make", "secret-scan-required", external=True)

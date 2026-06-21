@@ -232,7 +232,7 @@ def audit_public_tree(root: Path) -> dict[str, Any]:
         "status": "PASS" if not findings else "FAIL",
         "issue_count": len(findings),
         "issues": [finding.to_dict() for finding in findings],
-        "non_claim": "Public audit is a release scrubber; it does not classify campaign completeness.",
+        "non_claim": "Public audit checks publication safety; it does not classify campaign completeness.",
     }
 
 

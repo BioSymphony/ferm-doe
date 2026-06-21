@@ -274,7 +274,7 @@ Concrete pre-deposit checklist. Each item is a discrete go/no-go gate.
 - [ ] Any `__pycache__/`, `.DS_Store`, or `.ipynb_checkpoints/`
 - [ ] Local logs, debugging traces, not scientific output
 - [ ] AI-generated brand imagery without prompt provenance
-- [ ] `private-deployment-defaults.md` (excluded from public release by `docs/PUBLIC_RELEASE_PREP.md` scrub rules)
+- [ ] Operator-only deployment notes (excluded from public release by `docs/PUBLIC_RELEASE_PREP.md` data rules)
 
 ### 8.3 Required external metadata (DataCite 4.5 fields)
 
@@ -378,7 +378,7 @@ These are the risks the user should consciously accept (or mitigate) before auth
 The repo today provides:
 
 - A retrofit script (`skills/biosymphony-ferm-doe/scripts/rocrate_retrofit.py`) that builds a starting RO-Crate from a campaign manifest
-- A public-release prep document (`docs/PUBLIC_RELEASE_PREP.md`) with scrub rules
+- A public-release prep document (`docs/PUBLIC_RELEASE_PREP.md`) with public data rules
 - A public-readiness checklist in `docs/RELEASE_READINESS_CHECKLIST.md`
 - A `make release-check` target with demo validators and public-surface scans
 - A `make public-ready` target that adds the required gitleaks history and working-tree secret scan

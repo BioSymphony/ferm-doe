@@ -110,7 +110,7 @@ class PublicReleaseCheckTests(unittest.TestCase):
     def test_private_docs_and_artifacts_require_explicit_allowlist(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
-            private_doc = tmp_path / "docs/private-deployment-defaults.md"
+            private_doc = tmp_path / "docs/operator-only-defaults.md"
             private_doc.parent.mkdir(parents=True)
             private_doc.write_text("path=" + "/" + "Users" + "/" + "example" + "/" + "auto" + "nomy" + "\n")
             private_artifact = tmp_path / "artifacts/private/report.md"
@@ -122,7 +122,7 @@ class PublicReleaseCheckTests(unittest.TestCase):
                 scan_paths(
                     [tmp_path],
                     root=tmp_path,
-                    allow_private=["docs/private-*.md", "artifacts/private/**"],
+                    allow_private=["docs/operator-only-*.md", "artifacts/private/**"],
                 ),
                 [],
             )

@@ -28,7 +28,7 @@ All notable changes to this project will be documented here. Format follows [Kee
 - `skills/biosymphony-ferm-doe/SKILL.md` Closeout Standard gains one line: when a campaign exercises an optional adapter (BoFire, ENTMOOT, OMLT, TabPFN, BoTorch), record the installed package version in the dossier (`NOTES.md` or per-corpus EVIDENCE row) so claims are version-anchored. Points at the tool-registry `last_checked` baselines and `BACKEND_EVAL_FINDINGS.md` as-of dates as drift anchors.
 - `docs/TOOL_REGISTRY.md` opening gains one paragraph naming `last_checked` dates and `current_signal` text as baselines captured on a specific day, with a re-confirm-the-installed-version reminder before relying on findings, especially for upstream branches under active development like `bofire main`.
 
-## [Unreleased] - 2026-05-26 public-snapshot scrub
+## [Unreleased] - 2026-05-26 public-content review
 
 ### Removed
 
