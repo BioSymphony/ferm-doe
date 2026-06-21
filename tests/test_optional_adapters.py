@@ -98,6 +98,18 @@ def _bofire_state(**overrides: object) -> dict[str, object]:
 
 
 class BofireStrategyAdapterRoutingTests(unittest.TestCase):
+    def test_allow_zero_continuous_bounds_exclude_zero_for_bofire(self) -> None:
+        adjusted = bofire_strategy._continuous_bounds_for_bofire(
+            {"key": "glucose", "type": "continuous", "low": 0, "high": 50, "allow_zero": True}
+        )
+        preserved = bofire_strategy._continuous_bounds_for_bofire(
+            {"key": "temperature", "type": "continuous", "low": 25, "high": 37, "allow_zero": False}
+        )
+
+        self.assertGreater(adjusted[0], 0.0)
+        self.assertEqual(adjusted[1], 50.0)
+        self.assertEqual(preserved, [25.0, 37.0])
+
     def test_routes_for_supported_constrained_design_without_importing_bofire(self) -> None:
         state = _bofire_state(
             constraints=[

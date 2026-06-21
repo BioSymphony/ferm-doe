@@ -118,9 +118,9 @@ Pointers: `docs/SCALE_BRIDGE_METHODOLOGY.md`, `templates/scale_bridge_entry_cond
 
 ### BoFire constraint-strategy compatibility: known traps
 
-Two upstream BoFire traps have been verified in production. NChooseK plus SoboStrategy stalls indefinitely on `ask()` (BoFire issue #450, root cause `RandomStrategy._sample_with_nchoosek` enumerating combinatorial seeds for `optimize_acqf`). MultiFidelityVarianceBasedStrategy raises `ConstraintNotFulfilledError` on `ask()` with non-box constraints because the strategy does not propagate the Domain's linear or NChooseK constraints to its acquisition optimizer (BoFire issue #761).
+Two upstream BoFire traps have been verified in adapter checks. NChooseK plus SoboStrategy stalls indefinitely on `ask()` (BoFire issue #450, root cause `RandomStrategy._sample_with_nchoosek` enumerating combinatorial seeds for `optimize_acqf`). MultiFidelityVarianceBasedStrategy raises `ConstraintNotFulfilledError` on `ask()` with non-box constraints because the strategy does not propagate the Domain's linear or NChooseK constraints to its acquisition optimizer (BoFire issue #761).
 
-Mechanical rule. Consult `docs/BOFIRE_CONSTRAINT_PATTERNS.md` as the canonical strategy by constraint compatibility matrix before choosing a BoFire strategy. Default safe paths are DoEStrategy plus IPOPT, which honors NChooseK natively, and SoboStrategy plus post-hoc cardinality enforcement (oversample 2.5x, filter, return first K) for BO refinement. For multi-fidelity, fall back to parallel D-optimal arms per fidelity tier and record `fidelity_path: fallback_parallel_arms` explicitly. ENTMOOT v2 is the swap candidate for first-class MIP-encoded NChooseK BO. It has three open risks (`min_count` not emitted by `_get_expr`, hard dependency on `gurobipy` 11 or later, and a tie-cycle in `_fantasy_tell`). Swap to ENTMOOT on a fresh campaign rather than retrofitting an existing one.
+Mechanical rule. Consult `docs/BOFIRE_CONSTRAINT_PATTERNS.md` as the canonical strategy by constraint compatibility matrix before choosing a BoFire strategy. Default safe paths are BoFire main / PR #752 DoEStrategy plus IPOPT for NChooseK DoE screens (install `adaptive-nchoosek-doe` until that support tags), and SoboStrategy plus post-hoc cardinality enforcement (oversample 2.5x, filter, return first K) for BO refinement. For multi-fidelity, fall back to parallel D-optimal arms per fidelity tier and record `fidelity_path: fallback_parallel_arms` explicitly. ENTMOOT v2 is the swap candidate for first-class MIP-encoded NChooseK BO. It has three open risks (`min_count` not emitted by `_get_expr`, hard dependency on `gurobipy` 11 or later, and a tie-cycle in `_fantasy_tell`). Swap to ENTMOOT on a fresh campaign rather than retrofitting an existing one.
 
 Pointers: `docs/BOFIRE_CONSTRAINT_PATTERNS.md`, `docs/ENTMOOT_SWAP_DESIGN.md` (design only status).
 
@@ -368,7 +368,7 @@ Every campaign closeout should also produce a campaign-local handoff file at `ar
 - branch and commit state, resume commands, and do or don't instructions
 - unresolved risks, stale-status caveats, and claim-level boundaries
 - status reconciliation notes naming any superseded status snapshots
-- portability notes for private adapters that need scrubbing before public release
+- portability notes for private adapters that need review before public release
 
 If the campaign generated important learnings, also record a dated note that future agents can find from `artifacts/<campaign>/AGENTS.md`. Do not hide `no_accepted_design`, aliasing, constant-factor, synthetic-ledger, assay-readiness, equipment, procurement, or study-director caveats to make the dossier look cleaner. The caveats are part of the scientific ledger.
 

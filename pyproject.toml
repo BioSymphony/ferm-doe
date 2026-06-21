@@ -63,8 +63,24 @@ dependencies = [
 scipy = ["scipy>=1.11"]
 pydoe3 = ["pyDOE3>=1.0"]
 botorch = ["torch>=2.0", "botorch>=0.9", "gpytorch>=1.11"]
-bofire = ["bofire>=0.3.1,<0.4", "botorch>=0.9", "torch>=2.0"]
-adaptive = ["bofire>=0.3.1,<0.4", "botorch>=0.9", "torch>=2.0"]
+bofire = [
+  "bofire>=0.3.1,<0.4",
+  "botorch>=0.9",
+  "torch>=2.0",
+]
+adaptive = [
+  "bofire>=0.3.1,<0.4",
+  "botorch>=0.9",
+  "torch>=2.0",
+]
+adaptive-nchoosek-doe = [
+  # BoFire main carries native NChooseK support for DoEStrategy. Use this
+  # route for cardinality-respecting DoE screens until a tagged release
+  # includes PR #752.
+  "bofire[optimization] @ git+https://github.com/experimental-design/bofire.git@main",
+  "cyipopt>=1.5",
+  "shap",
+]
 backend-eval = ["baybe==0.14.3; python_version < '3.14'", "ax-platform==1.2.4"]
 entmoot = ["entmoot==2.1.1", "highspy>=1.7", "pyomo>=6.7,<7", "lightgbm~=4.6.0"]
 omlt = [

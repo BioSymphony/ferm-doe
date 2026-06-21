@@ -1,14 +1,41 @@
 # BoFire Constraint × Strategy Compatibility Patterns
 
-Status: validation pass · 2026-05-16 · scope = `bofire 0.3.1` (pinned)
-and `main` (post PR #705, #749, #757)
+Status: compatibility check pass, 2026-05-16; NChooseK-DoE version note added
+2026-05-30 · scope = `bofire 0.3.1` (pinned) and `main` (post PR #705,
+#749, #752, #757)
 
 This doc is the authoritative cheat-sheet for what BoFire constraints can be
 combined with which BoFire strategies in a biosymphony-ferm-doe manifest
 without stalling, raising `ConstraintNotFulfilledError`, or silently emitting
-infeasible candidates. It supplements `BOFIRE_POSITIONING.md` (the
-"powerup-not-destination" decision) with the per-constraint detail needed
-to author manifests that survive contact with the adapter.
+infeasible candidates. It supplements `BOFIRE_POSITIONING.md` with the
+per-constraint detail needed to author manifests that survive contact with
+the adapter.
+
+## 0. NChooseK DoE version rule
+
+If a manifest puts `NChooseKConstraint` into a model-free `DoEStrategy`
+screen, use BoFire `main` via the `adaptive-nchoosek-doe` extra until a tagged
+release includes PR #752:
+
+```bash
+pip install "biosymphony-ferm-doe[adaptive-nchoosek-doe]"
+```
+
+The pinned `bofire>=0.3.1,<0.4` extra predates the native NChooseK DoE path.
+Depending on the exact install, a DoE screen with a `min_count` floor may drop
+or reject that floor before candidate generation. Treat pinned-0.3.1
+NChooseK DoE output as fail-closed unless every emitted row is rechecked
+against the manifest cardinality contract.
+
+Two adapter details matter for this manifest shape:
+
+- BoFire expects `allow_zero=True` continuous inputs to have a positive lower
+  numeric bound, with zero modeled as the special allowed value. The adapter
+  shifts zero-starting intervals by a tiny epsilon before building BoFire
+  `ContinuousInput` objects.
+- Multi-response manifests route to multi-objective BO by default. If the
+  immediate goal is a first-batch D-optimal screen, call the DoE route
+  explicitly rather than relying on a BO routing decision.
 
 The matrix is grounded in:
 
@@ -21,8 +48,8 @@ The matrix is grounded in:
   + acquisition stall) and
   [#761](https://github.com/experimental-design/bofire/issues/761) (multi-fidelity
   + non-box constraints)
-- Live evidence from biosymphony-ferm-doe Phase 1, Phase 2, Phase 3 example
-  campaign smokes (2026-05-15)
+- Smoke-check notes from biosymphony-ferm-doe Phase 1, Phase 2, Phase 3
+  example campaign runs (2026-05-15)
 
 ## 1. Constraint type catalog
 
@@ -145,7 +172,7 @@ How to read the caveats:
 
 ### Bug B, Multi-fidelity strategies are not constraint-aware (issue #761)
 
-- **Open** (filed 2026-05-16 from Phase 3 evidence)
+- **Open** (filed 2026-05-16 from Phase 3 smoke checks)
 - Affects: `MultiFidelityVarianceBasedStrategy`,
   `MultiFidelityHVKGStrategy`
 - Symptom: `.ask()` raises `ConstraintNotFulfilledError` from
@@ -391,7 +418,7 @@ as of 2026-05-16). Each is annotated with biosymphony-ferm-doe impact.
 |---|---|---|---|
 | [#705](https://github.com/experimental-design/bofire/pull/705) | Multi-output, multi-fidelity optimization | 2026-05-11 | Adds `MultiFidelityVarianceBasedStrategy`, `MultiFidelityHVKGStrategy`. **Subject to bug B** until #761 closes. |
 | [#749](https://github.com/experimental-design/bofire/pull/749) | LLM Strategy | 2026-04-30 | Adds `LLMStrategy` for literature-warmstart BO. Research-grade; defer adapter wiring until a tagged release and public smoke fixture justify it. |
-| [#752](https://github.com/experimental-design/bofire/pull/752) | True NChooseK support for DoE | 2026-04-16 | DoEStrategy + IPOPT now handles NChooseK natively instead of as a box-bound approximation. Unblocks high-cardinality combinatorial screens. Already exercised in Phase 1 examples. |
+| [#752](https://github.com/experimental-design/bofire/pull/752) | True NChooseK support for DoE | 2026-04-16 | DoEStrategy + IPOPT handles NChooseK natively instead of as a box-bound approximation. Required for cardinality-respecting NChooseK DoE screens until this support lands in a tagged release. |
 | [#757](https://github.com/experimental-design/bofire/pull/757) | Scale RandomStrategy NChooseK sampling | 2026-04-29 | Makes `RandomStrategy` usable for 50+ dim NChooseK problems. Does NOT fix bug A, the seeding path inside Sobo still stalls. |
 | [#754](https://github.com/experimental-design/bofire/pull/754) | Fix MultiTaskGP serialization | 2026-04-21 | Unblocks save/load of multi-fidelity surrogates. Required before any multi-fidelity dossier-handoff workflow. |
 | [#646 / #644](https://github.com/experimental-design/bofire/pull/644) | Exclude constraints usable in GA / Conditional input features | 2025-10–11 | Already in 0.3.1; lets `EntingStrategy` (GA) honor `CategoricalExcludeConstraint`. |
@@ -411,7 +438,7 @@ When BoFire 0.4 tags:
    `enforcement: "post_hoc_filter"` on any NChooseK in a BO-phase
    manifest.
 5. Plumb `LLMStrategy` into the adapter only after a tagged 0.4 and a
-   validation artifact that shows the warmstart actually moves the
+   check artifact that shows the warmstart actually moves the
    first-batch posterior.
 
 ## 7. Adapter implications (what changes here)

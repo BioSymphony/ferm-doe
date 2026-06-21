@@ -180,7 +180,13 @@ def _bofire_inputs(domain_spec: dict[str, Any]) -> list[Any]:
     inputs = []
     for spec in _all_input_specs(domain_spec):
         if spec["type"] == "continuous":
-            inputs.append(ContinuousInput(key=spec["key"], bounds=[spec["low"], spec["high"]], allow_zero=spec.get("allow_zero", False)))
+            inputs.append(
+                ContinuousInput(
+                    key=spec["key"],
+                    bounds=_continuous_bounds_for_bofire(spec),
+                    allow_zero=spec.get("allow_zero", False),
+                )
+            )
         elif spec["type"] == "discrete":
             inputs.append(DiscreteInput(key=spec["key"], values=spec["values"]))
         elif spec["type"] == "task":
@@ -188,6 +194,17 @@ def _bofire_inputs(domain_spec: dict[str, Any]) -> list[Any]:
         elif spec["type"] == "categorical":
             inputs.append(CategoricalInput(key=spec["key"], categories=spec["categories"]))
     return inputs
+
+
+def _continuous_bounds_for_bofire(spec: dict[str, Any]) -> list[float]:
+    low = float(spec["low"])
+    high = float(spec["high"])
+    if bool(spec.get("allow_zero", False)) and low <= 0 < high:
+        # BoFire models zero as a special allowed value when allow_zero=True;
+        # the continuous interval itself must start above zero.
+        epsilon = min(high / 1_000_000.0, 1e-9)
+        return [epsilon, high]
+    return [low, high]
 
 
 def _bofire_outputs(domain_spec: dict[str, Any]) -> list[Any]:

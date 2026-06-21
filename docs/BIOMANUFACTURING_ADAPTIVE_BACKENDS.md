@@ -29,7 +29,7 @@ The candidate backends in this decision surface are permissively licensed:
 | TabPFN | Apache-2.0 | PyPI `tabpfn` 8.0.3 checked 2026-05-23; token-gated low-data surrogate route |
 
 Permissive license does not mean "safe to embed without review." Any new
-adapter still needs a fixture, a fail-closed report, and a public-release scrub
+adapter still needs a fixture, a fail-closed report, and a public-release audit
 before it becomes a default public route.
 
 ## Layering Rule
@@ -104,7 +104,7 @@ Keep **pyDOE/pyDOE3** for static classical DoE baselines and smoke fixtures.
 
 The repo does not currently have a worked-exemplar tier (a single end-to-end campaign with a cumulative dossier and a publication-style methods argument). Backends sit at the documented-route-plus-smoke depth and rely on the cross-cutting docs (BACKEND_EVAL_FINDINGS, ADAPTER_DESIGN_NOTES, BOFIRE_CONSTRAINT_PATTERNS, ENTMOOT_SWAP_DESIGN, SCALE_BRIDGE_METHODOLOGY) for the load-bearing context.
 
-The headline supersession from the 2026-05 sweep (OMLT becomes the new NChooseK cardinality workhorse; BoFire main does not collapse the MIP-based slot; ENTMOOT v2 stays valid for existing rigs with a one-line patch) is documented in [`BACKEND_EVAL_FINDINGS.md`](BACKEND_EVAL_FINDINGS.md). The non-obvious adapter design decisions that make those findings reproducible (OMLT lower-coupling, TabPFN Gaussian-approximation posterior wrap, the BoTorch direct cost-weighting trap, the MO BO sequential-mode RAM lever) live in [`ADAPTER_DESIGN_NOTES.md`](ADAPTER_DESIGN_NOTES.md).
+The headline supersession from the 2026-05 sweep (OMLT becomes the new NChooseK cardinality workhorse for BO; BoFire main does not collapse the MIP-based BO slot; ENTMOOT v2 stays valid for existing rigs with a one-line patch) is documented in [`BACKEND_EVAL_FINDINGS.md`](BACKEND_EVAL_FINDINGS.md). The non-obvious adapter design decisions that make those findings reproducible (OMLT lower-coupling, TabPFN Gaussian-approximation posterior wrap, the BoTorch direct cost-weighting trap, the MO BO sequential-mode RAM lever) live in [`ADAPTER_DESIGN_NOTES.md`](ADAPTER_DESIGN_NOTES.md).
 
 ## What Not To Do
 

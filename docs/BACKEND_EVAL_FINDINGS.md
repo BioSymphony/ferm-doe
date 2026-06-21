@@ -16,7 +16,7 @@ The findings below should be read as "what each adapter produced on those fixtur
 
 ## Headline
 
-For NChooseK-constrained Bayesian optimization, **OMLT supersedes ENTMOOT** as the cardinality workhorse in the public adapter set. The one-line encoding difference that produced the supersession is documented under "ENTMOOT definition-correction" and "OMLT lower-coupling fix" in [`ADAPTER_DESIGN_NOTES.md`](ADAPTER_DESIGN_NOTES.md). BoFire main as of mid-2026-05 does **not** collapse the MIP-based slot: PRs [#747](https://github.com/experimental-design/bofire/pull/747) (BONSAI pruning) and [#753](https://github.com/experimental-design/bofire/pull/753) (shared-variable NChooseK) reduce but do not eliminate the leak, and the `SoboStrategy + NChooseK` enumeration stall (upstream issue [#450](https://github.com/experimental-design/bofire/issues/450)) is still active. BoFire 0.3.1 stays the constrained-static-DoE default; OMLT or ENTMOOT take the NChooseK BO slot.
+For NChooseK-constrained Bayesian optimization, **OMLT supersedes ENTMOOT** as the cardinality workhorse in the public adapter set. The one-line encoding difference that produced the supersession is documented under "ENTMOOT definition-correction" and "OMLT lower-coupling fix" in [`ADAPTER_DESIGN_NOTES.md`](ADAPTER_DESIGN_NOTES.md). BoFire main as of mid-2026-05 does **not** collapse the MIP-based BO slot: PRs [#747](https://github.com/experimental-design/bofire/pull/747) (BONSAI pruning) and [#753](https://github.com/experimental-design/bofire/pull/753) (shared-variable NChooseK) reduce but do not eliminate the BO leak, and the `SoboStrategy + NChooseK` enumeration stall (upstream issue [#450](https://github.com/experimental-design/bofire/issues/450)) is still active. For a first-batch NChooseK DoE screen, use the BoFire-main PR #752 route documented in [`BOFIRE_CONSTRAINT_PATTERNS.md`](BOFIRE_CONSTRAINT_PATTERNS.md); for NChooseK BO, OMLT or ENTMOOT remain the routed slots.
 
 ## Constraint-honoring spectrum
 
@@ -31,7 +31,7 @@ Ranking is on `NChooseK leak rate` on a 4-factor `1-of-2 active among 4 carbons`
 | 5 | **ENTMOOT 2.1.1** | 5 / 16 under the `x_i > 0` definition; 0 / 16 under the binary-indicator definition | 0 | Definition-scoped: indicator-only PASS; lab-semantic FAIL. Superseded by OMLT for new campaigns; valid for existing rigs. |
 | 6 | **BayBE 0.14.3** | LEAKY — ~75% of candidates on the 4-factor cardinality fixture violate NChooseK | 0 | Honest but leaky on NChooseK; clean elsewhere. |
 | 7 | **ProcessOptimizer 1.1.2** | LEAKY — ~95% on the cardinality fixture | 1 on the linear fixture | Honest but leaky on both NChooseK and linear. |
-| FAIL | **BoFire main** (mid-2026-05) | 7 / 16 with `DoEStrategy` (`none_also_valid=False`); 0 candidates emitted with `SoboStrategy` (300s timeout — issue [#450](https://github.com/experimental-design/bofire/issues/450) still active) | n/a | Does NOT supersede the MIP-based slot. |
+| FAIL | **BoFire main BO probes** (mid-2026-05) | NChooseK DoE is now routed separately through PR #752; `SoboStrategy` emitted 0 candidates in 300s (issue [#450](https://github.com/experimental-design/bofire/issues/450) still active) | n/a | Does NOT supersede the MIP-based BO slot. |
 
 The unconstrained-fixture cells, the bounds-only fixture cell, and the linear-only cell for backends not listed here as leaky are all clean. The leaky cells in the table are exactly the cells where each backend's documented limitations live; this is consistent with each backend's upstream documentation.
 
@@ -68,21 +68,21 @@ TabPFN v3 is the Prior Labs foundation-model regressor wrapped as a BoTorch surr
 
 **Caveats:** non-commercial license on TabPFN v3 / v2.5 / v2.6 (the older `v2-reg` is Apache-2.0); Gaussian-approximation posterior wrap may underestimate uncertainty in highly non-Gaussian regions; TabPFN fit scales O(n²) — at n > 500 a different surrogate is needed; no batch-fantasies path (single-fidelity only). Routing rules and the Gaussian-approximation design decision are in [`ADAPTER_DESIGN_NOTES.md`](ADAPTER_DESIGN_NOTES.md).
 
-### BoFire 0.3.1 — honest-and-strict constrained-DoE default
+### BoFire 0.3.1: strict constrained-DoE default
 
-Unchanged this cycle. Routes constrained DoE through `DoEStrategy + DOptimalityCriterion + IPOPT`, single-objective constrained BO through `SoboStrategy`, multi-fidelity through `MultiFidelityVarianceBasedStrategy` (with the parallel-arms fallback documented in [`BOFIRE_CONSTRAINT_PATTERNS.md`](BOFIRE_CONSTRAINT_PATTERNS.md)). For NChooseK BO, routes decline and the agent falls back to ENTMOOT/OMLT — that "route declines" is the FAIL_CLOSED in the spectrum table, not a leak. Stays the default constrained-DoE/BO route per [`BOFIRE_POSITIONING.md`](BOFIRE_POSITIONING.md).
+Unchanged this cycle. Routes constrained DoE through `DoEStrategy + DOptimalityCriterion + IPOPT`, single-objective constrained BO through `SoboStrategy`, multi-fidelity through `MultiFidelityVarianceBasedStrategy` (with the parallel-arms fallback documented in [`BOFIRE_CONSTRAINT_PATTERNS.md`](BOFIRE_CONSTRAINT_PATTERNS.md)). For NChooseK BO, routes decline and the agent falls back to ENTMOOT/OMLT. The spectrum table labels this as FAIL_CLOSED. Stays the default constrained-DoE/BO route per [`BOFIRE_POSITIONING.md`](BOFIRE_POSITIONING.md).
 
-### BoFire main — does not supersede the MIP-based slot
+### BoFire main: DoE screen route with BO limits
 
-Tested against BoFire `main` as of mid-2026-05 (a release pinned just past the merge of [#747](https://github.com/experimental-design/bofire/pull/747) and [#753](https://github.com/experimental-design/bofire/pull/753)). Two findings:
+Tested against BoFire `main` as of mid-2026-05 while probing whether main removed the need for MIP-backed NChooseK BO. Two findings remain load-bearing:
 
-1. **`DoEStrategy` + `NChooseK`:** PR #747's BONSAI-style pruning reduces but does not eliminate all-zero-active candidates. **7 / 16** leaks on `cardinality_heavy_media` under the strictest `none_also_valid=False` interpretation. Worse than ENTMOOT v2's 5 / 16; much worse than OMLT's 0 / 16. Under BoFire's default `none_also_valid=True`, 10 / 16 of the emitted candidates are all-zero rows that the validator counts as leaks. PR #747 lands a partial gain (vs prior 0-candidate emission) but does not close the slot.
+1. **`DoEStrategy` + `NChooseK`:** use the PR #752 route for model-free NChooseK DoE screens. The pinned `bofire>=0.3.1,<0.4` extra predates that path, so this repo exposes `adaptive-nchoosek-doe` for the main-branch route and requires row-level cardinality rechecks. This DoE screen route does not change the BO workhorse decision below.
 
 2. **`SoboStrategy` + `NChooseK` + linear:** PR #753's shared-variable NChooseK does not unblock the SLSQP stall. 300-second timeout, 0 candidates emitted. Upstream issue [#450](https://github.com/experimental-design/bofire/issues/450) is still active on main.
 
-**Disposition:** keep ENTMOOT v2 (with the lower-coupling fix below) or OMLT (which ships the fix) as the NChooseK BO workhorse. BoFire main does not collapse the slot. The ENTMOOT swap design ([`ENTMOOT_SWAP_DESIGN.md`](ENTMOOT_SWAP_DESIGN.md)) and the constraint-patterns playbook ([`BOFIRE_CONSTRAINT_PATTERNS.md`](BOFIRE_CONSTRAINT_PATTERNS.md)) remain current.
+**Disposition:** use BoFire main/#752 for first-batch NChooseK DoE screens; keep ENTMOOT v2 (with the lower-coupling fix below) or OMLT (which ships the fix) as the NChooseK BO workhorse. The ENTMOOT swap design ([`ENTMOOT_SWAP_DESIGN.md`](ENTMOOT_SWAP_DESIGN.md)) and the constraint-patterns playbook ([`BOFIRE_CONSTRAINT_PATTERNS.md`](BOFIRE_CONSTRAINT_PATTERNS.md)) remain current.
 
-**Caveats:** single seed, single sweep day; the upstream branch moves. Worth re-testing when a tagged release (≥ 0.3.2) lands. A separate observation (worth a future probe): a `MultiFidelityVarianceBasedStrategy` retest succeeded on a 12-input domain in ~90 seconds, even while bare `SoboStrategy` stalls on the same 12-input shape. Whether issue #450 is strategy-specific or domain-shape-dependent is open.
+**Limits:** single seed, single sweep day; the upstream branch moves. Worth re-testing when a tagged release (>= 0.3.2) lands. A separate observation worth a future probe: a `MultiFidelityVarianceBasedStrategy` retest succeeded on a 12-input domain in ~90 seconds, even while bare `SoboStrategy` stalls on the same 12-input shape. Whether issue #450 is strategy-specific or domain-shape-dependent is open.
 
 ### BoTorch direct — budget-sensitive, wrapper-side trap
 
@@ -112,7 +112,7 @@ x_i ≤ M · b_i        (the standard big-M; "if not active, amount must be zero
 
 The MIP is then free to satisfy a `min_count` constraint by setting `b_i = 1, x_i = 0` (degenerate ON-but-empty). Auto-fantasy resampling at batch=16 plus the larger candidate space makes the degenerate corner attractive.
 
-The one-line fix is a complementary lower-coupling that closes the corner: `x_i ≥ ε · b_i`. The fix is empirically validated by OMLT (which ships exactly this lower-coupling) — see [`ADAPTER_DESIGN_NOTES.md`](ADAPTER_DESIGN_NOTES.md) for the encoding details. For new campaigns, prefer OMLT (the fix already ships); for existing rigs with ENTMOOT in place, the one-line patch is straightforward and is the right next step on the ENTMOOT side.
+The one-line fix is a complementary lower-coupling that closes the corner: `x_i >= epsilon * b_i`. OMLT ships this lower-coupling and passed the fixture checks. See [`ADAPTER_DESIGN_NOTES.md`](ADAPTER_DESIGN_NOTES.md) for the encoding details. For new campaigns, prefer OMLT; for existing rigs with ENTMOOT in place, the one-line patch is straightforward and is the right next step on the ENTMOOT side.
 
 ### BayBE — leaky on NChooseK, clean elsewhere
 
