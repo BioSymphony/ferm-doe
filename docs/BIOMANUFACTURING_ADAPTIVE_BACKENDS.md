@@ -93,7 +93,7 @@ Keep **pyDOE/pyDOE3** for static classical DoE baselines and smoke fixtures.
 
 ## How Deep Does Each Route Go In This Repo
 
-"37 tools in the registry" and "9 documented adapters" can suggest parity that the repo does not actually claim. The honest depth ladder, as of 2026-05:
+"47 tools in the registry" and "9 documented adapters" can suggest parity that the repo does not actually claim. The honest depth ladder, as of 2026-06:
 
 | Tier | Backends | What's in this repo |
 | --- | --- | --- |

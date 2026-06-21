@@ -22,7 +22,7 @@ Terminology note: the repo keeps internal identifiers such as `wave1`, `wave2`, 
 
 Key capabilities implemented in code:
 
-- A curated 37-tool BO/DoE registry (`docs/TOOL_REGISTRY.md`, `docs/tool-registry.json`) with documented tradeoffs and direct adapters for the load-bearing entries (BoFire, ENTMOOT v2, OMLT, TabPFN, BoTorch, pyDOE3, SALib, scipy, PubMed MCP).
+- A curated 47-tool BO/DoE and sidecar registry (`docs/TOOL_REGISTRY.md`, `docs/tool-registry.json`) with documented tradeoffs and direct adapters for the load-bearing entries (BoFire, ENTMOOT v2, OMLT, TabPFN, BoTorch, pyDOE3, SALib, scipy, PubMed MCP).
 - A public adaptive-backend surface (`docs/BIOMANUFACTURING_ADAPTIVE_BACKENDS.md`, `docs/adaptive-backend-evaluation.json`) that lets BoFire, BayBE, Ax/BoTorch, ENTMOOT, OMLT, and TabPFN compete behind the same design preflight checks.
 - A cost-model honesty stack: simulator number, plus bulk-reagent number, plus fully-loaded shake-flask COGS, plus CMO benchmark, plus a stated range. Documented in `docs/COST_MODEL_REALISM_CHECK.md` with `templates/cost_stack.template.md`.
 - Scale-bridge objects with explicit kLa, P/V, tip-speed, mixing-time, OUR, RQ, VVM, and geometric-similarity criteria.
@@ -495,7 +495,7 @@ flowchart TB
 - [`docs/ADAPTIVE_WAVE2.md`](docs/ADAPTIVE_WAVE2.md): first-batch result ingestion, assay-power checks, and follow-up planning artifacts
 - [`docs/WAVE2_BOTORCH.md`](docs/WAVE2_BOTORCH.md): follow-up planning walkthrough with the BoTorch backend (qEI / qUCB)
 - [`docs/SELF_LEARNING_DOE.md`](docs/SELF_LEARNING_DOE.md): learning ledger, hiccup review, and arm-scoped negative memory runbook
-- [`docs/TOOL_REGISTRY.md`](docs/TOOL_REGISTRY.md): 37-tool BO/DoE landscape with positioning and adapter status
+- [`docs/TOOL_REGISTRY.md`](docs/TOOL_REGISTRY.md): 47-tool BO/DoE and sidecar landscape with positioning and adapter status
 - [`docs/BIOMANUFACTURING_ADAPTIVE_BACKENDS.md`](docs/BIOMANUFACTURING_ADAPTIVE_BACKENDS.md): backend-selection surface for BoFire, BayBE, Ax/BoTorch, ENTMOOT, OMLT, and TabPFN
 - [`docs/BOFIRE_POSITIONING.md`](docs/BOFIRE_POSITIONING.md): when to route to BoFire and when to stay on stdlib
 - [`docs/BOFIRE_CONSTRAINT_PATTERNS.md`](docs/BOFIRE_CONSTRAINT_PATTERNS.md): linear, NChooseK, cardinality patterns, including the `SoboStrategy` + `NChooseK` trap

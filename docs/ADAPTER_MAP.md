@@ -55,4 +55,4 @@ Reports which extras are installed and which adapters are active. Useful for deb
 
 ## Adapter status from the tool registry
 
-See [`TOOL_REGISTRY.md`](TOOL_REGISTRY.md) and [`tool-registry.json`](tool-registry.json) for the curated 37-tool surface that includes each adapter's routing rationale, current signal, fit, and risks.
+See [`TOOL_REGISTRY.md`](TOOL_REGISTRY.md) and [`tool-registry.json`](tool-registry.json) for the curated 47-tool surface that includes each adapter's routing rationale, current signal, fit, and risks.

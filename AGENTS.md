@@ -14,7 +14,7 @@ The repo ships:
 - per-axis readiness state (responses, factors, arms, scale_context, doe, decision_rules, evidence, feasibility)
 - decision_rules / stop_rules / risk_register / assumptions blocks
 - DoE family taxonomy with minimum-runs guidance
-- a curated 37-tool BO/DoE registry with documented adapter routing (`docs/TOOL_REGISTRY.md`, `docs/tool-registry.json`)
+- a curated 47-tool BO/DoE and sidecar registry with documented adapter routing (`docs/TOOL_REGISTRY.md`, `docs/tool-registry.json`)
 - BoFire, ENTMOOT v2, OMLT, TabPFN, BoTorch, pyDOE3, SALib, scipy, PubMed MCP adapters that degrade cleanly when the optional extra is absent
 - a cumulative dossier pattern (per-corpus swarm plus integrator plus harvester) backed by `provenance.py` and `rocrate_retrofit.py`
 - a cost-model honesty stack (simulator, bulk reagent, fully-loaded COGS, CMO, range)

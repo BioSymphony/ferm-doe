@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "registry_kind": "biosymphony_ferm_doe_tool_registry",
-  "generated_on": "2026-05-16",
-  "maintainer_note": "Curated repo knowledge for optional tools, sidecars, and watchlist repos. Refresh before adding dependencies, launching paid remote work, or making current-version claims. Last refresh 2026-05-16 included (ENTMOOT design), (BoFire constraint-strategy audit), (PubMed MCP adapter), and BO framework alternatives (BoTorch direct, Atlas). Last refresh 2026-05-16 reflected 4-corpus BO-tools research swarm: added 8 entries (BayBe, obsidian, estim8, bletl, processoptimizer, TabPFN v2, LLAMBO, OMLT) and elevated entmoot to adopted_optional after in-repo adapter delivery (src/biosymphony_ferm_doe/adapters/entmoot_strategy.py with 12 passing tests, all 3 risks closed at adapter layer).",
+  "generated_on": "2026-06-21",
+  "maintainer_note": "Curated repo knowledge for optional tools, sidecars, and watchlist repos. Refresh before adding dependencies, launching paid remote work, or making current-version claims. Refresh 2026-06-21 added 10 public entries from a recent-tool survey: Xopt, Trieste, TabICLv2, PEtab/libpetab, pyPESTO, Pseudobatch, .eln, GROBID, OpenAlex, and Europe PMC. The RO-Crate entry was refreshed for Workflow Run RO-Crate and ro-crate-py context. Earlier May 2026 refreshes added or elevated BoFire NChooseK, PubMed MCP, BayBe, obsidian, estim8, bletl, ProcessOptimizer, TabPFN, LLAMBO, OMLT, and ENTMOOT.",
   "refresh_policy": {
     "default_refresh_days": 90,
     "refresh_before": [
@@ -26,7 +26,8 @@
     ".runtime/research-swarm/bo-tools-2026/EVIDENCE/llm-and-foundation-bo.md",
     ".runtime/research-swarm/bo-tools-2026/EVIDENCE/constrained-bo-2024-2026.md",
     ".runtime/research-swarm/bo-tools-2026/EVIDENCE/bioprocess-bo-2024-2026.md",
-    ".runtime/research-swarm/bo-tools-2026/EVIDENCE/bo-framework-landscape-2026.md"
+    ".runtime/research-swarm/bo-tools-2026/EVIDENCE/bo-framework-landscape-2026.md",
+    "docs/research/tool-registry-refresh-2026-06-21.md"
   ],
   "decision_rules": [
     {
@@ -194,17 +195,129 @@
       "license": "Apache-2.0 docs/spec materials; verify implementation package if added",
       "links": {
         "docs": "https://www.researchobject.org/ro-crate/",
-        "spec_repo": "https://github.com/ResearchObject/ro-crate"
+        "spec_repo": "https://github.com/ResearchObject/ro-crate",
+        "workflow_run_profile": "https://www.researchobject.org/workflow-run-crate/",
+        "rocrate_py": "https://github.com/ResearchObject/ro-crate-py",
+        "validator": "https://github.com/crs4/rocrate-validator"
       },
-      "last_checked": "2026-05-15",
-      "current_signal": "Chosen as a FAIR-ish metadata envelope for generated dossiers.",
-      "fit": "Dossier metadata, file inventory, hashes, source refs, license, and claim boundaries.",
-      "risks": "JSON-LD can become overbuilt; keep a minimal crate profile.",
+      "last_checked": "2026-06-21",
+      "current_signal": "Existing public dossier envelope refreshed against Workflow Run RO-Crate, ro-crate-py, and rocrate-validator. Keep the current stdlib metadata writer as authoritative unless a profile-aware validator is explicitly adopted.",
+      "fit": "Dossier metadata, file inventory, hashes, source refs, license, claim boundaries, and future workflow-run provenance.",
+      "risks": "JSON-LD can become overbuilt; validator and package APIs add churn. Keep a minimal crate profile and treat profile-aware validation as optional.",
       "route": [
-        "compile_dossier"
+        "compile_dossier",
+        "workflow_run_provenance",
+        "profile_validation_candidate"
       ],
       "claim_level": "provenance_metadata",
       "fail_closed_behavior": "Dossier check fails if required ro-crate-metadata.json is missing."
+    },
+    {
+      "tool_id": "eln_file_format",
+      "name": "ELN file format (.eln)",
+      "category": "experiment_packet_interchange",
+      "priority": "P1",
+      "status": "evaluate_next",
+      "posture": "ELN/LIMS-neutral run-packet interchange candidate built on RO-Crate conventions",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "MIT",
+      "links": {
+        "repo": "https://github.com/TheELNConsortium/TheELNFileFormat",
+        "iana": "https://www.iana.org/assignments/media-types/application/vnd.eln+zip",
+        "ro_crate_use_case": "https://www.researchobject.org/ro-crate/eln"
+      },
+      "last_checked": "2026-06-21",
+      "current_signal": "Research-agent survey found active consortium discussion in April-June 2026; the format is a zip-based interchange convention for ELN exports and imports.",
+      "fit": "Public-safe synthetic run packets, sample tables, and dossier exports that should move across ELN/LIMS tools without encoding private tracker details.",
+      "risks": "Import behavior varies across ELNs and the format still carries implementation quirks; do not claim validated ELN compatibility without round-trip fixture tests.",
+      "route": [
+        "eln_export_candidate",
+        "run_packet_interchange",
+        "ro_crate_profile_reference"
+      ],
+      "claim_level": "interchange_candidate",
+      "fail_closed_behavior": "Keep the existing run packet and table contracts authoritative when .eln export is absent or not round-trip tested."
+    },
+    {
+      "tool_id": "grobid_fulltext",
+      "name": "GROBID",
+      "category": "evidence_enrichment",
+      "priority": "P1",
+      "status": "evaluate_next",
+      "posture": "public scholarly PDF structuring sidecar for open-access evidence",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "Apache-2.0",
+      "links": {
+        "repo": "https://github.com/grobidOrg/grobid",
+        "docs": "https://grobid.readthedocs.io/",
+        "releases": "https://github.com/grobidOrg/grobid/releases"
+      },
+      "last_checked": "2026-06-21",
+      "current_signal": "GROBID 0.9.0 released 2026-04-07 with expanded full-text, figure, table, equation, URL, ORCID, and Docker support.",
+      "fit": "Convert public or open-license PDFs into structured TEI/BibTeX/citation-context inputs for dossier evidence tables.",
+      "risks": "Java/Docker service surface; copyright boundaries are source-specific. Do not ingest paywalled or non-permitted full text into public fixtures.",
+      "route": [
+        "public_pdf_structuring",
+        "dossier_evidence_harvest",
+        "citation_context_extraction"
+      ],
+      "claim_level": "evidence_extraction_sidecar",
+      "fail_closed_behavior": "Use PubMed fixture mode or manually curated evidence rows when GROBID is unavailable or source license is unclear."
+    },
+    {
+      "tool_id": "openalex_official",
+      "name": "OpenAlex official CLI/API",
+      "category": "literature_harvesting",
+      "priority": "P2",
+      "status": "watch",
+      "posture": "broad public literature and citation-graph context source",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "MIT for client tooling; OpenAlex data is CC0",
+      "links": {
+        "docs": "https://developers.openalex.org/",
+        "pypi": "https://pypi.org/project/openalex-official/",
+        "paper": "https://arxiv.org/abs/2205.01833"
+      },
+      "last_checked": "2026-06-21",
+      "current_signal": "Research-agent survey found openalex-official 0.3.3 released 2026-03-18; API access and free-tier limits changed in 2026.",
+      "fit": "Citation graph, topic, institution, and source metadata context beyond PubMed when building public literature dossiers.",
+      "risks": "API keys and billing/rate limits must stay outside repos and fixtures; metadata breadth does not imply source quality or full-text rights.",
+      "route": [
+        "public_literature_context",
+        "citation_graph_harvest"
+      ],
+      "claim_level": "metadata_harvest_watch",
+      "fail_closed_behavior": "Skip OpenAlex enrichment and preserve fixture-backed PubMed/manual evidence rows when the API is unavailable."
+    },
+    {
+      "tool_id": "europe_pmc_api",
+      "name": "Europe PMC APIs",
+      "category": "evidence_enrichment",
+      "priority": "P2",
+      "status": "watch",
+      "posture": "public life-science literature and annotations source",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "API/source records vary by article and endpoint",
+      "links": {
+        "developers": "https://europepmc.org/developers",
+        "rest": "https://europepmc.org/RestfulWebService",
+        "annotations": "https://europepmc.org/AnnotationsApi"
+      },
+      "last_checked": "2026-06-21",
+      "current_signal": "Official REST and annotations APIs remain public and cover life-science articles, preprints, patents, open full text, and text-mined annotations.",
+      "fit": "Complement PubMed MCP for public literature harvesting, preprint coverage, open full-text lookup, and concept evidence tables.",
+      "risks": "Full-text reuse depends on article license; API responses must be fixture-backed in tests and source licenses must be recorded in dossiers.",
+      "route": [
+        "public_life_science_search",
+        "open_fulltext_lookup",
+        "annotation_harvest"
+      ],
+      "claim_level": "metadata_harvest_watch",
+      "fail_closed_behavior": "Skip Europe PMC enrichment and keep existing citation fixtures when the endpoint is unavailable or source rights are unclear."
     },
     {
       "tool_id": "nox",
@@ -254,6 +367,61 @@
       ],
       "claim_level": "experimental_adapter",
       "fail_closed_behavior": "Prefer BoFire; if direct BoTorch route fails, write route report and fall back."
+    },
+    {
+      "tool_id": "xopt",
+      "name": "Xopt",
+      "category": "adaptive_design",
+      "priority": "P1",
+      "status": "evaluate_next",
+      "posture": "arbitrary scientific optimization and experiment-control comparison backend",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "Apache-2.0",
+      "links": {
+        "repo": "https://github.com/xopt-org/Xopt",
+        "docs": "https://xopt.xopt.org/",
+        "pypi": "https://pypi.org/project/xopt/"
+      },
+      "last_checked": "2026-06-21",
+      "current_signal": "PyPI xopt 3.1.1 released 2026-06-17; docs describe constrained, serial, parallel, and multi-objective Bayesian optimization plus evolutionary methods for arbitrary simulations and control systems.",
+      "fit": "Candidate comparison backend for constrained media fixtures, scale-bridge simulations, and arbitrary expensive objective loops when manifest boundaries are preserved.",
+      "risks": "Accelerator/control-systems origin; BioSymphony must own assay readiness, constraint translation, cost/scale semantics, and candidate-table validation.",
+      "route": [
+        "adaptive_backend_comparison",
+        "constrained_bo",
+        "multi_objective_bo",
+        "parallel_evaluation"
+      ],
+      "claim_level": "not_yet_evaluated",
+      "fail_closed_behavior": "Do not emit Xopt candidates as authoritative designs until a fixture route report exists; fall back to BoFire, ENTMOOT, OMLT, BoTorch, or stdlib planning."
+    },
+    {
+      "tool_id": "trieste",
+      "name": "Trieste",
+      "category": "adaptive_design",
+      "priority": "P2",
+      "status": "watch",
+      "posture": "TensorFlow-based BO research toolbox and complex-acquisition comparison target",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "Apache-2.0",
+      "links": {
+        "repo": "https://github.com/secondmind-labs/trieste",
+        "docs": "https://secondmind-labs.github.io/trieste/",
+        "pypi": "https://pypi.org/project/trieste/"
+      },
+      "last_checked": "2026-06-21",
+      "current_signal": "PyPI trieste 4.6.0 released 2026-06-17; public docs describe ask-tell, batch, asynchronous, constrained, multi-fidelity, and multi-objective BO.",
+      "fit": "Useful landscape comparison for complex follow-up planning and acquisition-function research, especially when TensorFlow/GPflow is already present in an external evaluation lane.",
+      "risks": "Heavy TensorFlow/GPflow stack and no fermentation-specific semantics; not a near-term public adapter unless a fixture demonstrates a route that BoFire/BayBE/Ax do not cover.",
+      "route": [
+        "complex_acquisition_reference",
+        "ask_tell_bo_watch",
+        "multi_fidelity_bo_watch"
+      ],
+      "claim_level": "watch_only",
+      "fail_closed_behavior": "Do not add as dependency or campaign route without an explicit evaluation report."
     },
     {
       "tool_id": "pymoo",
@@ -424,6 +592,89 @@
       ],
       "claim_level": "simulation_sidecar",
       "fail_closed_behavior": "Record model as external evidence and skip runtime execution."
+    },
+    {
+      "tool_id": "petab_libpetab",
+      "name": "PEtab / libpetab-python",
+      "category": "model_calibration_contracts",
+      "priority": "P1",
+      "status": "evaluate_next",
+      "posture": "parameter-estimation table contract candidate for mechanistic sidecars",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "MIT",
+      "links": {
+        "repo": "https://github.com/PEtab-dev/libpetab-python",
+        "docs": "https://petab.readthedocs.io/",
+        "pypi": "https://pypi.org/project/petab/"
+      },
+      "last_checked": "2026-06-21",
+      "current_signal": "PyPI petab 0.8.2 released 2026-03-12; package reads, writes, and validates PEtab files and installs the petablint validator.",
+      "fit": "Portable public calibration fixtures around SBML/ODE models before pyPESTO, AMICI, or RoadRunner-side evaluation.",
+      "risks": "Systems-biology parameter-estimation semantics are not fermentation manifest semantics; keep response, factor, assay, cost, and scale contracts BioSymphony-owned.",
+      "route": [
+        "mechanistic_model_contract",
+        "parameter_estimation_fixture",
+        "petab_validation"
+      ],
+      "claim_level": "calibration_contract_candidate",
+      "fail_closed_behavior": "Skip PEtab export/import and keep the campaign manifest plus table contracts authoritative when no validated PEtab fixture exists."
+    },
+    {
+      "tool_id": "pypesto",
+      "name": "pyPESTO",
+      "category": "mechanistic_model_sidecar",
+      "priority": "P1",
+      "status": "evaluate_next",
+      "posture": "parameter-estimation and uncertainty sidecar for public mechanistic models",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "BSD-3-Clause",
+      "links": {
+        "repo": "https://github.com/ICB-DCM/pyPESTO",
+        "docs": "https://pypesto.readthedocs.io/",
+        "pypi": "https://pypi.org/project/pypesto/",
+        "paper": "https://doi.org/10.1093/bioinformatics/btad711"
+      },
+      "last_checked": "2026-06-21",
+      "current_signal": "PyPI pypesto 0.6.0 released 2026-03-19; docs describe multi-start and global optimization, AMICI/RoadRunner/JAX/Julia simulator interfaces, PEtab/SBML pipelines, and uncertainty quantification.",
+      "fit": "Candidate calibration sidecar for public or synthetic kinetic and cell-culture models, with uncertainty reports that can feed evidence and assumption checks.",
+      "risks": "Heavy optional stack and calibration outputs can look more authoritative than the available data supports; never bypass readiness, assay-power, scale, or claim-boundary checks.",
+      "route": [
+        "mechanistic_parameter_estimation",
+        "uncertainty_quantification_sidecar",
+        "petab_sbml_pipeline"
+      ],
+      "claim_level": "calibration_sidecar_candidate",
+      "fail_closed_behavior": "Treat pyPESTO results as external evidence rows unless an in-repo fixture validates the full route; skip calibration when dependencies or model contracts are absent."
+    },
+    {
+      "tool_id": "pseudobatch",
+      "name": "Pseudobatch",
+      "category": "fed_batch_data_transform",
+      "priority": "P1",
+      "status": "evaluate_next",
+      "posture": "fed-batch sample-withdrawal correction reference and preprocessing candidate",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "MIT",
+      "links": {
+        "repo": "https://github.com/biosustain/pseudobatch",
+        "docs": "https://biosustain.github.io/pseudobatch/",
+        "pypi": "https://pypi.org/project/pseudobatch/",
+        "preprint": "https://doi.org/10.1101/2024.05.27.596043"
+      },
+      "last_checked": "2026-06-21",
+      "current_signal": "PyPI pseudobatch 1.0.1 released 2025-01-10; README and package page describe transformations for fed-batch data where samples are withdrawn during cultivation.",
+      "fit": "Preprocessing note for public fed-batch ledgers before growth-rate, biomass, or response modeling when sample withdrawal creates mass-balance artifacts.",
+      "risks": "Specific correction method, not a general fermentation simulator or scale-transfer model; error-propagation extra brings CmdStan complexity.",
+      "route": [
+        "fed_batch_sample_withdrawal",
+        "ledger_preprocessing",
+        "growth_rate_transform_reference"
+      ],
+      "claim_level": "preprocessing_candidate",
+      "fail_closed_behavior": "Leave raw and corrected values explicit in evidence tables; skip transformation when volume/sample metadata are missing."
     },
     {
       "tool_id": "pixi",
@@ -934,6 +1185,35 @@
         "tests/test_tabpfn_strategy.py",
         "docs/TOOL_REGISTRY.md"
       ]
+    },
+    {
+      "tool_id": "tabicl_v2",
+      "name": "TabICLv2",
+      "category": "surrogate_modeling",
+      "priority": "P2",
+      "status": "watch",
+      "posture": "open tabular foundation-model watch item next to TabPFN",
+      "package": "",
+      "pyproject_extra": "",
+      "license": "BSD-3-Clause with Apache-2.0-derived forecast subdirectory",
+      "links": {
+        "repo": "https://github.com/soda-inria/tabicl",
+        "docs": "https://tabicl.readthedocs.io/",
+        "pypi": "https://pypi.org/project/tabicl/",
+        "paper_v2": "https://arxiv.org/abs/2602.11139",
+        "paper_v1": "https://arxiv.org/abs/2502.05564"
+      },
+      "last_checked": "2026-06-21",
+      "current_signal": "PyPI tabicl 2.1.1 released 2026-04-29; official repo describes TabICLv2 as the ICML 2026 successor to TabICL with open inference code and weights, scikit-learn compatibility, regression/classification support, and larger-table scaling.",
+      "fit": "Watch as a possible TabPFN comparison surrogate for larger public result tables, especially when zero-tuning tabular regression is useful but TabPFN's small-data posture is limiting.",
+      "risks": "No native DoE constraint ownership, assay semantics, or scale context; checkpoint download and GPU memory behavior need a fixture before any adapter work.",
+      "route": [
+        "foundation_model_surrogate_watch",
+        "tabpfn_comparison",
+        "larger_table_regression_watch"
+      ],
+      "claim_level": "watch_only",
+      "fail_closed_behavior": "Do not add as dependency or route until a fixture shows constraint-preserving regression behavior under BioSymphony validation."
     },
     {
       "tool_id": "llambo",

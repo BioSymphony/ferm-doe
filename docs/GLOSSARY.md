@@ -86,4 +86,4 @@ Short definitions of the terms a newcomer hits in the first ten minutes of worki
 
 **Goal (Derringer-Suich desirability).** A composite objective formulated from response targets and bounds. Produced by `ferm-doe goals`. Each response gets a desirability score in [0, 1]; the campaign desirability is the geometric mean. See [`goals.py`](../src/biosymphony_ferm_doe/goals.py) for the formulation.
 
-**Tool registry.** The curated set of 37 BO/DoE tools the repo tracks, with adapter status (adopted, evaluate_next, watch, boundary_only, avoid, compatibility_only). Lives at [`tool-registry.json`](tool-registry.json) and is summarized in [`TOOL_REGISTRY.md`](TOOL_REGISTRY.md).
+**Tool registry.** The curated set of 47 BO/DoE and sidecar tools the repo tracks, with adapter status (adopted, evaluate_next, watch, boundary_only, avoid, compatibility_only). Lives at [`tool-registry.json`](tool-registry.json) and is summarized in [`TOOL_REGISTRY.md`](TOOL_REGISTRY.md).
