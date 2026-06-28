@@ -46,6 +46,23 @@ The repo-local preflight wrapper also recognizes task requests:
 python3 skills/biosymphony-ferm-doe/scripts/preflight_check.py templates/task_request.template.json
 ```
 
+## Engine Task Routing
+
+`schemas/engine_task_request.schema.json` defines the richer routing request used
+by `ferm-doe engine route-task-request`. It keeps dispatch policy separate from
+the compact public task-request validator above.
+
+Run it with:
+
+```bash
+PYTHONPATH=src python3 -m biosymphony_ferm_doe.cli engine route-task-request templates/engine_task_request.template.json
+```
+
+The engine router classifies intent, chooses a recommended issue pack and lane,
+and blocks external compute handoffs unless `routing.remote_compute_allowed` is
+explicitly true. It returns routing advice only; it does not authorize provider
+mutation or physical execution.
+
 ## Dossier Contract Check
 
 The public package has a compact dossier check, not the full private

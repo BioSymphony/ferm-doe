@@ -30,7 +30,7 @@ The CLI is stdlib-only at runtime. Optional extras route through adapters that d
 | Command | Purpose | Example |
 |---|---|---|
 | `ferm-doe agent-brief` (alias: `brief`) | Build an agent kickoff brief for orchestration. | `ferm-doe agent-brief examples/demo-pb-screening-public --goal "Plan next-round DOE." --out /tmp/brief.json --md-out /tmp/brief.md` |
-| `ferm-doe engine route-task-request` | Validate and route a task-request contract. | `ferm-doe engine route-task-request --request task.json` |
+| `ferm-doe engine route-task-request` | Validate and route an engine task-request contract. | `ferm-doe engine route-task-request templates/engine_task_request.template.json` |
 | `ferm-doe engine generate-issue-pack` | Generate Markdown issue bodies for Linear, GitHub Issues, or an orchestrator. | `ferm-doe engine generate-issue-pack --manifest examples/reference-doe-custom-design/campaign_manifest.json --out /tmp/issues --pack fermentation-readiness-v0` |
 
 See [`ISSUE_PACK_COOKBOOK.md`](ISSUE_PACK_COOKBOOK.md) for the pack chooser and [`ISSUE_PACK_GENERATION.md`](ISSUE_PACK_GENERATION.md) for the end-to-end runbook.

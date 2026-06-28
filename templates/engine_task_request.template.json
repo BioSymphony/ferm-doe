@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "request_kind": "ferm_doe_task_request",
+  "request_id": "TR-DEMO-READINESS",
+  "title": "Route a public-safe readiness check",
+  "summary": "Score readiness, evidence, feasibility, and stop/go gates before planning a synthetic Wave 1 design.",
+  "data_classification": "synthetic",
+  "campaign": {
+    "campaign_id": "demo-xylanase-public",
+    "objective": "Prepare a public-safe planning packet from synthetic demo inputs.",
+    "organism_or_host": "synthetic host",
+    "product_or_response": "enzyme activity",
+    "current_format": "shake flask",
+    "target_format": "screening plate"
+  },
+  "task": {
+    "intent": "readiness_audit",
+    "priority": "high",
+    "requested_outputs": [
+      "readiness_summary.json",
+      "readiness_verdict.md"
+    ]
+  },
+  "inputs": [
+    {
+      "kind": "campaign_manifest",
+      "path": "examples/demo-xylanase-public/campaign_manifest.json",
+      "required": true,
+      "data_classification": "synthetic",
+      "notes": "Relative public demo path."
+    }
+  ],
+  "routing": {
+    "preferred_lane": "codex",
+    "activate_first_wave_only": true,
+    "remote_compute_allowed": false
+  },
+  "safety": {
+    "contains_secrets": false,
+    "contains_private_process_data": false,
+    "private_data_handling": "not_applicable"
+  },
+  "notes": "Engine routing returns an issue-pack/lane recommendation only; it does not approve physical execution."
+}

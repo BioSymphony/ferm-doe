@@ -324,9 +324,9 @@ KEYWORD_RULES: list[tuple[str, tuple[str, ...]]] = [
 
 
 def schema_path() -> Path:
-    """Return the repository-local task request schema path when available."""
+    """Return the repository-local engine task request schema path."""
 
-    return Path(__file__).resolve().parents[2] / "schemas" / "task_request.schema.json"
+    return Path(__file__).resolve().parents[2] / "schemas" / "engine_task_request.schema.json"
 
 
 def load_task_request(path: str | Path) -> dict[str, Any]:
