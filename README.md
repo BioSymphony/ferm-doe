@@ -509,6 +509,7 @@ flowchart TB
 - [`docs/AGENT_HARNESSES.md`](docs/AGENT_HARNESSES.md): Claude Code, OpenAI Agents SDK, Codex CLI, Linear-aware runners, generic harnesses
 - [`schemas/campaign_manifest.schema.json`](schemas/campaign_manifest.schema.json): JSON Schema for the manifest
 - [`schemas/task_request.schema.json`](schemas/task_request.schema.json): JSON Schema for bounded agent task requests
+- [`schemas/engine_task_request.schema.json`](schemas/engine_task_request.schema.json): JSON Schema for the richer engine task router
 - [`schemas/tables/`](schemas/tables/): Frictionless-compatible table contracts (run ledger, evidence, equipment, reagent, design, results)
 - [`NON_CLAIMS.md`](NON_CLAIMS.md): scope and boundary statements
 - [`CHANGELOG.md`](CHANGELOG.md): release history
@@ -563,6 +564,9 @@ ferm-doe validate examples/demo-scale-bridge-public --out /tmp/result.json
 
 # validate a bounded agent task request
 ferm-doe validate-task-request templates/task_request.template.json
+
+# route a richer engine task request
+ferm-doe engine route-task-request templates/engine_task_request.template.json
 
 # check the compact public design-packet contract surface
 ferm-doe check-dossier examples/demo-xylanase-public
