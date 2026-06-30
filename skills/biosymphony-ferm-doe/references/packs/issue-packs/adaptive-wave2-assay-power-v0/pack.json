@@ -1,0 +1,42 @@
+{
+  "pack_id": "adaptive-wave2-assay-power-v0",
+  "claim_level": "planned_wave2_design",
+  "public_safe": true,
+  "work_items": [
+    {
+      "id": "A2-001",
+      "title": "Result ingestion and trust/QC gating",
+      "expected_artifacts": ["result_ingestion_report.json", "locked_prior_runs.csv"]
+    },
+    {
+      "id": "A2-002",
+      "title": "Response-level assay-power policy",
+      "expected_artifacts": ["assay_power_results.json"]
+    },
+    {
+      "id": "A2-003",
+      "title": "Adaptive follow-up recommendation",
+      "expected_artifacts": ["wave2_recommendation.json", "augment_design.csv", "adaptive_trace.json"]
+    },
+    {
+      "id": "A2-004",
+      "title": "Self-learning ledger and hiccup review",
+      "expected_artifacts": ["learning_ledger.csv", "hiccup_review.md", "negative_result_memory.json"]
+    },
+    {
+      "id": "A2-005",
+      "title": "Public docs, schema, and non-claim review",
+      "expected_artifacts": ["docs/ADAPTIVE_WAVE2.md", "docs/SELF_LEARNING_DOE.md"]
+    }
+  ],
+  "validation_commands": [
+    "PYTHONPATH=src python3 -m unittest discover -s tests -v",
+    "PYTHONPATH=src python3 -m biosymphony_ferm_doe.cli audit ."
+  ],
+  "non_claims": [
+    "No validated optimization claim.",
+    "No validated scale-transfer claim.",
+    "No physical-execution approval.",
+    "No GxP batch-record claim."
+  ]
+}

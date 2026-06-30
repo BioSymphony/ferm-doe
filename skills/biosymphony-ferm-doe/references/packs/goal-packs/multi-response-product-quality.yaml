@@ -1,0 +1,28 @@
+schema_version: 1
+pack_id: multi-response-product-quality
+pack_type: goal
+name: Multi-response product and quality optimization
+compatible_problem_classes:
+  - eps_rheology
+  - biopolymer
+  - biopharma_yield_quality
+primary_response:
+  direction: maximize
+  required_unit: configurable
+secondary_responses:
+  - id: quality_attribute
+    direction: target_or_maximize
+    optional: false
+  - id: biomass
+    direction: maintain_or_maximize
+    optional: true
+readiness_gates:
+  - every response has a unit and measurement method
+  - response priority or desirability weights are specified
+  - conflicting response tradeoffs are accepted before design
+  - QC flags are defined for failed or outlier runs
+stop_policy:
+  - Pareto front stable
+  - target quality threshold reached
+  - response conflict requires human decision
+  - run budget exhausted

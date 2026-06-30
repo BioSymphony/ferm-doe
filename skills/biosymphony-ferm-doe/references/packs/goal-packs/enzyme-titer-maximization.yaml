@@ -1,0 +1,27 @@
+schema_version: 1
+pack_id: enzyme-titer-maximization
+pack_type: goal
+name: Enzyme titer maximization
+compatible_problem_classes:
+  - enzyme_titer
+  - bioactivity_titer
+primary_response:
+  direction: maximize
+  required_unit: configurable
+secondary_responses:
+  - id: productivity
+    direction: maximize
+    optional: true
+  - id: biomass_or_viability
+    direction: maintain_above_threshold
+    optional: true
+readiness_gates:
+  - response assay method is identified
+  - factor ranges have units and feasible bounds
+  - at least one run ledger or prior-condition source exists
+  - result capture template exists before physical setup
+stop_policy:
+  - confidence target reached
+  - improvement plateau
+  - assay readiness blocker
+  - run budget exhausted

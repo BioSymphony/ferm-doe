@@ -1,0 +1,14 @@
+flowchart LR
+  Q["Question or issue"] --> S["Agent reads skills/biosymphony-ferm-doe/SKILL.md"]
+  S --> M["campaign_manifest.json"]
+  M --> V["ferm-doe validate --summary"]
+  V -->|"RED or blocking checks"| F["Fix manifest, evidence, assay, scale, or feasibility gaps"]
+  F --> M
+  V -->|"YELLOW or GREEN"| D["generate-design / analyze / plan-wave2"]
+  D --> P["finalize dossier and handoff packet"]
+  P --> A["next agent, scientist, or statistician review"]
+
+  G1["Local-first demos"] -. guardrail .- V
+  G2["Public-safe fixtures"] -. guardrail .- M
+  G3["No physical execution approval"] -. guardrail .- P
+  G4["audit + secret-scan before sharing"] -. guardrail .- A

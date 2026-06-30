@@ -1,0 +1,48 @@
+schema_version: 1
+pack_id: fermentation-readiness-v0
+pack_type: issue_pack
+name: Fermentation readiness readiness pass
+activation_policy:
+  default_active_wave: wave0
+  max_concurrent_agents: 1
+  keep_downstream_in_backlog: true
+labels:
+  - biosymphony-ferm-doe
+  - readiness
+issues:
+  - id: campaign-contract
+    file: issues/01-campaign-contract.md
+    wave: wave0
+    blocks:
+      - data-trust-audit
+      - factor-space-audit
+  - id: data-trust-audit
+    file: issues/02-data-trust-audit.md
+    wave: wave1
+    blocks:
+      - assay-readiness
+      - feasibility-audit
+  - id: factor-space-audit
+    file: issues/03-factor-space-audit.md
+    wave: wave1
+    blocks:
+      - design-tournament
+  - id: assay-readiness
+    file: issues/04-assay-readiness.md
+    wave: wave2
+    blocks:
+      - design-tournament
+  - id: feasibility-audit
+    file: issues/05-feasibility-audit.md
+    wave: wave2
+    blocks:
+      - design-tournament
+  - id: design-tournament
+    file: issues/06-design-tournament.md
+    wave: wave3
+    blocks:
+      - run-packet
+  - id: run-packet
+    file: issues/07-run-packet.md
+    wave: wave4
+    blocks: []

@@ -1,0 +1,28 @@
+schema_version: 1
+pack_id: bioreactor-multi-response
+pack_type: goal
+name: Bioreactor multi-response process optimization
+compatible_problem_classes:
+  - biopolymer
+  - recombinant_expression
+  - scale_up_readiness
+primary_response:
+  direction: maximize
+  required_unit: configurable
+secondary_responses:
+  - id: biomass
+    direction: maintain_or_maximize
+    optional: true
+  - id: process_stability
+    direction: maximize
+    optional: true
+readiness_gates:
+  - vessel scale and working volume are recorded
+  - controlled variables are separated from uncontrolled covariates
+  - sampling schedule and assay turnaround are feasible
+  - equipment constraints are explicit
+stop_policy:
+  - robust operating window found
+  - scale-up blocker found
+  - process instability detected
+  - run budget exhausted

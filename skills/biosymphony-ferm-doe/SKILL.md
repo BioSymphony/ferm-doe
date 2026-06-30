@@ -55,7 +55,7 @@ Do not silently inherit a parent model for dispatched workers. If a ticket needs
 
 Treat every campaign as a pre-experiment readiness program. Each step must leave an artifact, not just prose.
 
-1. Clarify objective and stop policy: `campaign_manifest.json`, `campaign_manifest.draft.json`, or `templates/campaign-contract.md`.
+1. Clarify objective and stop policy: `campaign_manifest.json`, `campaign_manifest.draft.json`, or `references/templates/campaign-contract.md`.
 2. Rescue and score historical data: `historical_run_ledger.csv`, `data_trust_report.md`, or `missing_info.json`.
 3. Build factor universe: `factor_universe.json`, `factor_universe.md`, or `factor_space.yaml`.
 4. Check assay readiness: `assay_readiness_report.md` plus response semantics in `campaign_state.json`.
@@ -76,9 +76,9 @@ For self-learning DOE work, treat hiccups as first-class campaign memory. Use `l
 
 Keep live literature and web search out of the core Python engine. The engine stays deterministic, testable, offline-capable, and provenance-driven.
 
-When outside evidence is needed, use Scientific Swarm or the optional evidence executor issue pack at `packs/issue-packs/evidence-executor-v0/`. Research workers can search PubMed, bioRxiv, Scholar or manual citation sources, vendor protocols, equipment manuals, assay methods, and sanitized prior-run summaries. Their deliverable is `evidence_table.csv` rows plus a source ledger and search log.
+When outside evidence is needed, use Scientific Swarm or the optional evidence executor issue pack at `references/packs/issue-packs/evidence-executor-v0/`. Research workers can search PubMed, bioRxiv, Scholar or manual citation sources, vendor protocols, equipment manuals, assay methods, and sanitized prior-run summaries. Their deliverable is `evidence_table.csv` rows plus a source ledger and search log.
 
-Evidence rows must follow `templates/evidence-table.template.csv` and should use `templates/evidence-executor-agent-brief.md` as the worker brief. Rows must carry source refs, confidence, source trust, review status, contradiction groups, caveats, and decision impact. Public or reference evidence must not be claimed as target-specific experimental proof. The DOE engine ingests those rows locally and lets factor-universe, assumption-attack, observability, control-row, and tournament scoring decide how much influence they deserve.
+Evidence rows must follow `references/templates/evidence-table.template.csv` and should use `references/templates/evidence-executor-agent-brief.md` as the worker brief. Rows must carry source refs, confidence, source trust, review status, contradiction groups, caveats, and decision impact. Public or reference evidence must not be claimed as target-specific experimental proof. The DOE engine ingests those rows locally and lets factor-universe, assumption-attack, observability, control-row, and tournament scoring decide how much influence they deserve.
 
 For synthesis-heavy campaigns, build one cumulative evidence dossier instead of isolated worker reports. Prefer per-corpus fan-out, a per-ticket integrator, and a final single-writer harvester that owns:
 
@@ -96,33 +96,33 @@ These patterns came out of real campaigns and apply to most fermentation DoE wor
 
 A simulator that lacks a published dose-response term for a load-bearing factor can produce Pareto winners that are simulator artifacts rather than physically meaningful designs. A common example: when a synergy term is gated on a co-substrate being present, a winner found at the co-substrate level of zero may carry excess of the inducer at pure cost with no titer benefit, contradicting decades of literature on that system.
 
-Mechanical rule. Declare `simulator.fidelity_level` in the campaign manifest with one of `linear_placeholder`, `dose_response_v2`, or `surrogate_on_observed`. If `linear_placeholder`, the simulator may not rank Pareto winners across factor levels, only across recipe families, and a completed `templates/PARETO_LIT_CHECK.template.md` is a mandatory sealing-gate artifact. Section 2 of that template halts sealing when a load-bearing factor has no published dose-response term in the simulator. Check K equals 3 or more winners so cross-winner concordance is computable.
+Mechanical rule. Declare `simulator.fidelity_level` in the campaign manifest with one of `linear_placeholder`, `dose_response_v2`, or `surrogate_on_observed`. If `linear_placeholder`, the simulator may not rank Pareto winners across factor levels, only across recipe families, and a completed `references/templates/PARETO_LIT_CHECK.template.md` is a mandatory sealing-gate artifact. Section 2 of that template halts sealing when a load-bearing factor has no published dose-response term in the simulator. Check K equals 3 or more winners so cross-winner concordance is computable.
 
-Pointers: `docs/SIMULATOR_V2_SPEC.md` (spec only status), `templates/PARETO_LIT_CHECK.template.md`.
+Pointers: `references/docs/SIMULATOR_V2_SPEC.md` (spec only status), `references/templates/PARETO_LIT_CHECK.template.md`.
 
 ### Cost-model honesty: never report a bare cost-per-mg number
 
 A cost-per-mg figure carries different meaning at different stack layers. Material at bulk prices excluding the inducer can be three to six orders of magnitude away from a fully-loaded shake-flask COGS estimate, which is itself far from a CMO process-scale benchmark. Reporting any one of those numbers in isolation creates a target the design cannot defend.
 
-Mechanical rule. Every cost-per-mg claim that ships in a handoff packet, dossier, or lab brief must stack five layers explicitly: simulator media-only at bulk, then plus inducer at bulk, then fully-loaded shake-flask COGS including materials, labor, QC, and depreciation, then an industry CMO process-scale benchmark, and finally an honest range that spans the four. Call out inducer dominance when the recipe specifies inducer at induction-relevant concentrations. Use `templates/cost_stack.template.md` as the authoring template.
+Mechanical rule. Every cost-per-mg claim that ships in a handoff packet, dossier, or lab brief must stack five layers explicitly: simulator media-only at bulk, then plus inducer at bulk, then fully-loaded shake-flask COGS including materials, labor, QC, and depreciation, then an industry CMO process-scale benchmark, and finally an honest range that spans the four. Call out inducer dominance when the recipe specifies inducer at induction-relevant concentrations. Use `references/templates/cost_stack.template.md` as the authoring template.
 
-Pointers: `docs/COST_MODEL_REALISM_CHECK.md`, `templates/cost_stack.template.md`.
+Pointers: `references/docs/COST_MODEL_REALISM_CHECK.md`, `references/templates/cost_stack.template.md`.
 
 ### Flask scale-down oxygen trap: entry conditions for flask-based screens
 
 A 250 mL unbaffled Erlenmeyer at typical shaker conditions reaches a kLa of 15 to 30 per hour, giving an OTR ceiling around 5 to 10 mmol O2 per liter per hour. *E. coli* BL21 at a growth rate of 0.3 per hour oxygen-limits at DCW 1.5 to 3 g/L, well before titer signals would meaningfully separate media recipes. The ranking that comes out of such a flask campaign reflects which recipes happen to slow growth enough to stay under the OTR ceiling, not which support best product expression. A larger bioreactor at kLa 400 per hour will disagree with the flask ranking, and the apparent translation failure will be misdiagnosed as a media-formulation problem.
 
-Mechanical rule. Any flask-based screening campaign must produce a filled `templates/scale_bridge_entry_conditions.template.md` before claiming the flask rankings are transferable to a bioreactor. The entry conditions for transferability are a baffled 500 mL flask, a sulfite-method or gassing-out kLa calibration of the actual shaker measured at 100 per hour or above, and a PreSens DO patch confirming DO at 30 percent or above on at least one flask of every batch. None of these is the simulator's job. They are entry conditions for the simulator's predictions to mean anything.
+Mechanical rule. Any flask-based screening campaign must produce a filled `references/templates/scale_bridge_entry_conditions.template.md` before claiming the flask rankings are transferable to a bioreactor. The entry conditions for transferability are a baffled 500 mL flask, a sulfite-method or gassing-out kLa calibration of the actual shaker measured at 100 per hour or above, and a PreSens DO patch confirming DO at 30 percent or above on at least one flask of every batch. None of these is the simulator's job. They are entry conditions for the simulator's predictions to mean anything.
 
-Pointers: `docs/SCALE_BRIDGE_METHODOLOGY.md`, `templates/scale_bridge_entry_conditions.template.md`.
+Pointers: `references/docs/SCALE_BRIDGE_METHODOLOGY.md`, `references/templates/scale_bridge_entry_conditions.template.md`.
 
 ### BoFire constraint-strategy compatibility: known traps
 
 Two upstream BoFire traps have been verified in adapter checks. NChooseK plus SoboStrategy stalls indefinitely on `ask()` (BoFire issue #450, root cause `RandomStrategy._sample_with_nchoosek` enumerating combinatorial seeds for `optimize_acqf`). MultiFidelityVarianceBasedStrategy raises `ConstraintNotFulfilledError` on `ask()` with non-box constraints because the strategy does not propagate the Domain's linear or NChooseK constraints to its acquisition optimizer (BoFire issue #761).
 
-Mechanical rule. Consult `docs/BOFIRE_CONSTRAINT_PATTERNS.md` as the canonical strategy by constraint compatibility matrix before choosing a BoFire strategy. Default safe paths are BoFire main / PR #752 DoEStrategy plus IPOPT for NChooseK DoE screens (install `adaptive-nchoosek-doe` until that support tags), and SoboStrategy plus post-hoc cardinality enforcement (oversample 2.5x, filter, return first K) for BO refinement. For multi-fidelity, fall back to parallel D-optimal arms per fidelity tier and record `fidelity_path: fallback_parallel_arms` explicitly. ENTMOOT v2 is the swap candidate for first-class MIP-encoded NChooseK BO. It has three open risks (`min_count` not emitted by `_get_expr`, hard dependency on `gurobipy` 11 or later, and a tie-cycle in `_fantasy_tell`). Swap to ENTMOOT on a fresh campaign rather than retrofitting an existing one.
+Mechanical rule. Consult `references/docs/BOFIRE_CONSTRAINT_PATTERNS.md` as the canonical strategy by constraint compatibility matrix before choosing a BoFire strategy. Default safe paths are BoFire main / PR #752 DoEStrategy plus IPOPT for NChooseK DoE screens (install `adaptive-nchoosek-doe` until that support tags), and SoboStrategy plus post-hoc cardinality enforcement (oversample 2.5x, filter, return first K) for BO refinement. For multi-fidelity, fall back to parallel D-optimal arms per fidelity tier and record `fidelity_path: fallback_parallel_arms` explicitly. ENTMOOT v2 is the swap candidate for first-class MIP-encoded NChooseK BO. It has three open risks (`min_count` not emitted by `_get_expr`, hard dependency on `gurobipy` 11 or later, and a tie-cycle in `_fantasy_tell`). Swap to ENTMOOT on a fresh campaign rather than retrofitting an existing one.
 
-Pointers: `docs/BOFIRE_CONSTRAINT_PATTERNS.md`, `docs/ENTMOOT_SWAP_DESIGN.md` (design only status).
+Pointers: `references/docs/BOFIRE_CONSTRAINT_PATTERNS.md`, `references/docs/ENTMOOT_SWAP_DESIGN.md` (design only status).
 
 ### How to evolve this section
 
@@ -152,11 +152,11 @@ Prefer these question categories, in this order:
 
 Expected intake artifacts:
 
-- `operator_intake.md` or filled `templates/operator-intake.md`
+- `operator_intake.md` or filled `references/templates/operator-intake.md`
 - `campaign_manifest.draft.json` when enough structure exists
 - `missing_operator_items.json` with `blocker`, `warning`, or `assumed_for_wave0`
 - `research_tasks.md` or Scientific Swarm evidence-lane issues when literature or context is needed
-- `evidence_table.csv` from `packs/issue-packs/evidence-executor-v0/` when research agents perform external evidence collection
+- `evidence_table.csv` from `references/packs/issue-packs/evidence-executor-v0/` when research agents perform external evidence collection
 
 Do not ask for private strain details, confidential media formulations, unpublished sequences, API keys, or raw customer process records. Ask for sanitized summaries or secure-store references instead.
 
@@ -235,45 +235,45 @@ Avoid adding a DOE method just because a reference package has it. Add it only i
 Before dispatching a tracker issue body or accepting a campaign manifest, validate it. The wrapper accepts full manifests, compact demo directories or manifests, task request JSON, sidecar JSON, and tracker-issue Markdown:
 
 ```bash
-python3 skills/biosymphony-ferm-doe/scripts/preflight_check.py path/to/file-or-dir
+python3 scripts/preflight_check.py path/to/file-or-dir
 ```
 
 To compile, score, design, and validate a local campaign without remote dependencies:
 
 ```bash
-python3 skills/biosymphony-ferm-doe/scripts/compile_campaign_state.py \
+python3 scripts/compile_campaign_state.py \
   --manifest examples/xylanase-wxz1-2012/campaign_manifest.json \
   --out .runtime/xylanase-state
 
-python3 skills/biosymphony-ferm-doe/scripts/score_campaign_readiness.py \
+python3 scripts/score_campaign_readiness.py \
   --manifest examples/xylanase-wxz1-2012/campaign_manifest.json \
   --out .runtime/xylanase-readiness.json
 
-python3 skills/biosymphony-ferm-doe/scripts/propose_wave1_design.py \
+python3 scripts/propose_wave1_design.py \
   --manifest examples/xylanase-wxz1-2012/campaign_manifest.json \
   --out .runtime/xylanase-designs
 
-python3 skills/biosymphony-ferm-doe/scripts/compile_ferm_doe_dossier.py \
+python3 scripts/compile_ferm_doe_dossier.py \
   --manifest examples/xylanase-wxz1-2012/campaign_manifest.json \
   --out ferm-doe-dossier
 
-python3 skills/biosymphony-ferm-doe/scripts/dossier_check.py ferm-doe-dossier
+python3 scripts/dossier_check.py ferm-doe-dossier
 
-python3 skills/biosymphony-ferm-doe/scripts/ferm_doe_contract_self_check.py ferm-doe-dossier
+python3 scripts/ferm_doe_contract_self_check.py ferm-doe-dossier
 
-python3 skills/biosymphony-ferm-doe/scripts/plan_wave2.py \
+python3 scripts/plan_wave2.py \
   --campaign-state ferm-doe-dossier/campaign_state.json \
   --results path/to/wave1_results.csv \
   --selected-design ferm-doe-dossier/selected_wave_1_design.csv \
   --out adaptive-wave2-plan
 
-python3 skills/biosymphony-ferm-doe/scripts/assay_power.py \
+python3 scripts/assay_power.py \
   --campaign-state ferm-doe-dossier/campaign_state.json \
   --out assay-power-check
 
-python3 skills/biosymphony-ferm-doe/scripts/sidecar_check.py \
-  templates/sidecar-compute-policy.json \
-  templates/sidecar-provider-handoff.json
+python3 scripts/sidecar_check.py \
+  references/templates/sidecar-compute-policy.json \
+  references/templates/sidecar-provider-handoff.json
 ```
 
 After applying real campaign manifest patches, rerun readiness or campaign scoring against the patched manifest and keep the machine-readable output. Schema-only checks are not enough; populated nested JSON can expose engine bugs that null or empty tests miss. Treat older gate assessments as snapshots that may be superseded by later readiness JSON, final checkpoints, or committed manifest state.
@@ -283,7 +283,7 @@ When a later run supersedes older status files, reconcile the campaign state. Up
 When authoring issue briefs or manifest patches that use engine-validated values, inspect the engine enums first instead of guessing semantically:
 
 ```bash
-rg "RESPONSE_CLASSES|SAMPLE_FRACTIONS|measurement_type|assay_required" src/biosymphony_ferm_doe skills/biosymphony-ferm-doe/scripts
+rg "RESPONSE_CLASSES|SAMPLE_FRACTIONS|measurement_type|assay_required" scripts
 ```
 
 The engine can materialize `factor_space.yaml|json|csv` and `constraint_set.yaml|json|csv` entries from `inputs[]`. Inline manifest factors, responses, and constraints win when IDs conflict, and conflicts are recorded in `input_conflicts`. Multi-arm factor spaces are preserved; set `design_policy.active_factor_space` before executable design generation when multiple arms are present, or keep linked arm-specific manifests and an explicit bridge artifact.
@@ -296,47 +296,47 @@ For optional remote provider execution, the launch bundle must also validate:
 - `fallback_policy`: no silent fallback and degraded status for any fallback path.
 - `provider_handoff_policy`: workers validate and prepare; orchestrator-side mutation is required when worker API reachability fails.
 
-The orchestrator handoff is emitted as `provider_handoff.json` and validates against `templates/sidecar-provider-handoff.json`. It must not contain provider secrets.
+The orchestrator handoff is emitted as `provider_handoff.json` and validates against `references/templates/sidecar-provider-handoff.json`. It must not contain provider secrets.
 
 ## Reference Map
 
-- Product brief: `docs/product-brief.md`
-- Superpowers: `docs/superpowers.md`
-- Data model: `docs/data-model.md`
-- Engine implementation: `docs/engine-implementation.md`
-- Dossier generation: `docs/dossier-generation.md`
-- BoFire positioning: `docs/BOFIRE_POSITIONING.md`
-- BoFire constraint patterns: `docs/BOFIRE_CONSTRAINT_PATTERNS.md`
-- ENTMOOT swap design: `docs/ENTMOOT_SWAP_DESIGN.md`
-- Backend evaluation findings: `docs/BACKEND_EVAL_FINDINGS.md`
-- Adapter design notes: `docs/ADAPTER_DESIGN_NOTES.md`
-- Scale-bridge methodology: `docs/SCALE_BRIDGE_METHODOLOGY.md`
-- Cost-model realism check: `docs/COST_MODEL_REALISM_CHECK.md`
-- Reference DOE fast path: `docs/reference-doe-fast-path.md`
-- High-ROI DOE parity strategy: `docs/high-roi-doe-parity-strategy.md`
-- Tool registry: `docs/TOOL_REGISTRY.md` (machine-readable at `docs/tool-registry.json`)
-- Sidecar architecture: `docs/sidecar-architecture.md`
-- Starter study catalog: `docs/starter-study-catalog.md`
-- Intake template: `templates/operator-intake.md`
-- Campaign contract template: `templates/campaign-contract.md` for readiness capture
-- Evidence table template: `templates/evidence-table.template.csv`
-- Evidence executor worker brief: `templates/evidence-executor-agent-brief.md`
-- Cost stack template: `templates/cost_stack.template.md`
-- Pareto literature check template: `templates/PARETO_LIT_CHECK.template.md`
-- Scale-bridge entry conditions template: `templates/scale_bridge_entry_conditions.template.md`
-- Sidecar compute policy: `templates/sidecar-compute-policy.json`
-- Sidecar provider handoff: `templates/sidecar-provider-handoff.json`
-- Adaptive follow-up wrapper: `skills/biosymphony-ferm-doe/scripts/plan_wave2.py`
-- Assay power wrapper: `skills/biosymphony-ferm-doe/scripts/assay_power.py`
-- Fermentation readiness issue pack: `packs/issue-packs/fermentation-readiness-v0/`
-- Scientific Swarm issue pack: `packs/issue-packs/scientific-swarm-v0/`
-- Evidence executor issue pack: `packs/issue-packs/evidence-executor-v0/`
-- Reference DOE utility issue pack: `packs/issue-packs/doe-parity-v0/`
-- High-ROI DOE parity upgrade issue pack: `packs/issue-packs/doe-parity-v1/`
-- Adaptive follow-up plus assay power issue pack: `packs/issue-packs/adaptive-wave2-assay-power-v0/`
-- Self-learning DOE runbook: `docs/self-learning-doe-runbook.md`
-- DOE learning ledger template: `templates/doe-learning-ledger.template.csv`
-- DOE hiccup report template: `templates/doe-hiccup-report.template.md`
+- Product brief: `references/docs/product-brief.md`
+- Superpowers: `references/docs/superpowers.md`
+- Data model: `references/docs/data-model.md`
+- Engine implementation: `references/docs/engine-implementation.md`
+- Dossier generation: `references/docs/dossier-generation.md`
+- BoFire positioning: `references/docs/BOFIRE_POSITIONING.md`
+- BoFire constraint patterns: `references/docs/BOFIRE_CONSTRAINT_PATTERNS.md`
+- ENTMOOT swap design: `references/docs/ENTMOOT_SWAP_DESIGN.md`
+- Backend evaluation findings: `references/docs/BACKEND_EVAL_FINDINGS.md`
+- Adapter design notes: `references/docs/ADAPTER_DESIGN_NOTES.md`
+- Scale-bridge methodology: `references/docs/SCALE_BRIDGE_METHODOLOGY.md`
+- Cost-model realism check: `references/docs/COST_MODEL_REALISM_CHECK.md`
+- Reference DOE fast path: `references/docs/reference-doe-fast-path.md`
+- High-ROI DOE parity strategy: `references/docs/high-roi-doe-parity-strategy.md`
+- Tool registry: `references/docs/TOOL_REGISTRY.md` (machine-readable at `references/docs/tool-registry.json`)
+- Sidecar architecture: `references/docs/sidecar-architecture.md`
+- Starter study catalog: `references/docs/starter-study-catalog.md`
+- Intake template: `references/templates/operator-intake.md`
+- Campaign contract template: `references/templates/campaign-contract.md` for readiness capture
+- Evidence table template: `references/templates/evidence-table.template.csv`
+- Evidence executor worker brief: `references/templates/evidence-executor-agent-brief.md`
+- Cost stack template: `references/templates/cost_stack.template.md`
+- Pareto literature check template: `references/templates/PARETO_LIT_CHECK.template.md`
+- Scale-bridge entry conditions template: `references/templates/scale_bridge_entry_conditions.template.md`
+- Sidecar compute policy: `references/templates/sidecar-compute-policy.json`
+- Sidecar provider handoff: `references/templates/sidecar-provider-handoff.json`
+- Adaptive follow-up wrapper: `scripts/plan_wave2.py`
+- Assay power wrapper: `scripts/assay_power.py`
+- Fermentation readiness issue pack: `references/packs/issue-packs/fermentation-readiness-v0/`
+- Scientific Swarm issue pack: `references/packs/issue-packs/scientific-swarm-v0/`
+- Evidence executor issue pack: `references/packs/issue-packs/evidence-executor-v0/`
+- Reference DOE utility issue pack: `references/packs/issue-packs/doe-parity-v0/`
+- High-ROI DOE parity upgrade issue pack: `references/packs/issue-packs/doe-parity-v1/`
+- Adaptive follow-up plus assay power issue pack: `references/packs/issue-packs/adaptive-wave2-assay-power-v0/`
+- Self-learning DOE runbook: `references/docs/self-learning-doe-runbook.md`
+- DOE learning ledger template: `references/templates/doe-learning-ledger.template.csv`
+- DOE hiccup report template: `references/templates/doe-hiccup-report.template.md`
 
 Read only the relevant reference for the current task.
 
@@ -355,7 +355,7 @@ Every worker should finish with:
 - fallback events recorded as degraded or partial, never hidden
 - caveats for assay readiness, factor feasibility, historical-data trust, and model-based recommendations
 - claim level stated without implying optimized, validated, or production-ready conditions unless executed result evidence joins to the planned runs
-- installed package version recorded in the dossier (`NOTES.md` or the per-corpus EVIDENCE row) when a campaign exercises an optional adapter (BoFire, ENTMOOT, OMLT, TabPFN, BoTorch) so claims are version-anchored; the tool-registry carries `last_checked` baselines per adapter and `docs/BACKEND_EVAL_FINDINGS.md` carries the as-of date for each verified backend, both of which can drift between snapshots
+- installed package version recorded in the dossier (`NOTES.md` or the per-corpus EVIDENCE row) when a campaign exercises an optional adapter (BoFire, ENTMOOT, OMLT, TabPFN, BoTorch) so claims are version-anchored; the tool-registry carries `last_checked` baselines per adapter and `references/docs/BACKEND_EVAL_FINDINGS.md` carries the as-of date for each verified backend, both of which can drift between snapshots
 
 Every campaign closeout should also produce a campaign-local handoff file at `artifacts/<campaign>/AGENTS.md`. Treat this as the canonical resume path for future agents. It should link, at minimum:
 

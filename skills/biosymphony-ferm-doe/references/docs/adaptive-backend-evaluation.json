@@ -1,0 +1,412 @@
+{
+  "schema_version": 1,
+  "surface_kind": "biosymphony_biomanufacturing_adaptive_backend_selection",
+  "last_checked": "2026-05-23",
+  "status": "public_evaluation_surface",
+  "free_open_source_summary": [
+    {
+      "tool_id": "bofire",
+      "license": "BSD-3-Clause",
+      "current_signal": "GitHub pushed 2026-05-21; PyPI 0.3.1; primary optional constrained DoE/BO adapter"
+    },
+    {
+      "tool_id": "baybe",
+      "license": "Apache-2.0",
+      "current_signal": "GitHub pushed 2026-05-21; PyPI 0.14.3; Python >=3.10,<3.14; evaluate next for low-data and hybrid campaigns"
+    },
+    {
+      "tool_id": "botorch",
+      "license": "MIT",
+      "current_signal": "GitHub pushed 2026-05-21; PyPI 0.17.2; low-level expert BO substrate"
+    },
+    {
+      "tool_id": "ax",
+      "license": "MIT",
+      "current_signal": "GitHub pushed 2026-05-18; PyPI ax-platform 1.2.4; evaluate as orchestration/custom-modeling fallback"
+    },
+    {
+      "tool_id": "entmoot",
+      "license": "BSD-3-Clause",
+      "current_signal": "In-repo adapter already adopted for MIP-backed NChooseK smoke paths"
+    },
+    {
+      "tool_id": "omlt",
+      "license": "BSD-3-Clause",
+      "current_signal": "PyPI 1.2.2 verified 2026-05-23; optional MIP-over-surrogate route for hard constraints"
+    },
+    {
+      "tool_id": "tabpfn_v2",
+      "license": "Apache-2.0",
+      "current_signal": "PyPI tabpfn 8.0.3 verified 2026-05-23; token-gated low-data surrogate route"
+    }
+  ],
+  "owned_by_biosymphony": [
+    "scale_bridge",
+    "assay_readiness",
+    "response_semantics",
+    "evidence_dossier",
+    "cost_realism",
+    "handoff_packet",
+    "campaign_manifest",
+    "readiness_verdict"
+  ],
+  "workflow_position": {
+    "summary": "For a full biomanufacturing workflow, use BoFire plus BioSymphony-owned layers by default, or route to BayBE, Ax, or direct BoTorch when the fixture campaign proves a better fit.",
+    "default_stack": [
+      "biosymphony_manifest_and_readiness_gates",
+      "bofire_candidate_generation",
+      "biosymphony_constraint_revalidation",
+      "biosymphony_evidence_cost_scale_and_handoff_layers"
+    ],
+    "alternative_backend_routes": [
+      {
+        "tool_id": "baybe",
+        "when": "low-data, discrete/hybrid, transfer-learning, or async recommendation workflows"
+      },
+      {
+        "tool_id": "ax",
+        "when": "trial lifecycle, generation-strategy infrastructure, or storage/resume workflow tests"
+      },
+      {
+        "tool_id": "botorch",
+        "when": "custom surrogate, acquisition, cost-aware, or multi-fidelity modeling tests"
+      },
+      {
+        "tool_id": "entmoot",
+        "when": "exact cardinality-heavy NChooseK BO is the load-bearing constraint"
+      },
+      {
+        "tool_id": "omlt",
+        "when": "MIP-optimized surrogate planning with hard linear or NChooseK constraints"
+      },
+      {
+        "tool_id": "tabpfn_v2",
+        "when": "token-gated low-data surrogate pilot when n is very small and factor count is modest"
+      }
+    ],
+    "retained_biosymphony_layers": [
+      "scale_bridge",
+      "assay_readiness",
+      "response_semantics",
+      "evidence_dossier",
+      "cost_realism",
+      "handoff_packet",
+      "readiness_verdict"
+    ]
+  },
+  "backend_candidates": [
+    {
+      "tool_id": "bofire",
+      "role": "default_static_constrained_doe_bo",
+      "default_position": "default_for_static_constrained_doe_bo",
+      "install_extra": "bofire",
+      "fit_for": [
+        "constrained media optimization",
+        "mixed continuous discrete categorical spaces",
+        "multi-objective candidate generation",
+        "DoE plus BO in one experiment-facing schema"
+      ],
+      "not_for": [
+        "batch records",
+        "assay readiness",
+        "dynamic feed-control semantics",
+        "unvalidated scale-transfer claims"
+      ],
+      "known_caveats": [
+        "NChooseK plus SoboStrategy can stall; use DoEStrategy or post-hoc cardinality filtering",
+        "multi-fidelity with non-box constraints needs compatibility checks before load-bearing use"
+      ],
+      "smoke_contract": {
+        "minimum_surface": "route_report_plus_candidate_table",
+        "must_check": [
+          "constraints_satisfied",
+          "fallback_report_written",
+          "manifest_remains_source_of_truth"
+        ]
+      }
+    },
+    {
+      "tool_id": "baybe",
+      "role": "evaluate_next_low_data_hybrid_transfer",
+      "default_position": "evaluate_next",
+      "install_extra": "backend-eval",
+      "fit_for": [
+        "low-data experimental planning",
+        "discrete and hybrid search spaces",
+        "transfer learning across similar campaigns",
+        "asynchronous recommendation cycles",
+        "substance and categorical encodings"
+      ],
+      "not_for": [
+        "replacing the campaign manifest",
+        "formal scale bridge",
+        "batch records",
+        "dynamic fed-batch control"
+      ],
+      "known_caveats": [
+        "needs fixture validation against BoFire on the same BioSymphony manifest",
+        "smaller classical DoE surface than BoFire"
+      ],
+      "smoke_contract": {
+        "minimum_surface": "recommendation_plus_serialized_state",
+        "must_check": [
+          "can_ingest_prior_rows",
+          "can_recommend_candidates",
+          "can_serialize_without_owning_manifest"
+        ]
+      }
+    },
+    {
+      "tool_id": "botorch",
+      "role": "expert_custom_modeling_substrate",
+      "default_position": "use_when_custom_acquisition_or_surrogate_required",
+      "install_extra": "botorch",
+      "fit_for": [
+        "custom acquisition functions",
+        "cost-aware acquisition",
+        "custom multi-fidelity models",
+        "surrogate research"
+      ],
+      "not_for": [
+        "campaign-facing manifest contracts",
+        "routine static media screens",
+        "operator handoff packets"
+      ],
+      "known_caveats": [
+        "low-level API increases adapter burden",
+        "all domain and constraint translation must be BioSymphony-owned"
+      ],
+      "smoke_contract": {
+        "minimum_surface": "explicit_model_and_acquisition_report",
+        "must_check": [
+          "cost_acquisition_declared_when_used",
+          "constraints_revalidated_posthoc",
+          "fallback_report_written"
+        ]
+      }
+    },
+    {
+      "tool_id": "ax",
+      "role": "adaptive_experimentation_orchestration_candidate",
+      "default_position": "evaluate_for_infrastructure_not_default_doe",
+      "install_extra": "backend-eval",
+      "fit_for": [
+        "production adaptive experimentation",
+        "trial lifecycle orchestration",
+        "custom generation strategies",
+        "BoTorch-backed infrastructure"
+      ],
+      "not_for": [
+        "first static constrained DoE route",
+        "fermentation readiness gates",
+        "lab handoff packet ownership"
+      ],
+      "known_caveats": [
+        "heavier translation surface than BoFire or BayBE",
+        "not chemistry or bioprocess first"
+      ],
+      "smoke_contract": {
+        "minimum_surface": "configuration_plus_generation_strategy_report",
+        "must_check": [
+          "trial_lifecycle_explicit",
+          "manifest_remains_source_of_truth",
+          "backend_can_be_disabled_cleanly"
+        ]
+      }
+    },
+    {
+      "tool_id": "entmoot",
+      "role": "cardinality_heavy_nchoosek_fallback",
+      "default_position": "use_for_exact_cardinality_when_bofire_stalls",
+      "install_extra": "entmoot",
+      "fit_for": [
+        "NChooseK-heavy media optimization",
+        "MIP-backed combinatorial constraints",
+        "tree-based surrogate route"
+      ],
+      "not_for": [
+        "multi-fidelity scale bridge",
+        "GP posterior analysis",
+        "batch records"
+      ],
+      "known_caveats": [
+        "solver stack must be declared",
+        "use the in-repo adapter rather than raw upstream APIs"
+      ],
+      "smoke_contract": {
+        "minimum_surface": "cardinality_respected_candidate_table",
+        "must_check": [
+          "min_count_respected",
+          "max_count_respected",
+          "solver_declared"
+        ]
+      }
+    },
+    {
+      "tool_id": "omlt",
+      "role": "optional_mip_surrogate_constraint_route",
+      "default_position": "use_when_mip_surrogate_and_hard_constraints_are_load_bearing",
+      "install_extra": "omlt",
+      "fit_for": [
+        "MIP-optimized surrogate planning",
+        "hard linear constraints",
+        "NChooseK/cardinality-heavy candidate generation",
+        "trained surrogate artifact pilots"
+      ],
+      "not_for": [
+        "replacing readiness gates",
+        "batch records",
+        "claiming surrogate accuracy without validation",
+        "routine stdlib screening"
+      ],
+      "known_caveats": [
+        "requires OMLT, Pyomo, HiGHS, LightGBM, and ONNX tooling",
+        "surrogate quality bounds candidate quality",
+        "solver stack is heavier than stdlib routes"
+      ],
+      "smoke_contract": {
+        "minimum_surface": "route_report_plus_candidate_table",
+        "must_check": [
+          "solver_declared",
+          "constraints_satisfied",
+          "fallback_report_written"
+        ]
+      }
+    },
+    {
+      "tool_id": "tabpfn_v2",
+      "role": "optional_low_data_foundation_surrogate",
+      "default_position": "operator_requested_or_low_data_pilot_only",
+      "install_extra": "tabpfn",
+      "fit_for": [
+        "low-data tabular regression",
+        "small factor-count sequential planning",
+        "foundation-model surrogate comparison"
+      ],
+      "not_for": [
+        "storing tokens",
+        "commercial use without license review",
+        "owning NChooseK constraints",
+        "assay or scale validation"
+      ],
+      "known_caveats": [
+        "requires operator-supplied TABPFN_TOKEN at runtime",
+        "non-commercial terms require review",
+        "posterior is approximated for BoTorch acquisition use"
+      ],
+      "smoke_contract": {
+        "minimum_surface": "route_report_plus_candidate_table",
+        "must_check": [
+          "token_absence_degrades_cleanly",
+          "constraints_revalidated_posthoc",
+          "fallback_report_written"
+        ]
+      }
+    }
+  ],
+  "scenario_matrix": [
+    {
+      "scenario_id": "static_constrained_media",
+      "primary_tool": "bofire",
+      "fallback_tools": [
+        "entmoot",
+        "pydoe",
+        "stdlib",
+        "omlt"
+      ],
+      "fixture_path": "examples/adaptive-backend-eval/static_constrained_media",
+      "backend_role": "constrained static DoE/BO candidate generation",
+      "acceptance_criteria": [
+        "candidate rows satisfy factor bounds",
+        "candidate rows satisfy declared linear constraints",
+        "route report records fallback behavior",
+        "BioSymphony manifest remains canonical"
+      ]
+    },
+    {
+      "scenario_id": "low_data_hybrid_transfer",
+      "primary_tool": "baybe",
+      "fallback_tools": [
+        "bofire",
+        "stdlib",
+        "tabpfn_v2"
+      ],
+      "fixture_path": "examples/adaptive-backend-eval/low_data_hybrid_transfer",
+      "backend_role": "low-data hybrid recommendation and transfer-learning pilot",
+      "acceptance_criteria": [
+        "prior rows can be ingested from sanitized ledger",
+        "candidate rows are emitted as BioSymphony planning suggestions",
+        "serialized backend state is not treated as the campaign manifest",
+        "fallback is explicit when BayBE is unavailable"
+      ]
+    },
+    {
+      "scenario_id": "cost_aware_multiobjective",
+      "primary_tool": "botorch",
+      "fallback_tools": [
+        "bofire",
+        "ax",
+        "stdlib"
+      ],
+      "fixture_path": "examples/adaptive-backend-eval/cost_aware_multiobjective",
+      "backend_role": "custom cost-aware acquisition or deeper multi-objective modeling",
+      "acceptance_criteria": [
+        "cost-aware acquisition is named explicitly",
+        "all candidate rows pass BioSymphony constraint revalidation",
+        "cost claims use the five-layer cost stack",
+        "fallback report is written when custom model path is unavailable"
+      ]
+    },
+    {
+      "scenario_id": "adaptive_orchestration",
+      "primary_tool": "ax",
+      "fallback_tools": [
+        "botorch",
+        "bofire",
+        "stdlib"
+      ],
+      "fixture_path": "examples/adaptive-backend-eval/adaptive_orchestration",
+      "backend_role": "trial lifecycle and generation-strategy infrastructure pilot",
+      "acceptance_criteria": [
+        "trial lifecycle is explicit",
+        "storage and resume assumptions are declared",
+        "manifest remains the campaign source of truth",
+        "Ax can be disabled without blocking dossier compilation"
+      ]
+    },
+    {
+      "scenario_id": "cardinality_heavy_media",
+      "primary_tool": "entmoot",
+      "fallback_tools": [
+        "bofire",
+        "omlt",
+        "stdlib"
+      ],
+      "fixture_path": "examples/adaptive-backend-eval/cardinality_heavy_media",
+      "backend_role": "exact NChooseK/cardinality constrained BO",
+      "acceptance_criteria": [
+        "every candidate respects min_count",
+        "every candidate respects max_count",
+        "solver name and version are recorded",
+        "BoFire post-hoc filtering comparison is optional and non-blocking"
+      ]
+    },
+    {
+      "scenario_id": "scale_bridge_planning",
+      "primary_tool": "bofire",
+      "fallback_tools": [
+        "baybe",
+        "botorch",
+        "stdlib"
+      ],
+      "fixture_path": "examples/adaptive-backend-eval/scale_bridge_planning",
+      "backend_role": "candidate support only; transferability remains BioSymphony-owned",
+      "acceptance_criteria": [
+        "scale-bridge entry conditions are checked outside the backend",
+        "no backend claims transferability by itself",
+        "assay comparability is documented",
+        "candidate table is split per executable arm when needed"
+      ]
+    }
+  ]
+}

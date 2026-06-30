@@ -72,8 +72,18 @@ def iter_markdown_files(paths: list[Path], excluded_dirs: set[str]) -> list[Path
         for child in path.rglob("*.md"):
             if any(part in excluded_dirs for part in child.parts):
                 continue
+            if is_bundled_skill_reference(child):
+                continue
             files.append(child)
     return sorted({path.resolve() for path in files})
+
+
+def is_bundled_skill_reference(path: Path) -> bool:
+    parts = path.parts
+    for index, part in enumerate(parts):
+        if part == "skills" and len(parts) > index + 3 and parts[index + 2] == "references":
+            return True
+    return False
 
 
 def normalize_target(raw: str) -> str:

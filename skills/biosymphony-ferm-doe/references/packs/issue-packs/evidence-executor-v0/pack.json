@@ -1,0 +1,57 @@
+{
+  "pack_id": "evidence-executor-v0",
+  "pack_type": "issue_pack",
+  "claim_level": "evidence_rows_for_review",
+  "public_safe": true,
+  "activation_policy": {
+    "default_active_wave": "EV-W0",
+    "max_concurrent_agents": 3,
+    "keep_downstream_in_backlog": true
+  },
+  "parallelism_policy": {
+    "EV-W0": 1,
+    "EV-W1": 3,
+    "EV-W2": 1
+  },
+  "work_items": [
+    {
+      "id": "EV-W0-01",
+      "title": "Evidence contract and source scope",
+      "wave": "EV-W0",
+      "depends_on": [],
+      "expected_artifacts": ["evidence_executor_plan.md", "evidence_search_log.md"]
+    },
+    {
+      "id": "EV-W1-01",
+      "title": "Public literature evidence extraction",
+      "wave": "EV-W1",
+      "depends_on": ["EV-W0-01"],
+      "expected_artifacts": ["evidence_table.csv", "evidence_source_ledger.csv", "evidence_search_log.md"]
+    },
+    {
+      "id": "EV-W1-02",
+      "title": "Public protocol and vendor method extraction",
+      "wave": "EV-W1",
+      "depends_on": ["EV-W0-01"],
+      "expected_artifacts": ["evidence_table.csv", "evidence_source_ledger.csv", "evidence_search_log.md"]
+    },
+    {
+      "id": "EV-W2-01",
+      "title": "Evidence table normalization and handoff",
+      "wave": "EV-W2",
+      "depends_on": ["EV-W1-01", "EV-W1-02"],
+      "expected_artifacts": ["evidence_table.csv", "evidence_executor_report.md"]
+    }
+  ],
+  "validation_commands": [
+    "test -f templates/evidence-table.template.csv",
+    "test -f templates/evidence-executor-agent-brief.md",
+    "PYTHONPATH=src python3 -m biosymphony_ferm_doe.cli audit ."
+  ],
+  "non_claims": [
+    "Evidence rows are planning inputs only.",
+    "No physical-execution validation.",
+    "No target-specific proof from public reference evidence.",
+    "No provider mutation."
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "sidecar_kind": "issue_pack",
+  "id": "issue-pack-demo-001",
+  "name": "Demo upstream issue pack",
+  "interface": {
+    "name": "biosymphony-ferm-doe.sidecar",
+    "version": 1,
+    "slots": [
+      "issue_pack"
+    ]
+  },
+  "campaign_goal_ref": {
+    "id": "campaign-goal-demo-001",
+    "path": "templates/sidecar-campaign-goal.json"
+  },
+  "input_pack_ref": {
+    "id": "input-pack-demo-001",
+    "path": "templates/sidecar-input-pack.json"
+  },
+  "tracker": {
+    "project_hint": "BioSymphony Ferm DoE",
+    "routing_label": "biosymphony-ferm-doe",
+    "default_state": "Backlog",
+    "activate_first_wave_only": true,
+    "tracker_required": false
+  },
+  "issues": [
+    {
+      "issue_id": "wave0-readiness",
+      "title": "readiness pass: validate sidecar campaign contract",
+      "state": "Todo",
+      "body_template_path": "templates/linear-issue.md",
+      "depends_on": [],
+      "validation_commands": [
+        "python3 skills/biosymphony-ferm-doe/scripts/sidecar_check.py templates/sidecar-campaign-goal.json templates/sidecar-input-pack.json templates/sidecar-issue-pack.json templates/sidecar-compute-policy.json"
+      ],
+      "expected_artifacts": [
+        "ferm-doe-dossier/readiness_verdict.md",
+        "ferm-doe-dossier/provenance.md"
+      ]
+    },
+    {
+      "issue_id": "wave1-dossier-compile",
+      "title": "first-batch: compile public-safe dossier artifacts",
+      "state": "Backlog",
+      "body_template_path": "templates/linear-issue.md",
+      "depends_on": [
+        "wave0-readiness"
+      ],
+      "validation_commands": [
+        "python3 skills/biosymphony-ferm-doe/scripts/compile_ferm_doe_dossier.py --manifest examples/xylanase-wxz1-2012/campaign_manifest.json --out ferm-doe-dossier",
+        "python3 skills/biosymphony-ferm-doe/scripts/dossier_check.py ferm-doe-dossier",
+        "python3 skills/biosymphony-ferm-doe/scripts/ferm_doe_contract_self_check.py ferm-doe-dossier"
+      ],
+      "expected_artifacts": [
+        "ferm-doe-dossier/experimental_setup.json",
+        "ferm-doe-dossier/horizontal_doe.csv",
+        "ferm-doe-dossier/claim_audit.json"
+      ]
+    }
+  ]
+}

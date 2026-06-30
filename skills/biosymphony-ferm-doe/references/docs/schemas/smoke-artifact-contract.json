@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/BioSymphony/ferm-doe/main/docs/schemas/smoke-artifact-contract.json",
+  "title": "Backend smoke-test artifact contract",
+  "description": "Required artifacts every backend smoke run must produce so it can be compared against the adaptive-backend evaluation surface (see docs/BIOMANUFACTURING_ADAPTIVE_BACKENDS.md and docs/adaptive-backend-evaluation.json). A backend earns promotion only when every artifact in `required` is present and well-formed.",
+  "contract_version": "1.0.0",
+  "as_of": "2026-05-22",
+  "type": "object",
+  "required": ["scenario_id", "backend", "out_dir", "artifacts"],
+  "properties": {
+    "scenario_id": {"type": "string", "description": "Matches smoke_plan.json scenario_id"},
+    "backend": {"type": "string", "enum": ["bofire", "baybe", "ax", "botorch_direct", "processoptimizer", "cellculturebo", "nimo", "entmoot", "omlt", "gp_plus", "tabpfn", "tabpfn_v2", "llambo"]},
+    "out_dir": {"type": "string"},
+    "artifacts": {
+      "type": "object",
+      "required": [
+        "result.json",
+        "route_report.json",
+        "candidate_table.csv",
+        "constraint_check.json",
+        "fallback_report.json",
+        "closed_loop_replay.json",
+        "negative_control_report.json",
+        "artifact_hashes.json",
+        "license_note.md",
+        "planning_boundary.md"
+      ],
+      "properties": {
+        "result.json": {"$ref": "#/$defs/result"},
+        "route_report.json": {"$ref": "#/$defs/route_report"},
+        "candidate_table.csv": {"$ref": "#/$defs/candidate_table"},
+        "constraint_check.json": {"$ref": "#/$defs/constraint_check"},
+        "fallback_report.json": {"$ref": "#/$defs/fallback_report"},
+        "closed_loop_replay.json": {"$ref": "#/$defs/closed_loop_replay"},
+        "negative_control_report.json": {"$ref": "#/$defs/negative_control_report"},
+        "artifact_hashes.json": {"$ref": "#/$defs/artifact_hashes"},
+        "license_note.md": {"$ref": "#/$defs/markdown_min_lines"},
+        "planning_boundary.md": {"$ref": "#/$defs/markdown_min_lines"}
+      }
+    }
+  },
+  "$defs": {
+    "result": {
+      "type": "object",
+      "required": ["status", "backend", "scenario_id", "timestamp_utc", "package_versions", "summary"],
+      "properties": {
+        "status": {"enum": ["PASS", "FAIL", "FAIL_CLOSED", "DEFERRED"]},
+        "backend": {"type": "string"},
+        "scenario_id": {"type": "string"},
+        "timestamp_utc": {"type": "string", "format": "date-time"},
+        "package_versions": {"type": "object", "additionalProperties": {"type": "string"}},
+        "summary": {
+          "type": "object",
+          "required": ["n_candidates_n1", "n_candidates_batch", "constraints_honored_natively", "closed_loop_rounds_completed", "negative_control_triggered"],
+          "properties": {
+            "n_candidates_n1": {"type": "integer", "minimum": 0},
+            "n_candidates_batch": {"type": "integer", "minimum": 0},
+            "constraints_honored_natively": {"type": "boolean"},
+            "closed_loop_rounds_completed": {"type": "integer", "minimum": 0},
+            "negative_control_triggered": {"type": "boolean"}
+          }
+        }
+      }
+    },
+    "route_report": {
+      "type": "object",
+      "required": ["selected", "reason", "fallback_route"],
+      "properties": {
+        "selected": {"enum": ["primary", "fallback", "demoted", "skipped", "halted"]},
+        "reason": {"type": "string"},
+        "fallback_route": {"type": ["string", "null"]},
+        "route_reasons_matched": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "candidate_table": {
+      "type": "object",
+      "description": "CSV file. Must include columns: run_id, plus all factor columns named per BioSymphony manifest. Optional: predicted_response_*, acquisition_score, fidelity_tier.",
+      "required": ["min_rows", "must_have_columns"],
+      "properties": {
+        "min_rows": {"const": 1},
+        "must_have_columns": {"type": "array", "items": {"const": "run_id"}}
+      }
+    },
+    "constraint_check": {
+      "type": "object",
+      "required": ["factor_bounds_pass", "linear_constraints_pass", "nchoosek_pass", "forbidden_combinations_pass", "per_arm_pass", "any_violation"],
+      "properties": {
+        "factor_bounds_pass": {"type": "boolean"},
+        "linear_constraints_pass": {"type": "boolean"},
+        "nchoosek_pass": {"type": "boolean"},
+        "forbidden_combinations_pass": {"type": "boolean"},
+        "per_arm_pass": {"type": "boolean"},
+        "any_violation": {"type": "boolean"},
+        "violations": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "fallback_report": {
+      "type": "object",
+      "required": ["triggered", "phase", "reason"],
+      "properties": {
+        "triggered": {"type": "boolean"},
+        "phase": {
+          "type": ["string", "null"],
+          "enum": [
+            "import",
+            "translate_manifest",
+            "ask",
+            "tell",
+            "constraint_solve",
+            "closed_loop_resume",
+            "routing",
+            "recommend",
+            "build_or_recommend",
+            "negative_control",
+            "import_or_ask",
+            "fit_gp",
+            "post_hoc_filter",
+            null
+          ]
+        },
+        "reason": {"type": ["string", "null"]},
+        "fallback_path_taken": {"type": ["string", "null"]}
+      }
+    },
+    "closed_loop_replay": {
+      "type": "object",
+      "required": ["n1_smoke_pass", "n16_batch_pass", "rounds"],
+      "properties": {
+        "n1_smoke_pass": {"type": "boolean"},
+        "n16_batch_pass": {"type": "boolean"},
+        "rounds": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "required": ["round", "n_candidates", "n_results_told", "resume_idempotent"],
+            "properties": {
+              "round": {"type": "integer"},
+              "n_candidates": {"type": "integer"},
+              "n_results_told": {"type": "integer"},
+              "resume_idempotent": {"type": "boolean"},
+              "qc_excluded_rows": {"type": "integer"}
+            }
+          }
+        }
+      }
+    },
+    "negative_control_report": {
+      "type": "object",
+      "required": ["scenario", "expected_behavior", "observed_behavior", "passed"],
+      "properties": {
+        "scenario": {"type": "string", "description": "e.g. 'infeasible_constraints', 'missing_assay_semantics', 'bad_result_join', 'missing_scale_bridge', 'unrealistic_cost_model'"},
+        "expected_behavior": {"const": "fail_closed_with_route_report"},
+        "observed_behavior": {"type": "string"},
+        "passed": {"type": "boolean"}
+      }
+    },
+    "artifact_hashes": {
+      "type": "object",
+      "description": "sha256 of each generated artifact (key = filename, value = hex digest)",
+      "additionalProperties": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+    },
+    "markdown_min_lines": {
+      "type": "object",
+      "required": ["min_lines"],
+      "properties": {"min_lines": {"const": 3}}
+    }
+  }
+}

@@ -1,0 +1,3 @@
+design_run_id,arm_id,qc_status,inclusion_status,trust_score,primary_response,factor_a,factor_b
+R001,example_arm,pass,include,0.95,12.4,low,30
+R002,example_arm,pass,include,0.92,14.1,high,30

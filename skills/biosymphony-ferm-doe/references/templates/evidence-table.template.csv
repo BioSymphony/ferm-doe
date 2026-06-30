@@ -1,0 +1,1 @@
+lane_id,evidence_id,source_type,source_ref,source_title,source_date,source_trust,license,extraction_method,agent_id,review_status,claim_type,entity_type,claim,factor_or_response,suggested_action,suggested_role,suggested_min,suggested_max,phase,effect_direction,severity,decision_impact,contradiction_group,confidence,caveat

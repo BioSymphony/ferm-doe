@@ -1,0 +1,16 @@
+{
+  "profiles": ["screening"],
+  "doe": {
+    "family": "definitive_screening",
+    "n_runs": 11,
+    "randomized": true,
+    "claim": "heuristic",
+    "design_table_path": "expected/selected_wave_1_design.csv"
+  },
+  "decision_rules": [
+    {"rule_id": "advance-on-active-factor", "scope": "global", "comparator": "qualitative", "threshold": "any factor effect outside replicate noise", "action": "advance_to_next_wave", "evidence_required": ["wave_1_results"]}
+  ],
+  "stop_rules": [
+    {"rule_id": "stop-on-assay-failure", "condition": "assay linearity not established", "action": "pause", "owner_role": "analytics"}
+  ]
+}

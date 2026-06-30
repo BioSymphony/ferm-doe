@@ -1,0 +1,2 @@
+learning_id,campaign_id,wave,arm_id,event_type,severity,source_artifact,symptom,root_cause_hypothesis,design_implication,assay_power_implication,bridge_implication,recommended_follow_up,status,owner,follow_up_validation,claim_boundary
+L001,<campaign_id>,wave2_planning,,assay_power_hiccup,warning,assay_power_results.json,<short symptom>,<hypothesis>,<design impact>,<assay impact>,<bridge impact>,<next action>,open,<owner>,PYTHONPATH=src python3 -m biosymphony_ferm_doe.cli utility assay-power --campaign-state <state> --out <out>,planned_wave2_design_only

@@ -1,0 +1,20 @@
+schema_version: 1
+pack_id: approximate-lab-inventory
+pack_type: input
+name: Approximate lab inventory and capacity
+data_safety: sanitized_internal
+required_artifacts:
+  - reagent_inventory
+  - equipment_capacity
+  - constraints_report
+required_metadata:
+  - inventory_date
+  - source_owner
+  - confidence_level
+compatibility_notes:
+  - Good for pre-experiment readiness.
+  - Not sufficient for autonomous purchasing or physical setup.
+forbidden:
+  - API keys
+  - vendor account credentials
+  - exact private batch records

@@ -1,0 +1,33 @@
+schema_version: 1
+pack_id: evidence-executor-v0
+pack_type: issue_pack
+name: Evidence Executor For Ferm DoE
+activation_policy:
+  default_active_wave: EV-W0
+  max_concurrent_agents: 3
+  keep_downstream_in_backlog: true
+parallelism_policy:
+  EV-W0: 1
+  EV-W1: 3
+  EV-W2: 1
+labels:
+  - biosymphony-ferm-doe
+  - evidence-executor
+  - scientific-swarm
+issues:
+  - id: EV-W0-01
+    file: issues/01-evidence-contract.md
+    wave: EV-W0
+    blocks: [EV-W1-01, EV-W1-02]
+  - id: EV-W1-01
+    file: issues/02-public-literature-extraction.md
+    wave: EV-W1
+    blocks: [EV-W2-01]
+  - id: EV-W1-02
+    file: issues/03-protocol-vendor-method-extraction.md
+    wave: EV-W1
+    blocks: [EV-W2-01]
+  - id: EV-W2-01
+    file: issues/04-evidence-normalization-handoff.md
+    wave: EV-W2
+    blocks: []

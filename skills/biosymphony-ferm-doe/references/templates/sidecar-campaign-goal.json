@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "sidecar_kind": "campaign_goal",
+  "id": "campaign-goal-demo-001",
+  "name": "Demo upstream readiness campaign goal",
+  "interface": {
+    "name": "biosymphony-ferm-doe.sidecar",
+    "version": 1,
+    "slots": [
+      "campaign_goal"
+    ]
+  },
+  "campaign": {
+    "campaign_id": "demo-ferm-doe-campaign",
+    "domain": "upstream_bioprocess",
+    "organism_or_system": "public_demo_or_secure_reference",
+    "process_mode": "shake_flask_or_bioreactor",
+    "readiness_target": "YELLOW"
+  },
+  "objective": {
+    "primary": "Produce a pre-experiment readiness verdict and first-batch run packet from sanitized inputs.",
+    "direction": "maximize",
+    "response_id": "product_titer",
+    "secondary": [
+      "assay readiness",
+      "factor feasibility",
+      "reagent sufficiency"
+    ]
+  },
+  "stop_policy": {
+    "red_if": [
+      "assay cannot detect expected differences",
+      "required inputs are missing or private data is not referenced safely"
+    ],
+    "yellow_if": [
+      "campaign can plan first-batch but still needs operator review"
+    ],
+    "green_if": [
+      "first-batch packet is internally consistent and validation passes"
+    ]
+  },
+  "required_inputs": [
+    {
+      "input_id": "historical_run_ledger",
+      "kind": "csv",
+      "required": true
+    },
+    {
+      "input_id": "factor_space",
+      "kind": "yaml_or_json",
+      "required": true
+    },
+    {
+      "input_id": "reagent_inventory",
+      "kind": "csv",
+      "required": false
+    }
+  ],
+  "expected_artifacts": [
+    "ferm-doe-dossier/readiness_verdict.md",
+    "ferm-doe-dossier/factor_space_audit.md",
+    "ferm-doe-dossier/selected_wave_1_design.csv",
+    "ferm-doe-dossier/provenance.md"
+  ],
+  "data_safety": {
+    "private_data_policy": "Use secure references or sanitized summaries for sensitive process, strain, customer, or sequence material; never copy restricted records into this repo.",
+    "allowed_in_repo": [
+      "public",
+      "synthetic",
+      "sanitized_private_reference",
+      "secure_store_reference"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+schema_version: 1
+pack_id: public-paper-derived
+pack_type: input
+name: Public paper-derived starter data
+data_safety: public
+required_artifacts:
+  - source_catalog
+  - campaign_manifest
+  - historical_run_ledger
+  - factor_space
+required_metadata:
+  - doi
+  - url
+  - license_status
+  - table_status
+  - transformation_notes
+allowed_table_status:
+  - normalized_in_repo
+  - extract_ready
+  - extract_ready_with_supplement
+forbidden:
+  - restricted process records
+  - restricted sequence material
+  - restricted media formulations
+  - customer-specific batch data

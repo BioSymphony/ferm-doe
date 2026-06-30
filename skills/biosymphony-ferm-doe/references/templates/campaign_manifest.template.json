@@ -1,0 +1,101 @@
+{
+  "campaign_id": "REPLACE_ME",
+  "claim_level": "internal_planning",
+  "profiles": ["custom"],
+  "objective": "REPLACE_ME: what scientific question is the campaign answering?",
+  "system": {
+    "organism_label": "REPLACE_ME",
+    "product_class": "REPLACE_ME",
+    "scale": "REPLACE_ME",
+    "privacy": "internal"
+  },
+  "responses": [
+    {
+      "response_id": "REPLACE_ME",
+      "class": "titer",
+      "measurement_type": "assayed",
+      "direction": "maximize",
+      "assay_required": true,
+      "assay_method": "REPLACE_ME",
+      "sample_fraction": "REPLACE_ME",
+      "standard_curve": {"status": "planned"},
+      "matrix_effects_policy": {"status": "planned"},
+      "assay_power_policy": {
+        "minimum_detectable_effect": 1,
+        "expected_effect_size": 3,
+        "cv_percent": 15,
+        "replicate_count": 3,
+        "target_power": 0.8,
+        "lod": 0.1,
+        "loq": 0.5,
+        "dynamic_range": {"low": 0.5, "high": 100},
+        "matrix_recovery_min": 80,
+        "turnaround_h": 24,
+        "non_claim": "Template values are placeholders and must be replaced before execution planning."
+      }
+    }
+  ],
+  "factors": [
+    {"factor_id": "REPLACE_ME", "type": "numeric", "low": 0, "high": 1, "unit": "REPLACE_ME"}
+  ],
+  "constraints": [
+    {"constraint_id": "REPLACE_ME", "kind": "feasibility", "description": "REPLACE_ME"}
+  ],
+  "arms": [],
+  "scale_context": null,
+  "doe": {
+    "family": "definitive_screening",
+    "n_runs": 11,
+    "randomized": true,
+    "claim": "heuristic",
+    "design_table_path": "expected/selected_wave_1_design.csv"
+  },
+  "decision_rules": [
+    {
+      "rule_id": "REPLACE_ME",
+      "scope": "global",
+      "comparator": "ge",
+      "threshold": 0.0,
+      "action": "advance_to_next_wave",
+      "evidence_required": []
+    }
+  ],
+  "stop_rules": [
+    {
+      "rule_id": "REPLACE_ME",
+      "condition": "REPLACE_ME",
+      "action": "pause",
+      "owner_role": "REPLACE_ME"
+    }
+  ],
+  "risk_register": [],
+  "assumptions": [],
+  "readiness": {
+    "axes": {
+      "responses": {},
+      "factors": {},
+      "doe": "planned",
+      "evidence": "planned"
+    },
+    "overall": "YELLOW",
+    "reasons": ["initial template; nothing executed"]
+  },
+  "inputs": {
+    "historical_run_ledger": "inputs/historical_run_ledger.csv",
+    "evidence_table": "inputs/evidence_table.csv"
+  },
+  "adaptive_wave2": {
+    "claim_level": "planned_wave2_design",
+    "primary_response_id": "REPLACE_ME",
+    "allowed_actions": ["confirm", "narrow", "expand", "pause", "stop", "scale_or_downscale"],
+    "require_assay_power": true,
+    "self_learning": {
+      "enabled": true,
+      "negative_memory_scope": "arm",
+      "learning_ledger_path": "wave2/learning_ledger.csv",
+      "hiccup_review_path": "wave2/hiccup_review.md",
+      "closeout_rule": "Every open hiccup is closed with evidence or carried into the later campaign manifest."
+    }
+  },
+  "readiness_expectation": "YELLOW"
+}
