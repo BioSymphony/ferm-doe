@@ -1,3 +1,8 @@
+---
+name: ferm-doe-linear
+description: Use when connecting BioSymphony Ferm DoE campaign manifests, readiness summaries, stop rules, and follow-up waves to Linear issues.
+---
+
 # Linear-aware agent integration
 
 Pattern for using `biosymphony-ferm-doe` with a long-running agent that has Linear access (Claude Code + Linear MCP, OpenAI Agents SDK + Linear, Codex CLI + Linear, custom orchestrator).

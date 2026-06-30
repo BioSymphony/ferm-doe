@@ -1,0 +1,23 @@
+{
+  "name": "biosymphony-ferm-doe",
+  "version": "0.1.0",
+  "description": "BioSymphony Ferm DoE skills for public-safe fermentation and upstream bioprocess planning.",
+  "author": {
+    "name": "BioSymphony",
+    "url": "https://github.com/BioSymphony"
+  },
+  "homepage": "https://github.com/BioSymphony/ferm-doe",
+  "repository": "https://github.com/BioSymphony/ferm-doe",
+  "license": "MIT",
+  "keywords": ["fermentation", "doe", "bioprocess"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "BioSymphony Ferm DoE",
+    "shortDescription": "Fermentation DoE planning",
+    "longDescription": "Public-safe Ferm DoE skills for fermentation, cell-culture, upstream bioprocess, adaptive DoE, assay readiness, and pre-experiment planning.",
+    "developerName": "BioSymphony",
+    "category": "Research",
+    "capabilities": ["Skills"],
+    "defaultPrompt": ["Use $biosymphony-ferm-doe to prepare a readiness-gated fermentation DoE plan."]
+  }
+}

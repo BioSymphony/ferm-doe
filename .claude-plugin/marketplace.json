@@ -1,0 +1,22 @@
+{
+  "name": "biosymphony-ferm-doe",
+  "owner": {
+    "name": "BioSymphony"
+  },
+  "metadata": {
+    "version": "0.1.0",
+    "description": "Public-safe Ferm DoE skills for fermentation and upstream bioprocess planning."
+  },
+  "plugins": [
+    {
+      "name": "biosymphony-ferm-doe",
+      "displayName": "BioSymphony Ferm DoE",
+      "source": "./",
+      "description": "Prepare readiness-gated fermentation DoE plans.",
+      "category": "life-sciences",
+      "tags": ["fermentation", "doe", "bioprocess"],
+      "strict": false,
+      "skills": ["./skills/biosymphony-ferm-doe"]
+    }
+  ]
+}

@@ -1,3 +1,8 @@
+---
+name: ferm-doe-claude
+description: Use when running BioSymphony Ferm DoE in Claude Code or a Claude Agent SDK app with campaign manifests as durable state.
+---
+
 # Claude agent config for biosymphony-ferm-doe
 
 Drop this into a Claude Agent SDK app or Claude Code project as a starting reference.

@@ -1,3 +1,8 @@
+---
+name: ferm-doe-generic
+description: Use when integrating BioSymphony Ferm DoE with a runtime-agnostic agent that maintains campaign manifests and readiness outputs.
+---
+
 # Generic agent config for biosymphony-ferm-doe
 
 Use this as a runtime-agnostic reference when integrating the skill into any agent framework.

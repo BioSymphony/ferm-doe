@@ -1,0 +1,11 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "biosymphony-ferm-doe",
+  "version": "0.1.0",
+  "description": "BioSymphony Ferm DoE skills for public-safe fermentation and upstream bioprocess planning.",
+  "author": {
+    "name": "BioSymphony",
+    "url": "https://github.com/BioSymphony"
+  },
+  "skills": ["./skills/biosymphony-ferm-doe"]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "BioSymphony Ferm DoE"
+  short_description: "Fermentation DoE planning"
+  default_prompt: "Use $biosymphony-ferm-doe to prepare a readiness-gated fermentation DoE plan."
