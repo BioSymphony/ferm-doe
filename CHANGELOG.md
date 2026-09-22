@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [Semantic Versioning](https://semver.org/), with pre-alpha tags through `0.x`.
 
+## [Unreleased] - 2026-09-22 AI tool review
+
+### Added
+
+- Added Docling, olmOCR, PaperQA2, TabTune, and GOLLuM as research or evaluation candidates, with source links and fallback behavior.
+- Added a compact review of recent releases, uncertainty benchmarks, and agentic optimization research.
+
+### Changed
+
+- Refreshed selected upstream metadata, including September TabPFN, TabICL, Xopt, PEtab, and pyPESTO releases. Supported dependency ranges remain unchanged.
+- Replaced the broad LLAMBO performance claim with a benchmark-scoped warmstart evaluation.
+- Release scans block restricted records and Windows workstation paths; finding reports withhold matched content.
+
 ## [Unreleased] - 2026-08-30 tool and documentation refresh
 
 ### Added

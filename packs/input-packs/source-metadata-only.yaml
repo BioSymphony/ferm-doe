@@ -16,5 +16,4 @@ allowed_table_status:
 forbidden:
   - copied numeric tables
   - figure-derived digitization without license review
-  - private process records
-
+  - nonpublic operational records

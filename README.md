@@ -1,5 +1,7 @@
 # BioSymphony Ferm DoE
 
+BioSymphony Ferm DoE is a toolkit for planning fermentation experiments with design of experiments (DoE). It produces design tables, measurement readiness reports, follow-up plans, and run packets.
+
 ![BioSymphony Ferm DoE banner](assets/images/biosymphony-ferm-doe-banner.png)
 
 [![CI](https://github.com/BioSymphony/ferm-doe/actions/workflows/ci.yml/badge.svg)](https://github.com/BioSymphony/ferm-doe/actions/workflows/ci.yml)
@@ -7,26 +9,32 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![Status: pre-alpha](https://img.shields.io/badge/status-pre--alpha-orange.svg)](#status)
 
-**A multi-agent skill for constraint-aware experimental design in fermentation and biomanufacturing.**
+Use the `ferm-doe` command line or a coding agent that can read files and run commands. A `campaign_manifest.json` records the objective, responses, factors, constraints, and evidence references so another person or agent can continue the work.
 
-Any coding agent harness can drive it: Symphony with Linear, Claude Code workers with Linear, Codex CLI, OpenAI Agents SDK, or a custom orchestrator. State lives in one file (`campaign_manifest.json`), so sessions pause, resume, fan work across parallel sub-agents, and hand off cleanly between agents and humans. The same commands run on a laptop, in CI, or behind an AWS Lambda or Modal endpoint, so the user picks local or cloud per task.
+Outputs are planning artifacts for scientific review. Lab execution and experimental validation remain separate; see [scope and limitations](NON_CLAIMS.md).
 
-The loop is:
+## Start Here
 
-1. **Frame the design problem.** Turn a rough objective, responses, factors, scale context, constraints, and supporting references into a durable `campaign_manifest.json`.
-2. **Generate useful designs.** Route to stdlib DoE, BoFire, ENTMOOT, OMLT, TabPFN, BoTorch, or reference-DOE utilities with explicit adapter status and claim labels.
-3. **Close the loop.** Analyze the first-batch results, plan the follow-up batch, preserve negative-result memory, and produce a run packet plus `expected/AGENTS.md` handoff.
-4. **Coordinate the work.** Run locally, hand to a repo-local coding agent, split into issue packs, mirror status into Linear, or expose selected checks through AWS Lambda or Modal.
+In a cloned checkout, create a virtual environment and validate the synthetic screening demo:
 
-Checkpoint labels: artifact and CLI contracts use names such as `wave1`, `wave2`, `plan-wave2`, and `planned_wave2_design`. They describe first-batch and follow-up checkpoints, not a predetermined experiment schedule. Results are QC-reviewed before the next action is chosen.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e .
+ferm-doe validate examples/demo-pb-screening-public --summary
+```
 
-Key capabilities implemented in code:
+Expected result: `error_count: 0` and `status: YELLOW`. The demo uses synthetic data to demonstrate planning checks.
 
-- A curated BO/DoE and sidecar registry (`docs/TOOL_REGISTRY.md`, `docs/tool-registry.json`) with documented tradeoffs and direct adapters for the load-bearing entries (BoFire, ENTMOOT v2, OMLT, TabPFN, BoTorch, pyDOE3, SALib, scipy, PubMed MCP).
-- A public adaptive-backend surface (`docs/BIOMANUFACTURING_ADAPTIVE_BACKENDS.md`, `docs/adaptive-backend-evaluation.json`) that compares BoFire, BayBE, Ax/BoTorch, ENTMOOT, OMLT, and TabPFN through the same design preflight checks.
-- A cost-model honesty stack: simulator number, plus bulk-reagent number, plus fully-loaded shake-flask COGS, plus CMO benchmark, plus a stated range. Documented in `docs/COST_MODEL_REALISM_CHECK.md` with `templates/cost_stack.template.md`.
-- Scale-bridge objects with explicit kLa, P/V, tip-speed, mixing-time, OUR, RQ, VVM, and geometric-similarity criteria.
-- A durable campaign manifest that supports pause, resume, Linear-backed review, and handoff between agent sessions or between an agent and a human.
+Continue with the [agent demo prompt](#run-the-demo-with-your-agent) or the [manual CLI walkthrough](#drive-it-by-hand). For other tasks, choose a [use case](docs/USE_CASES.md). See [Install](#install) for clone commands and optional dependencies.
+
+## Planning Workflow
+
+1. Define the objective, measured responses, factors, constraints, and scale context in `campaign_manifest.json`.
+2. Check the inputs and measurement requirements, resolve blocking errors, and generate a design table.
+3. Analyze supplied results, propose a follow-up batch, and write a run packet with source references and claim labels.
+
+The `wave1` and `wave2` artifact names identify the first-batch and follow-up checkpoints. Results determine the next planning step.
 
 ```mermaid
 flowchart TB
@@ -42,106 +50,14 @@ flowchart TB
   classDef block fill:#fffdf8,stroke:#bf5a3c,color:#a44a2f,stroke-width:1.5px;
 ```
 
-## Design maps
+## Planning Capabilities
 
-These diagrams summarize the main design surfaces: experiment inputs, scale-transfer criteria, and DoE family choice. See [`docs/VISUAL_OVERVIEW.md`](docs/VISUAL_OVERVIEW.md) for the short notes behind each diagram.
+- Generate classical designs with the base package; use optional adapters for constrained designs and Bayesian follow-up. The [tool registry](docs/TOOL_REGISTRY.md) distinguishes implemented adapters from evaluation candidates.
+- Record scale-transfer criteria such as oxygen transfer, power per volume, tip speed, and mixing time in the [scale context](docs/SCALE_BRIDGE.md).
+- Compare simulator estimates, reagent costs, labor and overhead, and contract manufacturing benchmarks with the [cost-model reporting template](docs/COST_MODEL_REALISM_CHECK.md).
+- Divide longer campaigns into bounded [issue packs](docs/ISSUE_PACK_GENERATION.md), preserve source references, and write handoff files for the next session.
 
-### Experiment design map
-
-```mermaid
-flowchart LR
-  subgraph IN["Inputs"]
-    direction TB
-    O("objective") ~~~ R("responses") ~~~ F("factors") ~~~ C("constraints") ~~~ S("scale context")
-  end
-  subgraph CH["Design choices"]
-    direction TB
-    FAM("DoE family") ~~~ RB("runs & blocks") ~~~ RC("replicates & controls")
-  end
-  subgraph OUT["Outputs"]
-    direction TB
-    DM("design matrix") ~~~ RP("run plan") ~~~ MP("measurement plan") ~~~ NW("follow-up options")
-  end
-  IN ==> CH ==> OUT
-  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
-  class O,R,F,C,S,FAM,RB,RC,DM,RP,MP,NW proc;
-  style IN fill:#efeadd,stroke:#d9d2c0,color:#1b1b18;
-  style CH fill:#efeadd,stroke:#d9d2c0,color:#1b1b18;
-  style OUT fill:#efeadd,stroke:#d9d2c0,color:#1b1b18;
-```
-
-### Scale transfer criteria
-
-```mermaid
-flowchart LR
-  SRC("source scale<br/>qualified data or stated basis"):::hero --> BR{"bridge criteria<br/>kLa · P/V · tip-speed<br/>mix-time · OUR · RQ · VVM<br/>geometric similarity"}:::gate
-  BR -->|"all criteria met"| MATCH("Match → review"):::go --> TGT("target scale<br/>planning hypothesis"):::proc
-  BR -->|"some gaps"| GAP("Gap → measure / estimate"):::gate
-  BR -->|"not qualified"| RED("Revise → review the bridge"):::block
-  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
-  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
-  classDef gate fill:#fffdf8,stroke:#b0892f,color:#8a6a1f,stroke-width:1.5px;
-  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
-  classDef block fill:#fffdf8,stroke:#bf5a3c,color:#a44a2f,stroke-width:1.5px;
-```
-
-### DoE family selector
-
-```mermaid
-flowchart LR
-  Q{"What is the<br/>situation?"}:::hero
-  Q -->|"many factors to screen"| SC("Screening<br/>PB · fractional"):::proc
-  Q -->|"curved response surface"| RSM("RSM<br/>CCD · Box-Behnken"):::proc
-  Q -->|"media / feed blend"| MX("Mixture<br/>simplex · extreme-vertices"):::proc
-  Q -->|"hard-to-change setpoints"| SP("Split-plot"):::proc
-  Q -->|"scale transfer"| SB("Scale bridge"):::proc
-  Q -->|"after first batch"| SA("Sequential augmentation"):::go
-  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
-  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
-  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
-```
-
-## Start here
-
-This repo is a skill you point a coding agent at. After a one-time local install, Claude Code, Codex CLI, an OpenAI Agents SDK runner, a Symphony worker, or any orchestrator that can read files and run shell commands picks up the skill at [`skills/biosymphony-ferm-doe/SKILL.md`](skills/biosymphony-ferm-doe/SKILL.md) and drives the campaign end to end. You do not need to learn the `ferm-doe` CLI yourself unless you want to.
-
-After cloning, the shortest local smoke test is:
-
-```bash
-python3 -m venv .venv && source .venv/bin/activate
-python -m pip install -e .
-ferm-doe validate examples/demo-pb-screening-public --summary
-```
-
-Expected result: `error_count` is `0`; the demo remains `YELLOW` because it is a synthetic planning fixture, not executed lab evidence.
-
-A first run:
-
-1. Install the repo locally (see [Install](#install)).
-2. Open the checkout in your coding agent.
-3. Paste the prompt from [Run the demo with your agent](#run-the-demo-with-your-agent). The agent checks the design inputs at `examples/demo-pb-screening-public/`, generates a first-batch design, analyzes the bundled synthetic results, plans the follow-up batch, and writes a run packet under `/tmp/demo-pb/`.
-
-When you have a real campaign, pick a job-to-be-done from [`docs/USE_CASES.md`](docs/USE_CASES.md) and an agent harness from [Agent harnesses](#agent-harnesses).
-
-The readiness gate decides what the agent does next: RED blocks, YELLOW continues planning with listed limits, and GREEN means the declared checks are clear:
-
-```mermaid
-flowchart TB
-  M[("campaign_manifest.json")]:::hero --> V("validate --summary"):::proc --> W{"worst axis +<br/>failed checks"}:::gate
-  W -->|"errors present"| R("RED · do not proceed"):::block
-  W -->|"guidance / synthetic"| Y("YELLOW · proceed with limits<br/>planning only"):::gate
-  W -->|"all axes clear"| G("GREEN · checks clear"):::go
-  R --> FIX("fix failed checks → re-run"):::block --> V
-  Y --> N("design · analyze · plan follow-up"):::proc
-  G --> N
-  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
-  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
-  classDef gate fill:#fffdf8,stroke:#b0892f,color:#8a6a1f,stroke-width:1.5px;
-  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
-  classDef block fill:#fffdf8,stroke:#bf5a3c,color:#a44a2f,stroke-width:1.5px;
-```
-
-## Popular use cases
+## Popular Use Cases
 
 | You need to... | Start with |
 |---|---|
@@ -155,9 +71,9 @@ flowchart TB
 
 See [`docs/USE_CASES.md`](docs/USE_CASES.md) for copy-paste agent requests and the recommended demo for each workflow.
 
-## Agent harnesses
+## Agent Harnesses
 
-Any coding agent that can read files and run shell commands works. The repo ships ready-to-use configs for the common patterns:
+Choose an agent integration or run the CLI directly. The repository includes configuration examples for these workflows:
 
 | Harness | Use it when | Read |
 |---|---|---|
@@ -168,7 +84,7 @@ Any coding agent that can read files and run shell commands works. The repo ship
 | Cloud endpoint (AWS Lambda or Modal) | You want stateless planning commands behind an API | [`deploy/`](deploy/) |
 | Hand-driven CLI | You want to drive `ferm-doe` yourself without an agent | [Drive it by hand](#drive-it-by-hand) |
 
-State lives in `campaign_manifest.json` regardless of harness, so sessions pause, resume, and hand off cleanly. The full operating map is in [`docs/WORKFLOWS.md`](docs/WORKFLOWS.md).
+See [Workflows](docs/WORKFLOWS.md) for state ownership and handoff conventions.
 
 ```mermaid
 flowchart LR
@@ -191,7 +107,7 @@ flowchart LR
   classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
 ```
 
-## When to use this
+## When To Use This
 
 Use this skill when a user, a Linear ticket, or an upstream agent asks you to plan one of the following, and the lab has not yet run the experiment:
 
@@ -216,7 +132,7 @@ python -m pip install -e .
 
 This installs the `ferm-doe` CLI that the agent calls. Optional scientific extras (BoFire, BoTorch, ENTMOOT, OMLT, TabPFN, pyDOE3, SALib, scipy) install separately when a campaign needs them; see [Optional extras](#optional-extras). Adapters degrade to a `not_available` report when the extra is missing, so the demos run on a clean install.
 
-## Run the demo with your agent
+## Run The Demo With Your Agent
 
 Open the checkout in your coding agent (Claude Code, Codex CLI, an OpenAI Agents SDK runner, or any orchestrator that can read files and run shell commands). Paste this prompt:
 
@@ -236,13 +152,13 @@ Start with examples/demo-pb-screening-public:
 5. Before suggesting that anything is shareable, run `make public-ready`.
 ```
 
-The agent validates the canonical closed-loop demo, generates a first-batch design, analyzes the bundled synthetic first-batch results, plans a follow-up batch with `plan-wave2`, and finalizes a run packet under `/tmp/demo-pb/`. The generated files are safe to delete. See [`docs/AGENT_QUICKSTART.md`](docs/AGENT_QUICKSTART.md) for the extended version with expected outputs and the agent-loop pattern.
+The demo writes disposable outputs under `/tmp/demo-pb/`. The [agent quickstart](docs/AGENT_QUICKSTART.md) lists the commands and expected artifacts.
 
 When you are ready to plan your own campaign, ask the agent to copy `templates/campaign_manifest.template.json` and `templates/operator-intake.md` into a separate local workspace, fill them in, and run the same validate / design / analyze / plan-wave2 / finalize loop on the new campaign. Keep private or unpublished inputs out of this public checkout.
 
 At closeout, ask the agent to write a campaign-local handoff at `artifacts/<campaign>/AGENTS.md` and to record hiccups, excluded results, and arm-scoped negative memory in the self-learning ledger and review files. The pattern is documented in [`docs/SELF_LEARNING_DOE.md`](docs/SELF_LEARNING_DOE.md). The artifacts are the portable memory across agent runtimes, so the next session (with the same agent or a different one) resumes from the same file.
 
-## Drive it by hand
+## Drive It By Hand
 
 You can also drive `ferm-doe` yourself without an agent. The same demo runs as:
 
@@ -262,7 +178,7 @@ ferm-doe finalize examples/demo-pb-screening-public \
   --out /tmp/demo-pb/run_packet.md --json-out /tmp/demo-pb/run_packet.json
 ```
 
-See [CLI affordances](#cli-affordances) for the full command surface. Contributor and release checks are heavier:
+See [CLI Commands](#cli-commands) for more examples. To check a contribution before sharing it, run:
 
 ```bash
 make release-check
@@ -272,7 +188,7 @@ make public-ready
 
 `make release-check` runs the unit tests, validates every top-level public example with `error_count == 0`, checks the tool registry and adaptive-backend surface, and runs the public-release scanner over the public surface. `make public-ready` adds the required gitleaks history and working-tree secret scan. If `gitleaks` is missing, the public-ready gate fails closed.
 
-## What `validate --summary` looks like
+## What `validate --summary` Looks Like
 
 ```bash
 PYTHONPATH=src python3 -m biosymphony_ferm_doe.cli validate examples/demo-scale-bridge-public --summary
@@ -292,7 +208,7 @@ PYTHONPATH=src python3 -m biosymphony_ferm_doe.cli validate examples/demo-scale-
 }
 ```
 
-When the manifest is incomplete, the validator surfaces specific guidance instead of failing:
+Advisory gaps produce warnings such as these. Missing required fields and structural contradictions can produce blocking errors:
 
 ```json
 {
@@ -361,29 +277,13 @@ flowchart TB
   classDef block fill:#fffdf8,stroke:#bf5a3c,color:#a44a2f,stroke-width:1.5px;
 ```
 
-These eight labels live on three axes. **A** is a rigor ladder for how the design matrix was generated, from `exact` down to `heuristic`: an agent that sees `claim_level: heuristic` surfaces the row to a statistician before sealing the campaign. **B** marks planning and analysis outputs that were computed but not executed (the follow-up plan, the BO plan, the first-batch analysis). **C** is a provenance flag: `public_synthetic_demo` blocks any ready-to-run claim.
+The labels describe three properties: the design-generation method, the planning or analysis status, and data provenance. Review `heuristic` designs with a statistician. The `public_synthetic_demo` label identifies synthetic inputs and blocks a ready-to-run claim.
 
-## Where this project fits
+## Where This Project Fits
 
-This project adds a manifest-driven planning and review layer around DoE generators. The table describes this repository's scope; capabilities and workflows in other tools vary by product and configuration. It is a positioning summary, not a feature or quality ranking.
+Use the toolkit to record a campaign's inputs, check its measurement and design requirements, and retain evidence across planning sessions. Classical generators and optional optimization backends supply candidate designs; the campaign records retain the constraints, source references, and review history.
 
-| Planning concern | BioSymphony Ferm DoE | Typical companion or alternative |
-|---|---|---|
-| Input completeness and run-readiness checks | Manifest plus validator checks | Product and workflow dependent |
-| Scale-up and scale-down framing | First-class scale and bridge objects | Product and workflow dependent |
-| Profile-driven campaign state | JSON manifest with named profiles | Product and workflow dependent |
-| Source-tracked design rationale | Evidence and provenance fields | Product and workflow dependent |
-| Long-running planning loop | Durable manifest, handoff, and follow-up artifacts | Agent or workflow dependent |
-| Cost-model disclosure | Five-layer cost stack with caveats | Product and workflow dependent |
-| DoE generation | Stdlib generators plus optional adapters; each output carries a claim level | Commercial or open-source DoE generator |
-| Bayesian follow-up planning | Optional BoTorch, BoFire, ENTMOOT, OMLT, and TabPFN routes with documented limits | Backend and workflow dependent |
-| Constrained mixture or NChooseK | Selected adapters for declared constraint shapes | Backend and workflow dependent |
-| Result analysis | Stdlib OLS planning analysis with permutation p-values, bootstrap CIs, and lack-of-fit; labeled for review | Statistical tooling and review |
-| GxP execution | Not provided | Separate validated execution system |
-
-This is a planning layer that sits above a DoE generator and a statistician. It frames what the campaign needs to learn, what would make it fail, and which measurements, constraints, and scale criteria should be reviewed before a design is considered for physical work.
-
-**The design tournament.** It does not emit one design. It generates competing design strategies, scores each against readiness, feasibility, and assay-readiness, and returns the strongest accepted planning candidate (or refuses with `no_accepted_design`):
+The design comparison workflow scores candidate strategies against readiness, feasibility, and assay requirements. It returns the highest-scoring accepted candidate, or `no_accepted_design` when none passes:
 
 ```mermaid
 flowchart LR
@@ -410,7 +310,7 @@ flowchart LR
 
 The skeptical audit lane informs scoring but is never selected as the design candidate (`tournament.py · run_design_tournament()`).
 
-**The cost-honesty stack.** Cost is reported in five layers, optimistic to fully-loaded, so a number is never quoted without its caveats:
+Cost reports separate simulator estimates, raw materials, operating costs, external manufacturing benchmarks, and the stated uncertainty range:
 
 ```mermaid
 flowchart TB
@@ -446,9 +346,68 @@ Public demos cover the main campaign shapes. The non-BoFire demos run on the std
 | Product-class starter | [`yeast-isoprenoid-2l-fedbatch/`](examples/yeast-isoprenoid-2l-fedbatch/) | Hydrophobic product planning fixture with derived productivity and cost responses |
 | ENTMOOT smoke | [`entmoot-nchoosek-smoke/`](examples/entmoot-nchoosek-smoke/) | NChooseK Bayesian optimization via ENTMOOT v2, the conservative route for the behavior recorded in the repository's BoFire 0.3.1 audit |
 
+## Design Maps
+
+Use these maps to review experiment inputs, scale-transfer criteria, and the choice of DoE family. [Visual overview](docs/VISUAL_OVERVIEW.md) explains each map.
+
+### Experiment Design Map
+
+```mermaid
+flowchart LR
+  subgraph IN["Inputs"]
+    direction TB
+    O("objective") ~~~ R("responses") ~~~ F("factors") ~~~ C("constraints") ~~~ S("scale context")
+  end
+  subgraph CH["Design choices"]
+    direction TB
+    FAM("DoE family") ~~~ RB("runs & blocks") ~~~ RC("replicates & controls")
+  end
+  subgraph OUT["Outputs"]
+    direction TB
+    DM("design matrix") ~~~ RP("run plan") ~~~ MP("measurement plan") ~~~ NW("follow-up options")
+  end
+  IN ==> CH ==> OUT
+  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
+  class O,R,F,C,S,FAM,RB,RC,DM,RP,MP,NW proc;
+  style IN fill:#efeadd,stroke:#d9d2c0,color:#1b1b18;
+  style CH fill:#efeadd,stroke:#d9d2c0,color:#1b1b18;
+  style OUT fill:#efeadd,stroke:#d9d2c0,color:#1b1b18;
+```
+
+### Scale Transfer Criteria
+
+```mermaid
+flowchart LR
+  SRC("source scale<br/>qualified data or stated basis"):::hero --> BR{"bridge criteria<br/>kLa · P/V · tip-speed<br/>mix-time · OUR · RQ · VVM<br/>geometric similarity"}:::gate
+  BR -->|"all criteria met"| MATCH("Match → review"):::go --> TGT("target scale<br/>planning hypothesis"):::proc
+  BR -->|"some gaps"| GAP("Gap → measure / estimate"):::gate
+  BR -->|"not qualified"| RED("Revise → review the bridge"):::block
+  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
+  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
+  classDef gate fill:#fffdf8,stroke:#b0892f,color:#8a6a1f,stroke-width:1.5px;
+  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
+  classDef block fill:#fffdf8,stroke:#bf5a3c,color:#a44a2f,stroke-width:1.5px;
+```
+
+### DoE Family Selector
+
+```mermaid
+flowchart LR
+  Q{"What is the<br/>situation?"}:::hero
+  Q -->|"many factors to screen"| SC("Screening<br/>PB · fractional"):::proc
+  Q -->|"curved response surface"| RSM("RSM<br/>CCD · Box-Behnken"):::proc
+  Q -->|"media / feed blend"| MX("Mixture<br/>simplex · extreme-vertices"):::proc
+  Q -->|"hard-to-change setpoints"| SP("Split-plot"):::proc
+  Q -->|"scale transfer"| SB("Scale bridge"):::proc
+  Q -->|"after first batch"| SA("Sequential augmentation"):::go
+  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
+  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
+  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
+```
+
 ## Architecture
 
-The hero loop at the top of this README is the first-run loop. The implementation flow is:
+The implementation connects campaign inputs, validation, design selection, and generated artifacts:
 
 ```mermaid
 flowchart TB
@@ -505,7 +464,7 @@ flowchart TB
 - [`docs/CONTRACTS.md`](docs/CONTRACTS.md): public task request and design-packet contract checks
 - [`docs/SWARMS_AND_EVIDENCE.md`](docs/SWARMS_AND_EVIDENCE.md): source-tracking pattern for design rationale
 - [`docs/dossier-generation.md`](docs/dossier-generation.md): how the planning packet is assembled and checked
-- [`docs/COST_MODEL_REALISM_CHECK.md`](docs/COST_MODEL_REALISM_CHECK.md): the five-stack cost honesty pattern
+- [`docs/COST_MODEL_REALISM_CHECK.md`](docs/COST_MODEL_REALISM_CHECK.md): cost assumptions, operating costs, and uncertainty ranges
 - [`docs/OPEN_DATA_PUBLICATION_STRATEGY.md`](docs/OPEN_DATA_PUBLICATION_STRATEGY.md): how a campaign artifact set maps to a publishable open-data drop
 - [`docs/SIMULATOR_V2_SPEC.md`](docs/SIMULATOR_V2_SPEC.md): simulator v2 spec (SPEC ONLY; not yet implemented)
 - [`docs/AGENT_HARNESSES.md`](docs/AGENT_HARNESSES.md): Claude Code, OpenAI Agents SDK, Codex CLI, Linear-aware runners, generic harnesses
@@ -518,7 +477,7 @@ flowchart TB
 - [`CONTRIBUTING.md`](CONTRIBUTING.md): how to add profiles, families, demos
 - [`agents/`](agents/): runtime-specific agent configs (Claude, OpenAI, generic, Linear)
 
-## Agent harness integration
+## Agent Harness Integration
 
 The skill is runtime-agnostic. State lives in `<campaign_dir>/campaign_manifest.json`. Agents update it across turns. The CLI is stdlib-only at runtime; optional scientific dependencies route through adapters that degrade cleanly to a "not_available" report when missing.
 
@@ -553,7 +512,7 @@ flowchart TB
 
 The full runbook is in [`docs/ISSUE_PACK_GENERATION.md`](docs/ISSUE_PACK_GENERATION.md); pack chooser and copy-paste recipes live in [`docs/ISSUE_PACK_COOKBOOK.md`](docs/ISSUE_PACK_COOKBOOK.md).
 
-## CLI commands
+## CLI Commands
 
 A single-page index of every `ferm-doe` subcommand, grouped by lifecycle stage, is at [`docs/CLI_REFERENCE.md`](docs/CLI_REFERENCE.md). The snippets below cover common tasks.
 
@@ -646,7 +605,7 @@ ferm-doe engine utility check-deps
 # api_key=PLACEHOLDER_NEVER_COMMIT  # audit-skip: assigned_secret_like_value documentation example
 ```
 
-## Optional extras
+## Optional Extras
 
 Install only what your campaign needs. Each extra is independently routable; the skill falls back to a stdlib path when the extra is absent. For a capability-centric view ("I want to do X, which extra activates it"), see [`docs/ADAPTER_MAP.md`](docs/ADAPTER_MAP.md). For backend findings, routing limits, and adapter design decisions, see [`docs/BACKEND_EVAL_FINDINGS.md`](docs/BACKEND_EVAL_FINDINGS.md) and [`docs/ADAPTER_DESIGN_NOTES.md`](docs/ADAPTER_DESIGN_NOTES.md).
 
@@ -710,7 +669,7 @@ flowchart TB
 A. See [`docs/BOFIRE_POSITIONING.md`](docs/BOFIRE_POSITIONING.md). Short version: stdlib for unconstrained or simple-box screening and adaptive follow-up planning; BoFire for linear or nonlinear constraint blends (cost, total-mass, NChooseK) and for multi-fidelity scale-bridge planning. The BoFire adapter degrades to a "not_available" report when the extra is absent, so smoke scripts run on any laptop.
 
 **Q. When do I route to ENTMOOT instead of BoFire?**
-A. When NChooseK cardinality is load-bearing in Bayesian optimization, not just the initial DoE. The repository's BoFire 0.3.1 audit found that `SoboStrategy` plus `NChooseK` did not return candidates. Upstream issue #450 is now closed, but later BoFire releases have not been evaluated against this adapter. ENTMOOT and OMLT remain the conservative MIP-backed routes. See [`docs/ENTMOOT_SWAP_DESIGN.md`](docs/ENTMOOT_SWAP_DESIGN.md).
+A. When Bayesian follow-up must enforce NChooseK cardinality constraints. The repository's BoFire 0.3.1 audit found that `SoboStrategy` plus `NChooseK` did not return candidates. Upstream issue #450 is now closed, but later BoFire releases have not been evaluated against this adapter. ENTMOOT and OMLT remain the conservative MIP-backed routes. See [`docs/ENTMOOT_SWAP_DESIGN.md`](docs/ENTMOOT_SWAP_DESIGN.md).
 
 **Q. What about BayBE, Ax, OMLT, and TabPFN?**
 A. They are optional evaluation routes that keep the campaign manifest as the source of state. See [`docs/BIOMANUFACTURING_ADAPTIVE_BACKENDS.md`](docs/BIOMANUFACTURING_ADAPTIVE_BACKENDS.md). BoFire remains the default constrained static DoE/BO route. BayBE is a low-data and hybrid-space comparison target; Ax/BoTorch is for custom modeling or trial lifecycle pilots; OMLT is a MIP-surrogate route for hard constraints; TabPFN is a token-gated low-data surrogate experiment.
@@ -722,7 +681,7 @@ A. The demos use synthetic placeholder data with `readiness_expectation: YELLOW`
 A. Yes. The schema is organism-agnostic. Scale-bridge criteria like P/V and tip speed are common for shear-sensitive mammalian work; kLa is more common for microbial. See [`docs/SCALE_BRIDGE.md`](docs/SCALE_BRIDGE.md).
 
 **Q. How is this different from a Jupyter notebook with pyDOE3?**
-A. Notebooks generate designs but do not necessarily provide readiness checks or durable state for a long-running agent. This repo is the manifest layer that sits above a notebook or commercial DoE tool, plus the evidence-aware planning loop and readiness checks.
+A. The toolkit adds a campaign manifest, input and measurement checks, source references, follow-up planning, and handoff files around design generation. You can use a notebook to inspect or extend those outputs.
 
 **Q. Is the skill stateful or stateless?**
 A. The skill itself is stateless. State lives in the campaign manifest file. The agent that uses the skill is responsible for persisting and updating that file across turns.
@@ -741,23 +700,17 @@ A. An agent session that spans hours or days, accumulates context, may pause and
 
 ## Status
 
-Pre-alpha (`0.1.0a0`). The schema is intentionally permissive at unknown-key boundaries (`additionalProperties: true` throughout); validators emit guidance, not gating, except for structural contradictions and release-blocking public artifacts. Long-running agents should call `validate --summary` between turns and read the full output when fixing.
+Pre-alpha (`0.1.0a0`). Validators report advisory gaps as warnings and missing required inputs, structural contradictions, or public-safety violations as errors. Run `validate --summary` after campaign edits; use the full report to investigate failed checks.
 
 ## Contributing
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md). Public-safe synthetic demos are welcome; do not include private process data in this repo.
 
-## Pitch
-
-In bioprocess work, the expensive failure is the well-formatted experiment that cannot answer its scientific question.
-
-`biosymphony-ferm-doe` assesses whether a fermentation campaign is measurable, feasible under its declared constraints, and worth considering before the lab spends time and materials.
-
 ## License
 
 [MIT](LICENSE).
 
-## Related work
+## Related Work
 
 - [Garcia-Ochoa & Gomez 2009](https://doi.org/10.1016/j.biotechadv.2008.10.006): kLa review (cited in the scale-bridge demo)
 - [Junker 2004](https://doi.org/10.1263/jbb.97.347): scale-up review

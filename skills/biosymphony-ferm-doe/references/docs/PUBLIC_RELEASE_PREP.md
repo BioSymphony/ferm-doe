@@ -86,16 +86,7 @@ Use `make secret-scan-optional` only for local diagnostics on machines where `gi
 
 ## Public Data Rules
 
-Do not publish:
-
-- private strain details
-- unpublished sequences
-- customer batch records
-- confidential media formulations
-- API keys or provider credentials
-- private workstation paths
-- private issue-tracker / team / project details
-- raw private campaign artifacts
+Do not publish private strain details, unpublished sequences, customer batch records, confidential media formulations, API keys, provider credentials, workstation paths, private issue-tracker details, or raw private campaign artifacts.
 
 ## Public Positioning
 

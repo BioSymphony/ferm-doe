@@ -60,6 +60,7 @@ This repo is a skill you point a coding agent at. Start with the agent prompt an
 ## Adaptive Backends
 
 - [`TOOL_REGISTRY.md`](TOOL_REGISTRY.md): curated BO/DoE tool registry.
+- [September AI tool review](research/tool-review-2026-09-22.md): selected research candidates, release changes, and evaluation criteria.
 - [`tool-registry.json`](tool-registry.json): machine-readable registry.
 - [`BIOMANUFACTURING_ADAPTIVE_BACKENDS.md`](BIOMANUFACTURING_ADAPTIVE_BACKENDS.md): BoFire, BayBE, Ax/BoTorch, ENTMOOT, OMLT, and TabPFN routing surface plus the depth ladder.
 - [`BACKEND_EVAL_FINDINGS.md`](BACKEND_EVAL_FINDINGS.md): dated six-fixture findings across seven backends, including the May 2026 OMLT and BoFire evaluation notes.

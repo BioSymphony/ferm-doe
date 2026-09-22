@@ -17,6 +17,89 @@ SCRIPT = ROOT / "skills/biosymphony-ferm-doe/scripts/public_release_check.py"
 
 
 class PublicReleaseCheckTests(unittest.TestCase):
+    def test_reports_withhold_matched_content(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            marker = "ghp_" + "A" * 24
+            (root / "notes.md").write_text(marker)
+            findings = scan_paths([root], root=root)
+            self.assertTrue(findings)
+            self.assertNotIn(marker, json.dumps([f.to_dict() for f in findings]))
+
+    def test_blocks_windows_paths_and_restricted_labels(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            separator = chr(92)
+            drive_path = separator.join(("C:", "work", "private", "notes.md"))
+            unc_path = separator * 2 + separator.join(("server", "share", "notes.md"))
+            (root / "notes.md").write_text(
+                drive_path + "\n" + unc_path + "\nVisibility: internal\n"
+            )
+            rules = {f.rule_id for f in scan_paths([root], root=root)}
+            self.assertIn("windows_local_path", rules)
+            self.assertIn("restricted_document", rules)
+
+    def test_guardrail_suppression_is_line_scoped(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "before.md").write_text(
+                "Do not include private process data.\nprivate process: leaked\n"
+            )
+            (root / "after.md").write_text(
+                "private process: leaked\nDo not include private process data.\n"
+            )
+
+            findings = scan_paths([root], root=root, allow_private=[])
+
+        markers = {(finding.path, finding.line) for finding in findings if finding.rule_id == "private_campaign_marker"}
+        self.assertEqual({("before.md", 2), ("after.md", 1)}, markers)
+
+    def test_rejects_symlinked_files_without_following_or_leaking_target(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "root"
+            root.mkdir()
+            outside = Path(tmp) / "outside.md"
+            outside.write_text("private " + "process: outside\n")
+            linked = root / "docs" / "linked.md"
+            linked.parent.mkdir()
+            try:
+                linked.symlink_to(outside)
+            except (OSError, NotImplementedError):
+                self.skipTest("symlinks are unavailable on this platform")
+
+            findings = scan_paths([root], root=root, allow_private=[])
+
+        self.assertEqual(len(findings), 1)
+        self.assertEqual(findings[0].rule_id, "symlink_path")
+        self.assertEqual(findings[0].path, "docs/linked.md")
+        self.assertNotIn(str(outside), json.dumps([finding.to_dict() for finding in findings]))
+
+    def test_restricted_components_are_nested_and_case_insensitive(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            folders = ("nested/Internal", "docs/PRIVATE-notes", "deep/Workshop/child", "archive/private-records")
+            for folder in folders:
+                path = root / folder / "notes.md"
+                path.parent.mkdir(parents=True)
+                path.write_text("Ordinary prose.\n")
+
+            findings = scan_paths([root], root=root, allow_private=[])
+
+        restricted = [finding for finding in findings if finding.rule_id == "restricted_path"]
+        self.assertEqual(len(folders), len(restricted))
+        self.assertEqual({finding.path for finding in restricted}, {f"{folder}/notes.md" for folder in folders})
+
+    def test_blocks_internal_files_even_without_sensitive_text(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for folder in ("internal", "workshop", "logs", "docs/private-notes"):
+                path = root / folder / "notes.md"
+                path.parent.mkdir(parents=True)
+                path.write_text("Ordinary prose.")
+            findings = scan_paths([root], root=root, allow_private=[])
+            self.assertEqual(4, len(findings))
+            self.assertTrue(all(f.rule_id == "restricted_path" for f in findings))
+
     def test_clean_public_fixture_passes(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)

@@ -1,6 +1,6 @@
 # Agent Quickstart
 
-This repo is designed for coding agents, but the safest first run is still local and explicit: install the CLI, run a public demo, then let the agent iterate on a manifest.
+Install the CLI, validate the synthetic screening demo, and ask your coding agent to generate the design, analysis, follow-up plan, and run packet. Use the prompt and commands in this guide to keep the first run local.
 
 ## Copy-Paste Agent Prompt
 
@@ -24,11 +24,11 @@ Start with examples/demo-pb-screening-public:
 
 ## What The Agent Should Do
 
-The agent should treat `campaign_manifest.json` as durable state. It should run `ferm-doe validate <campaign_dir> --summary` between meaningful edits, fix structural errors before readiness warnings, and preserve clear claim levels such as `public_synthetic_demo`, `planned_wave2_design`, and `bayesian_optimization_planned`.
+The agent updates `campaign_manifest.json` and runs `ferm-doe validate <campaign_dir> --summary` after campaign edits. It fixes structural errors before advisory warnings and preserves each artifact's claim label, such as `public_synthetic_demo` or `planned_wave2_design`.
 
-The agent should not turn a YELLOW demo into a physical-execution plan. YELLOW usually means the fixture is useful for learning the workflow, not that assay qualification, scale transfer, or statistician review has happened.
+A synthetic demo remains a planning example. Its YELLOW status preserves that limitation; it does not establish assay qualification or scale-transfer evidence.
 
-At campaign closeout, the agent should produce a campaign-local handoff file at `artifacts/<campaign>/AGENTS.md` (the canonical resume path for future agents) and capture any hiccups, excluded results, or arm-scoped negative memory in `learning_ledger.csv`, `hiccup_review.md`, and `negative_result_memory.json`. The self-learning pattern is documented in [`docs/SELF_LEARNING_DOE.md`](SELF_LEARNING_DOE.md). These artifacts are the portable memory across agent runtimes: a future Claude Code, Codex, or Symphony worker reads them the same way.
+At closeout, the agent writes `artifacts/<campaign>/AGENTS.md` so the next session can resume. It records problems, excluded results, and findings specific to each campaign arm in `learning_ledger.csv`, `hiccup_review.md`, and `negative_result_memory.json`. See [Learning And Handoff Records](SELF_LEARNING_DOE.md) for the file conventions.
 
 ## First Useful Commands
 
@@ -88,4 +88,3 @@ Use the failed check IDs as the first agent worklist. Do not generate a design u
 - [`USE_CASES.md`](USE_CASES.md): choose a workflow by job-to-be-done.
 - [`PUBLIC_ADOPTION_PATH.md`](PUBLIC_ADOPTION_PATH.md): move from CLI-only to repo-local skill to harness configs.
 - [`PUBLIC_SECURITY_MODEL.md`](PUBLIC_SECURITY_MODEL.md): understand the local-first privacy boundary.
-- [`../examples/README.md`](../examples/README.md): pick the right public fixture for a first run.

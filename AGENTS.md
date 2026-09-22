@@ -25,16 +25,7 @@ The repo ships:
 
 ## Public Safety Rules
 
-Do not add:
-
-- private strain details
-- unpublished sequences
-- customer batch records
-- confidential media formulations
-- API keys or provider credentials
-- private workstation paths
-- private issue-tracker / team / project identifiers
-- raw private campaign artifacts
+Do not add private strain details, unpublished sequences, customer batch records, confidential media formulations, API keys, provider credentials, workstation paths, private issue-tracker identifiers, or raw private campaign artifacts.
 
 Use synthetic or public-source examples only, label synthetic data clearly.
 
@@ -59,7 +50,7 @@ See `skills/biosymphony-ferm-doe/SKILL.md`. Summary: intake, readiness gate, fac
 
 - Treat public examples as synthetic contract fixtures, not campaign records.
 - Keep campaign routing explicit through `task_request` contracts; do not activate heavy campaign workflows for ordinary validation or docs tasks.
-- Keep issue packs tracker-neutral until a private campaign maps pack-local IDs to a tracker.
+- Keep issue packs tracker-neutral until an authorized deployment maps pack-local IDs to a tracker.
 - Preserve arm scope in DOE artifacts: per-arm design CSVs are authoritative; horizontal DOE tables are review surfaces.
 - Prefer stdlib/offline code paths in the public package; optional scientific dependencies must degrade cleanly.
 - Bounded workers (parallel sub-agents, swarm corpora, integrator and harvester roles) are coordinated through `task_request` contracts and the cumulative-dossier pattern, not ad-hoc dispatch.

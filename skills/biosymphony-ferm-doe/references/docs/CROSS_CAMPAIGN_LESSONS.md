@@ -106,15 +106,7 @@ stronger claim to make the campaign look complete.
 
 ## 8. Public Release Rules
 
-Public examples must stay synthetic or public-source-derived. Do not publish:
+Public examples must stay synthetic or public-source-derived. Do not publish private strain details, customer batch records, unpublished sequences, confidential media formulations, provider IDs, runtime logs, private tracker IDs, or raw private campaign artifacts.
 
-- private strain details
-- customer batch records
-- unpublished sequences
-- confidential media formulations
-- provider IDs or runtime logs
-- private tracker IDs
-- raw private campaign artifacts
-
-When a private campaign produces a reusable lesson, promote the lesson as a
+When work in a private workspace produces a reusable lesson, promote the lesson as a
 generic rule, fixture, or validator. Do not backport the raw campaign record.

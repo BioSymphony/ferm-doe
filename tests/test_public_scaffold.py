@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import os
+import ast
+import tempfile
 import json
 import re
 import subprocess
@@ -68,6 +70,35 @@ class PublicScaffoldTests(unittest.TestCase):
         self.assertIn("secret-scan-required", noxfile)
         self.assertIn("scripts/check_markdown_links.py", makefile)
         self.assertIn("scripts/check_markdown_links.py", noxfile)
+
+    def test_nox_scan_detects_new_research_and_registry_artifacts(self) -> None:
+        from biosymphony_ferm_doe.public_release import scan_paths
+
+        tree = ast.parse((ROOT / "noxfile.py").read_text())
+        lane = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "release_check")
+        command = next(
+            node for node in ast.walk(lane)
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+            and node.func.attr == "run" and any(
+                isinstance(arg, ast.Constant) and arg.value == "biosymphony_ferm_doe.public_release"
+                for arg in node.args
+            )
+        )
+        paths = [arg.value for arg in command.args[3:] if isinstance(arg, ast.Constant)]
+        surfaces = [
+            "docs/research/new-review.md",
+            "docs/tool-registry.json",
+            "skills/biosymphony-ferm-doe/references/docs/tool-registry.json",
+            "skills/biosymphony-ferm-doe/references/docs/research/new-review.md",
+        ]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for relative in surfaces:
+                file = root / relative
+                file.parent.mkdir(parents=True, exist_ok=True)
+                file.write_text("private" + " process: synthetic restricted fixture\n")
+            findings = scan_paths([root / path for path in paths], root=root, allow_private=[])
+            self.assertEqual(set(surfaces), {finding.path for finding in findings})
 
     def test_local_markdown_links_resolve(self) -> None:
         result = subprocess.run(

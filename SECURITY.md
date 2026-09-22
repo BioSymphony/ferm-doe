@@ -2,15 +2,7 @@
 
 Do not open issues or pull requests containing private biological, operational, or customer data.
 
-Never include:
-
-- API keys, provider tokens, or registry credentials
-- private strain details
-- unpublished sequences
-- customer batch records
-- confidential media formulations
-- proprietary process histories
-- private supplier quotes
+Never include API keys, provider tokens, registry credentials, private strain details, unpublished sequences, customer batch records, confidential media formulations, proprietary process histories, or private supplier quotes.
 
 Use synthetic examples or public data with source and transformation notes.
 

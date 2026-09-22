@@ -18,7 +18,7 @@ Use one of these public-safe substitutes:
 - synthetic rows with clear `claim_level: public_synthetic_demo`
 - public-source summaries with source, license, and transformation notes
 - source-metadata-only rows when reuse rights are unclear
-- secure-store references in private campaign workspaces
+- secure-store references resolved outside this repository
 
 ## Scanner Boundary
 

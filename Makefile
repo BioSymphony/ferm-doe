@@ -146,7 +146,7 @@ release-check: test validate-all assay-power-demo contract-check tool-registry-c
 		docs/COST_MODEL_REALISM_CHECK.md docs/dossier-generation.md \
 		docs/OPEN_DATA_PUBLICATION_STRATEGY.md docs/SIMULATOR_V2_SPEC.md \
 		docs/BIOMANUFACTURING_ADAPTIVE_BACKENDS.md docs/adaptive-backend-evaluation.json docs/schemas schemas \
-		docs/BACKEND_EVAL_FINDINGS.md docs/ADAPTER_DESIGN_NOTES.md \
+		docs/BACKEND_EVAL_FINDINGS.md docs/ADAPTER_DESIGN_NOTES.md docs/research docs/tool-registry.json skills \
 		examples/demo-xylanase-public examples/demo-scale-bridge-public examples/demo-split-plot-fedbatch-public \
 		examples/demo-warnings-walkthrough-public examples/demo-pb-screening-public \
 		examples/demo-media-cost-bofire examples/demo-shakeflask-to-2l-bofire \

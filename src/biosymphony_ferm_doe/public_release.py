@@ -86,6 +86,20 @@ def default_rules() -> list[ReleaseRule]:
             re.compile(r"(?<![A-Za-z0-9_])/(?:Users|Volumes|home)/[^\s`\"'<>)]+"),
         ),
         ReleaseRule(
+            "windows_local_path",
+            "Windows workstation paths must be replaced with portable placeholders.",
+            re.compile(
+                r"(?i)(?:\b[A-Z]:[\\/][^\s`\"'<>]+|"
+                r"\\\\[^\\/\s`\"'<>]+[\\/][^\\/\s`\"'<>]+"
+                r"(?:[\\/][^\s`\"'<>]+)*)"
+            ),
+        ),
+        ReleaseRule(
+            "restricted_document",
+            "Restricted document labels must be reviewed before publication.",
+            re.compile(r"(?i)^\s*(?:classification|visibility|distribution)\s*[:=]\s*(?:private|internal|confidential)\b"),
+        ),
+        ReleaseRule(
             "private_key_block",
             "Private key material must not be published.",
             re.compile(r"BEGIN (?:RSA|OPENSSH|EC|DSA) PRIVATE KEY"),
@@ -194,17 +208,35 @@ def scan_paths(
     excluded_dirs: set[str] | None = None,
     rules: list[ReleaseRule] | None = None,
 ) -> list[ReleaseFinding]:
-    root_path = (root or Path.cwd()).resolve()
+    scan_root = root or Path.cwd()
     allow_patterns = list(DEFAULT_PRIVATE_ALLOWLIST if allow_private is None else allow_private)
     excluded = set(DEFAULT_EXCLUDED_DIRS if excluded_dirs is None else excluded_dirs)
     active_rules = rules or default_rules()
     findings: list[ReleaseFinding] = []
 
     for file_path in iter_files(paths, excluded):
-        resolved = file_path.resolve()
-        relative = relative_path(resolved, root_path)
+        relative = relative_path(file_path, scan_root)
         if is_allowlisted(relative, allow_patterns):
             continue
+        if file_path.is_symlink() or (
+            relative != "<outside-root>" and has_symlink_component(file_path, scan_root)
+        ):
+            findings.append(
+                ReleaseFinding(
+                    relative,
+                    1,
+                    1,
+                    "symlink_path",
+                    "Symlinked files and directories must be rejected before public release scanning.",
+                    "[content withheld]",
+                )
+            )
+            continue
+        parts = tuple(part.casefold() for part in Path(relative).parts)
+        if parts and (any(part in {"internal", "workshop", "logs"} for part in parts) or any(part.startswith("private-") for part in parts)):
+            findings.append(ReleaseFinding(relative, 1, 1, "restricted_path", "Internal records must be excluded from public bundles.", "[content withheld]"))
+            continue
+        resolved = file_path.resolve()
         text = read_text_file(resolved)
         if text is None:
             continue
@@ -220,12 +252,11 @@ def scan_text(text: str, path: str, rules: list[ReleaseRule] | None = None) -> l
     for index, line in enumerate(lines):
         line_number = index + 1
         scanned_line = line.split("audit-skip:", 1)[0]
-        context = "\n".join(lines[max(0, index - 12) : min(len(lines), index + 4)])
         for rule in active_rules:
             for match in rule.pattern.finditer(scanned_line):
                 if has_audit_skip(line, rule.rule_id):
                     continue
-                if should_skip_match(rule.rule_id, line, match, context=context):
+                if should_skip_match(rule.rule_id, line, match):
                     continue
                 findings.append(
                     ReleaseFinding(
@@ -234,7 +265,7 @@ def scan_text(text: str, path: str, rules: list[ReleaseRule] | None = None) -> l
                         column=match.start() + 1,
                         rule_id=rule.rule_id,
                         message=rule.message,
-                        excerpt=collapse_excerpt(line),
+                        excerpt="[content withheld]",
                     )
                 )
     return findings
@@ -257,12 +288,12 @@ def has_audit_skip(line: str, rule_id: str) -> bool:
     return "all" in rule_tokens or rule_id.lower() in rule_tokens
 
 
-def should_skip_match(rule_id: str, line: str, match: re.Match[str], *, context: str | None = None) -> bool:
-    """Suppress documented guardrails that mention sensitive concepts as bans."""
+def should_skip_match(rule_id: str, line: str, match: re.Match[str]) -> bool:
+    """Suppress documented guardrails on the same line as a sensitive term."""
 
     if rule_id != "private_campaign_marker":
         return False
-    lower = (context or line).lower()
+    lower = line.lower()
     window = lower[max(0, match.start() - 100) : match.end() + 100]
     safety_markers = [
         "do not ",
@@ -292,14 +323,26 @@ def should_skip_match(rule_id: str, line: str, match: re.Match[str], *, context:
 def iter_files(paths: list[Path], excluded_dirs: set[str]) -> list[Path]:
     files: list[Path] = []
     for path in paths:
+        if path.is_symlink():
+            files.append(path)
+            continue
         if path.is_file():
             files.append(path)
             continue
         if not path.is_dir():
             continue
         for dirpath, dirnames, filenames in os.walk(path):
-            dirnames[:] = [name for name in dirnames if name not in excluded_dirs]
             current = Path(dirpath)
+            kept_dirnames: list[str] = []
+            for name in dirnames:
+                if name in excluded_dirs:
+                    continue
+                candidate = current / name
+                if candidate.is_symlink():
+                    files.append(candidate)
+                    continue
+                kept_dirnames.append(name)
+            dirnames[:] = kept_dirnames
             for filename in filenames:
                 files.append(current / filename)
     return sorted(files)
@@ -319,10 +362,27 @@ def read_text_file(path: Path) -> str | None:
 
 
 def relative_path(path: Path, root: Path) -> str:
-    try:
-        return path.relative_to(root).as_posix()
-    except ValueError:
-        return path.as_posix()
+    """Return a lexical, portable path without resolving symlink targets."""
+
+    absolute_path = path.absolute()
+    for root_variant in (root.absolute(), root.resolve()):
+        try:
+            return absolute_path.relative_to(root_variant).as_posix()
+        except ValueError:
+            continue
+    return "<outside-root>"
+
+
+def has_symlink_component(path: Path, root: Path) -> bool:
+    """Return whether path contains a user-controlled symlink below root."""
+
+    current = path.absolute()
+    root_variants = {root.absolute(), root.resolve()}
+    while current not in root_variants and current != current.parent:
+        if current.is_symlink():
+            return True
+        current = current.parent
+    return False
 
 
 def is_allowlisted(relative: str, patterns: list[str]) -> bool:
