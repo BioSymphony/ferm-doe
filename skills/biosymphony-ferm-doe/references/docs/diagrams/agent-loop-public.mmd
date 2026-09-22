@@ -1,14 +1,11 @@
-flowchart LR
-  Q["Question or issue"] --> S["Agent reads skills/biosymphony-ferm-doe/SKILL.md"]
-  S --> M["campaign_manifest.json"]
-  M --> V["ferm-doe validate --summary"]
-  V -->|"RED or blocking checks"| F["Fix manifest, evidence, assay, scale, or feasibility gaps"]
-  F --> M
-  V -->|"YELLOW or GREEN"| D["generate-design / analyze / plan-wave2"]
-  D --> P["finalize dossier and handoff packet"]
-  P --> A["next agent, scientist, or statistician review"]
-
-  G1["Local-first demos"] -. guardrail .- V
-  G2["Public-safe fixtures"] -. guardrail .- M
-  G3["No physical execution approval"] -. guardrail .- P
-  G4["audit + secret-scan before sharing"] -. guardrail .- A
+flowchart TB
+  A["Define the campaign"] --> B["Check inputs"]
+  B -->|"blocking errors"| A
+  B -->|"no blocking errors"| C["Generate a design"]
+  C -->|"add supplied result rows"| D["Analyze results"]
+  D --> E["Plan a follow-up batch"]
+  E --> F["Assemble a review packet"]
+  classDef step fill:#ffffff,stroke:#176b68,color:#123d3c;
+  classDef output fill:#075350,stroke:#075350,color:#fffaf0;
+  class A,B,C,D,E step;
+  class F output;

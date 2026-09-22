@@ -1,77 +1,21 @@
 # Visual Overview
 
-These diagrams summarize the main design questions in the repo: what varies, what is constrained, how scale transfer is handled, and which DoE family fits the campaign.
+The README contains three diagrams for the planning workflow, scale review, and bounded agent work. Each SVG is editable text with a title and description for accessibility.
 
-## Experiment Design Map
+## Planning Workflow
 
-```mermaid
-flowchart LR
-  subgraph IN["Inputs"]
-    direction TB
-    O("objective") ~~~ R("responses") ~~~ F("factors") ~~~ C("constraints") ~~~ S("scale context")
-  end
-  subgraph CH["Design choices"]
-    direction TB
-    FAM("DoE family") ~~~ RB("runs & blocks") ~~~ RC("replicates & controls")
-  end
-  subgraph OUT["Outputs"]
-    direction TB
-    DM("design matrix") ~~~ RP("run plan") ~~~ MP("measurement plan") ~~~ NW("follow-up options")
-  end
-  IN ==> CH ==> OUT
-  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
-  class O,R,F,C,S,FAM,RB,RC,DM,RP,MP,NW proc;
-  style IN fill:#efeadd,stroke:#d9d2c0,color:#1b1b18;
-  style CH fill:#efeadd,stroke:#d9d2c0,color:#1b1b18;
-  style OUT fill:#efeadd,stroke:#d9d2c0,color:#1b1b18;
-```
+![Define the campaign, check inputs, generate a design, analyze supplied results, plan a follow-up batch, and assemble a review packet.](../assets/images/biosymphony-agent-loop.svg)
 
-Start from the experiment inputs: objective, responses, factors, constraints, and scale context. These determine the DoE family, run structure, blocking, replication, controls, and measurement plan.
+Analysis requires supplied result rows. The screening demo uses synthetic results. See the [agent quickstart](AGENT_QUICKSTART.md) for commands and expected outputs, or the [Mermaid version](diagrams/agent-loop-public.mmd) for a text-rendered flowchart.
 
-The useful check is direct: define what varies, what stays fixed, and what will be measured.
+## Scale Review
 
-## Scale Transfer Criteria
+![Record source and target conditions, compare declared criteria, and resolve gaps or prepare a target-scale plan for review.](../assets/images/scale-bridge-review.svg)
 
-```mermaid
-flowchart LR
-  SRC("source scale<br/>qualified data or stated basis"):::hero --> BR{"bridge criteria<br/>kLa · P/V · tip-speed<br/>mix-time · OUR · RQ · VVM<br/>geometric similarity"}:::gate
-  BR -->|"all criteria met"| MATCH("Match → review"):::go --> TGT("target scale<br/>planning hypothesis"):::proc
-  BR -->|"some gaps"| GAP("Gap → measure / estimate"):::gate
-  BR -->|"not qualified"| RED("Revise → review the bridge"):::block
-  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
-  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
-  classDef gate fill:#fffdf8,stroke:#b0892f,color:#8a6a1f,stroke-width:1.5px;
-  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
-  classDef block fill:#fffdf8,stroke:#bf5a3c,color:#a44a2f,stroke-width:1.5px;
-```
+The campaign declares its criteria and tolerances. Record the evidence for each comparison; see the [scale-bridge framework](SCALE_BRIDGE.md). Scale transfer is a campaign context, while a DoE family defines the design structure. The [design recipes](DOE_FAMILY_RECIPES.md) describe supported choices.
 
-Scale-up and scale-down decisions depend on criteria such as `kLa`, `P/V`, tip speed, mix time, DO/OUR, VVM, and geometry. The design should show what is measured, estimated, or missing before choosing the next run set.
+## Bounded Agent Work
 
-The transfer review should record one of three outcomes: match, gap, or redesign.
+![An orchestrator defines tasks, workers return scoped artifacts, and an integrator checks and assembles a packet for human review.](../assets/images/agent-work-packets.svg)
 
-## DoE Family Selection
-
-```mermaid
-flowchart LR
-  Q{"What is the<br/>situation?"}:::hero
-  Q -->|"many factors to screen"| SC("Screening<br/>PB · fractional"):::proc
-  Q -->|"curved response surface"| RSM("RSM<br/>CCD · Box-Behnken"):::proc
-  Q -->|"media / feed blend"| MX("Mixture<br/>simplex · extreme-vertices"):::proc
-  Q -->|"hard-to-change setpoints"| SP("Split-plot"):::proc
-  Q -->|"scale transfer"| SB("Scale bridge"):::proc
-  Q -->|"after first batch"| SA("Sequential augmentation"):::go
-  classDef hero fill:#1b1b18,stroke:#d9d2c0,color:#ffffff,stroke-width:1.5px;
-  classDef proc fill:#fffdf8,stroke:#2b2926,color:#2b2926,stroke-width:1.5px;
-  classDef go fill:#fffdf8,stroke:#6f7d3f,color:#566230,stroke-width:1.5px;
-```
-
-The DoE family changes run count, blocking, replication, and interpretation. Common routes include:
-
-- screening for many factors
-- RSM for curved response surfaces
-- mixture designs for media blends
-- split-plot designs for hard-to-change setpoints
-- scale bridge designs for transfer criteria
-- sequential augmentation after first-batch
-
-The same campaign can move between families as data arrives.
+The orchestrator owns dispatch and dependencies. The toolkit supplies task contracts and artifact checks. See the [issue-pack runbook](ISSUE_PACK_GENERATION.md).

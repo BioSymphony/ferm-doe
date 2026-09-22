@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="464" viewBox="0 0 960 464" role="img" aria-labelledby="title desc">
+<title id="title">Review A Scale Bridge</title><desc id="desc">Record source and target conditions. Compare the declared criteria against evidence and tolerances. Record gaps for further review, or prepare a target-scale plan when the evidence supports the criteria.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9" fill="none" stroke="#176b68" stroke-width="1.6"/></marker></defs>
+<style>
+text { font-family:Arial,Helvetica,sans-serif; fill:#123d3c; }
+.heading { font-size:28px; font-weight:700; }
+.label { font-size:23px; font-weight:700; }
+.body { font-size:21px; fill:#355b58; }
+.tag { font-size:19px; font-weight:700; fill:#176b68; }
+.light { fill:#fffaf0; }
+.line { fill:none; stroke:#176b68; stroke-width:2.5; marker-end:url(#arrow); }
+.muted { fill:#fff2d9; stroke:#a87b2c; }
+</style>
+<rect width="960" height="464" rx="18" fill="#f6f8f4"/>
+<text x="32" y="47" class="heading">Review A Scale Bridge</text>
+<rect x="32" y="82" width="400" height="150" rx="12" fill="#ffffff" stroke="#bed3ce" stroke-width="1.5"/>
+<text x="52" y="113" class="tag">1 · CONDITIONS</text>
+<text x="52" y="147" class="label">Describe both scales</text>
+<text x="52" y="181" class="body">Equipment, operating context,</text>
+<text x="52" y="209" class="body">and source evidence</text>
+<rect x="528" y="82" width="400" height="150" rx="12" fill="#ffffff" stroke="#bed3ce" stroke-width="1.5"/>
+<text x="548" y="113" class="tag">2 · COMPARISON</text>
+<text x="548" y="147" class="label">Check declared criteria</text>
+<text x="548" y="181" class="body">Source and target values,</text>
+<text x="548" y="209" class="body">tolerances, and evidence</text>
+<path d="M432 157 H522" class="line"/>
+<rect x="32" y="304" width="400" height="128" rx="12" fill="#ffffff" stroke="#bed3ce" stroke-width="1.5"/>
+<text x="52" y="335" class="tag">GAPS REMAIN</text>
+<text x="52" y="369" class="label">Resolve missing evidence</text>
+<text x="52" y="403" class="body">Measure, justify, or revise the bridge</text>
+<rect x="528" y="304" width="400" height="128" rx="12" fill="#075350" stroke="#075350" stroke-width="1.5"/>
+<text x="548" y="335" class="tag light">CRITERIA SUPPORTED</text>
+<text x="548" y="369" class="label light">Prepare the target-scale plan</text>
+<text x="548" y="403" class="body light">Record assumptions for review</text>
+<path d="M650 232 V263 H232 V298" class="line"/>
+<path d="M792 232 V298" class="line"/>
+</svg>

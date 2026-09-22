@@ -232,6 +232,8 @@ def release_check(session: nox.Session) -> None:
         "deploy",
         "scripts",
         "assets/images/biosymphony-agent-loop.svg",
+        "assets/images/scale-bridge-review.svg",
+        "assets/images/agent-work-packets.svg",
         "docs/README.md",
         "docs/AGENT_QUICKSTART.md",
         "docs/USE_CASES.md",
