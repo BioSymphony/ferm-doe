@@ -1,21 +1,19 @@
 # Visual Overview
 
-The README contains three diagrams for the planning workflow, scale review, and bounded agent work. Each SVG is editable text with a title and description for accessibility.
+## Tool Selection And Calling
 
-## Planning Workflow
+![Tool knowledge informs the agent, which calls the CLI or a Python adapter and uses JSON or CSV results to choose its next call.](../../../../assets/images/tool-use-loop.svg)
 
-![Define the campaign, check inputs, generate a design, analyze supplied results, plan a follow-up batch, and assemble a review packet.](../../../../assets/images/biosymphony-agent-loop.svg)
+The [registry](TOOL_REGISTRY.md) records task fit and implementation status. The [adapter map](ADAPTER_MAP.md) identifies callable entry points. Your agent reads those references and controls the sequence. See the [Mermaid version](diagrams/agent-loop-public.mmd).
 
-Analysis requires supplied result rows. The screening demo uses synthetic results. See the [agent quickstart](AGENT_QUICKSTART.md) for commands and expected outputs, or the [Mermaid version](diagrams/agent-loop-public.mmd) for a text-rendered flowchart.
+## Chaining Calls
+
+![Campaign inputs feed design selection and generation; supplied results feed analysis and follow-up planning.](../../../../assets/images/biosymphony-agent-loop.svg)
+
+Commands share campaign inputs and result tables. The agent inspects each output before choosing the next call. Analysis JSON informs that review; the follow-up planner reads the supplied result rows directly. See the [README walkthrough](../../../../README.md#planning-workflow).
 
 ## Scale Review
 
-![Record source and target conditions, compare declared criteria, and resolve gaps or prepare a target-scale plan for review.](../../../../assets/images/scale-bridge-review.svg)
+![Source and target conditions feed a comparison that identifies evidence gaps or produces a target-scale plan for review.](../../../../assets/images/scale-bridge-review.svg)
 
-The campaign declares its criteria and tolerances. Record the evidence for each comparison; see the [scale-bridge framework](SCALE_BRIDGE.md). Scale transfer is a campaign context, while a DoE family defines the design structure. The [design recipes](DOE_FAMILY_RECIPES.md) describe supported choices.
-
-## Bounded Agent Work
-
-![An orchestrator defines tasks, workers return scoped artifacts, and an integrator checks and assembles a packet for human review.](../../../../assets/images/agent-work-packets.svg)
-
-The orchestrator owns dispatch and dependencies. The toolkit supplies task contracts and artifact checks. See the [issue-pack runbook](ISSUE_PACK_GENERATION.md).
+The campaign declares criteria and tolerances. Record the evidence for each comparison; see the [scale-bridge framework](SCALE_BRIDGE.md).

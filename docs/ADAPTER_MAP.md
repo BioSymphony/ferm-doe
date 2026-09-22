@@ -1,59 +1,74 @@
 # Adapter Map
 
-Capability-centric map of optional extras. The README's [Optional extras](../README.md#optional-extras) table is install-centric; this one starts from "I want to do X" and tells you which extra activates it.
+Use this map to select a callable tool. The [registry](TOOL_REGISTRY.md) records implementation status and reviewed sources; the [README](https://github.com/BioSymphony/ferm-doe#optional-extras) lists installation extras.
 
-The CLI is stdlib-only at runtime. Every adapter degrades to a `not_available` report when its extra is missing, so the demos and the closed-loop path run on a clean install. Install the extra only when a campaign needs the capability.
+## CLI Calls
 
-## By capability
+| Capability | Command | Extra |
+|---|---|---|
+| Classical designs | `generate-design` | Base package; `pydoe3` extends selected families |
+| Analysis and design power | `analyze`, `doe-power` | Base package; `scipy` adds t-distribution calculations |
+| Rule-based follow-up | `plan-wave2` | Base package |
+| Gaussian-process candidates | `plan-wave2 --backend botorch` | `botorch` |
+| Engine design comparison | `engine propose-design`, `engine compare-designs` | Base package with optional method support |
 
-| I want to... | Extra | Install | CLI surface that activates it |
-|---|---|---|---|
-| Get Student-t p-values in first-batch analysis | `scipy` | `pip install "biosymphony-ferm-doe[scipy]"` | `ferm-doe analyze` (auto) |
-| Get t-quantile in DoE power | `scipy` | `pip install "biosymphony-ferm-doe[scipy]"` | `ferm-doe doe-power --sigma S` (auto) |
-| Generate quasi-random Latin-hypercube or Sobol space-filling designs | `scipy` | `pip install "biosymphony-ferm-doe[scipy]"` | `ferm-doe engine propose-design` and `ferm-doe engine utility benchmark-doe` use `scipy.stats.qmc` when available |
-| Generate Box-Behnken with k ≥ 5 | `pydoe3` | `pip install "biosymphony-ferm-doe[pydoe3]"` | `ferm-doe generate-design` with `doe.family = box_behnken` and 5+ numeric factors |
-| Generate maximin Latin Hypercube | `pydoe3` | `pip install "biosymphony-ferm-doe[pydoe3]"` | `ferm-doe generate-design` with `doe.family = latin_hypercube` |
-| Run follow-up Bayesian optimization with a Gaussian-process surrogate | `botorch` | `pip install "biosymphony-ferm-doe[botorch]"` | `ferm-doe plan-wave2 --backend botorch --acquisition qei` or `qucb` (see [`WAVE2_BOTORCH.md`](WAVE2_BOTORCH.md)) |
-| Route constrained DoE through BoFire (linear, total-mass, NChooseK) | `bofire` | `pip install "biosymphony-ferm-doe[bofire]"` | `ferm-doe plan-wave2 --backend bofire` or auto-routing when the manifest declares non-box constraints (see [`BOFIRE_POSITIONING.md`](BOFIRE_POSITIONING.md)) |
-| Evaluate tagged BoFire NChooseK DoE support | `adaptive-nchoosek-doe` | `pip install "biosymphony-ferm-doe[adaptive-nchoosek-doe]"` | Pins BoFire 0.4.1 on Python 3.11 or newer for a separate, unverified evaluation lane; see [`BOFIRE_CONSTRAINT_PATTERNS.md`](BOFIRE_CONSTRAINT_PATTERNS.md) |
-| Route multi-fidelity scale-bridge candidate planning through BoFire | `bofire` | `pip install "biosymphony-ferm-doe[bofire]"` | `ferm-doe plan-wave2 --backend bofire` when the manifest and prior rows define at least two scale arms; the compatible adapter uses `MultiFidelityStrategy` |
-| Run NChooseK Bayesian optimization (cardinality is load-bearing in BO) | `entmoot` | `pip install "biosymphony-ferm-doe[entmoot]"` | ENTMOOT v2 adapter; a conservative route for the behavior recorded in the BoFire 0.3.1 audit (see [`ENTMOOT_SWAP_DESIGN.md`](ENTMOOT_SWAP_DESIGN.md)) |
-| Run MIP-based surrogate planning over linear and NChooseK constraints | `omlt` | `pip install "biosymphony-ferm-doe[omlt]"` | OMLT adapter at `adapters/omlt_strategy.py`; activates from the planner when MIP routing fits the constraint shape |
-| Use a token-gated foundation-model surrogate for low-data sequential planning | `tabpfn` | `pip install "biosymphony-ferm-doe[tabpfn]"` | TabPFN adapter at `adapters/tabpfn_strategy.py`; inactive unless `TABPFN_TOKEN` is set at runtime |
-| Compare follow-up candidate generators (BayBE, Ax against the in-repo BoTorch route) | `backend-eval` | `pip install "biosymphony-ferm-doe[backend-eval]"` | `examples/adaptive-backend-eval/` fixtures; see [`BIOMANUFACTURING_ADAPTIVE_BACKENDS.md`](BIOMANUFACTURING_ADAPTIVE_BACKENDS.md) |
-| Run SALib PAWN, delta, or Sobol sensitivity analysis | `sensitivity` | `pip install "biosymphony-ferm-doe[sensitivity]"` | SALib adapter at `adapters/salib_sensitivity.py` |
-| Render Plotly figures in the BoFire HTML report | `report` | `pip install "biosymphony-ferm-doe[report]"` | `reporters/bofire_html.py` |
-| Frictionless-validate table contracts (run ledger, evidence, design, results) | `contracts` | `pip install "biosymphony-ferm-doe[contracts]"` | Validators that read `schemas/tables/*.yaml` |
+Commands in the table follow `ferm-doe`. See the [CLI reference](CLI_REFERENCE.md) for required inputs.
 
-## Catch-all install
+The public `plan-wave2` command accepts `stdlib` and `botorch`. The BoTorch branch writes a separate candidate report and does not run the stdlib follow-up workflow. See [BoTorch inputs and outputs](WAVE2_BOTORCH.md).
 
-```bash
-pip install "biosymphony-ferm-doe[all]"
-```
+BoFire, ENTMOOT, OMLT, and TabPFN are Python adapter calls in this checkout. Passing their names to `engine plan-wave2 --backend` does not execute those adapters: that engine utility still generates candidates through its stdlib implementation.
 
-Installs the SciPy, pyDOE3, BoTorch, BoFire, SALib, Plotly, and Frictionless extras. The catch-all omits backend-evaluation packages, solver-heavy stacks, and token-gated foundation-model weights. Install those extras individually when a campaign uses them.
+## Python Calls
 
-## Routing rules
+Import these modules from `biosymphony_ferm_doe.adapters`. The function links identify the implementation and accepted arguments.
 
-The planner picks an adapter route based on what the manifest declares plus optional CLI flags:
+| Tool | Entry point | Inputs and use |
+|---|---|---|
+| BoFire | [`plan_bofire_wave2`](https://github.com/BioSymphony/ferm-doe/blob/main/src/biosymphony_ferm_doe/adapters/bofire_strategy.py) | Compiled state and usable result rows; constrained or multi-fidelity candidates |
+| ENTMOOT | [`plan_entmoot_wave2`](https://github.com/BioSymphony/ferm-doe/blob/main/src/biosymphony_ferm_doe/adapters/entmoot_strategy.py) | Compiled state and usable rows; tree surrogate with linear or NChooseK constraints |
+| OMLT | [`plan_omlt_wave2`](https://github.com/BioSymphony/ferm-doe/blob/main/src/biosymphony_ferm_doe/adapters/omlt_strategy.py) | Compiled state and usable rows; solver-backed surrogate planning |
+| TabPFN | [`plan_tabpfn_wave2`](https://github.com/BioSymphony/ferm-doe/blob/main/src/biosymphony_ferm_doe/adapters/tabpfn_strategy.py) | Compiled state and usable rows; foundation-model surrogate |
+| BoTorch | [`plan_bo_wave2`](https://github.com/BioSymphony/ferm-doe/blob/main/src/biosymphony_ferm_doe/adapters/botorch_wave2.py) | Campaign manifest and prepared rows; numeric-factor Gaussian-process candidates |
+| SALib | [`pawn_indices`, `delta_indices`, `sobol_indices`](https://github.com/BioSymphony/ferm-doe/blob/main/src/biosymphony_ferm_doe/adapters/salib_sensitivity.py) | Factor definitions and numeric arrays; Sobol analysis requires a matching sampling design |
+| PubMed records | [`fetch_citations`](https://github.com/BioSymphony/ferm-doe/blob/main/src/biosymphony_ferm_doe/adapters/pubmed_mcp.py) | Normalize local citation fixtures; live retrieval belongs to the agent harness |
 
-- **Box constraints only, n < 4 usable first-batch rows, or categorical-heavy**: stdlib closed-loop path. No extra needed.
-- **Numeric factors, n ≥ 4 usable rows, primary response declared**: `botorch` route is available; pass `--backend botorch`.
-- **Linear constraints, mixture sums, total-mass**: `bofire` route fits; routes automatically when the manifest declares non-box constraints. Pass `--backend bofire` to force.
-- **NChooseK cardinality matters in the BO loop**: route to `entmoot` or `omlt`. The supported BoFire 0.3.x adapter retains the compatibility limit recorded in [`ENTMOOT_SWAP_DESIGN.md`](ENTMOOT_SWAP_DESIGN.md); upstream issue #450 is closed, but later releases have not been evaluated here.
-- **Hard MIP constraints over a learned surrogate**: `omlt` route.
-- **Low-data prediction with a foundation model**: `tabpfn` route, token-gated.
+### Example: Call The BoFire Adapter
 
-When the requested route's extra is missing, the adapter writes a `not_available` report and the planner falls back to the stdlib path. The orchestrator can surface the short-circuit reason to the user.
-
-## Health check
+Compile a synthetic campaign into state:
 
 ```bash
-ferm-doe doctor
+ferm-doe engine compile-state \
+  --manifest examples/demo-media-cost-bofire/campaign_manifest.json \
+  --out /tmp/media-tool-demo
 ```
 
-Reports which extras are installed and which adapters are active. Useful for debugging "why did this campaign route through stdlib when I expected BoFire?".
+Call the adapter and inspect its report. An empty result list requests candidates without prior observations:
 
-## Adapter status from the tool registry
+```python
+import json
+from pathlib import Path
+from biosymphony_ferm_doe.adapters.bofire_strategy import plan_bofire_wave2
 
-See [`TOOL_REGISTRY.md`](TOOL_REGISTRY.md) and [`tool-registry.json`](tool-registry.json) for the curated 49-tool surface that includes each adapter's routing rationale, current signal, fit, and risks.
+state = json.loads(Path("/tmp/media-tool-demo/campaign_state.json").read_text())
+report = plan_bofire_wave2(state, [], backend="bofire", remaining_budget=3)
+Path("/tmp/media-tool-demo/bofire_report.json").write_text(
+    json.dumps(report, indent=2) + "\n"
+)
+print(report["adapter_status"], report["candidate_design_count"])
+```
+
+With the optional dependency absent, this call returns `not_available`. A successful call returns `executed`; inspect `candidate_design`, `route`, and `issues` before using the candidates. The report does not execute a second tool for you.
+
+For follow-up calls, prepare usable result rows with the campaign's run IDs, response columns, trust rules, and QC checks. Pass the rows in the adapter's input format. Your agent can save the report, compare candidates with another method, and choose its next call.
+
+## Availability And Constraints
+
+`ferm-doe doctor` reports dependency and configuration checks. An installed dependency alone does not establish that a particular adapter ran. Utility reports distinguish `adapter_executed` from availability; direct adapter reports carry their own status and issues.
+
+BoFire, ENTMOOT, OMLT, and TabPFN modules can report unavailable dependencies. Solver routes also require a compatible solver; TabPFN requires model access. BoTorch and SALib imports require their extras. Check each call's output rather than assuming a universal fallback.
+
+The supported BoFire adapter retains the Bayesian `SoboStrategy` + `NChooseK` compatibility limit recorded in [ENTMOOT routing guidance](ENTMOOT_SWAP_DESIGN.md). ENTMOOT and OMLT provide separate solver-backed candidate routes. Inspect constraint coverage and candidate feasibility before accepting a design.
+
+## Evaluation Candidates
+
+BayBE and Ax have comparison fixtures under [adaptive backend evaluation](https://github.com/BioSymphony/ferm-doe/tree/main/examples/adaptive-backend-eval). Other registry entries describe research or external tools. A registry entry is neither an installed dependency nor a callable adapter. Read `status`, `package`, `route`, and `docs_in_repo` before choosing a tool.

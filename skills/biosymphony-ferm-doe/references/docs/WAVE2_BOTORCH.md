@@ -1,103 +1,41 @@
-# Follow-Up Planning With BoTorch
+# Follow-Up Candidates With BoTorch
 
-Walkthrough of `ferm-doe plan-wave2 --backend botorch` against the existing `demo-pb-screening-public` fixture. The command name is stable, but the concept is follow-up planning after first-batch results, not a predetermined second experiment. For the conceptual model, see [`ADAPTIVE_WAVE2.md`](ADAPTIVE_WAVE2.md).
+The public CLI fits a Gaussian-process surrogate and optimizes a qEI or qUCB acquisition function. It returns candidate factor settings for a numeric search space.
 
-## What BoTorch adds to the closed loop
+## Prepare The Inputs
 
-The default `plan-wave2 --backend stdlib` path computes a model-informed augmentation: it identifies active factors via the OLS analysis, applies tighter narrowing steps biased along the per-factor ascent direction, and emits `confirm`, `narrow`, `expand`, `pause`, `stop`, or `scale_or_downscale`.
+Use a manifest with supported numeric factors and a primary response. Prepare at least four usable observations. Review run IDs, exclusions, trust, and QC before passing the result CSV: this CLI branch passes rows directly to the adapter and does not run the stdlib ingestion checks.
 
-The `--backend botorch` path fits a Gaussian-process surrogate over first-batch result rows and optimizes an acquisition function over the unit hypercube of coded factor values. It writes follow-up candidate rows labeled `claim_level: bayesian_optimization_planned` alongside the standard closed-loop artifacts. Useful when:
+The adapter uses factor bounds as its search space. It does not enforce additional process constraints; use an appropriate constrained adapter when those constraints determine feasibility. See the [adapter map](ADAPTER_MAP.md).
 
-- First-batch evidence is dense enough for a GP fit (n >= 4 usable observations).
-- Factor space is numeric and continuous (categorical and hard-to-change factors are not in scope for this backend).
-- You want to explore-vs-exploit explicitly with an acquisition function rather than the deterministic ascent heuristic.
+## Call The Tool
 
-The BoTorch route does not replace the stdlib analysis. Both run; the BoTorch candidates are an additional artifact, and the orchestrator can choose which to ship.
-
-## Install
+Install the extra in your checkout:
 
 ```bash
-pip install "biosymphony-ferm-doe[botorch]"
+python -m pip install -e '.[botorch]'
 ```
 
-The extra installs `torch`, `botorch`, and `gpytorch`. The adapter is import-safe: if the extra is missing, `plan-wave2 --backend botorch` short-circuits with reason `not_available` and the stdlib path still runs.
-
-## Run
+Try the bundled synthetic results:
 
 ```bash
 ferm-doe plan-wave2 examples/demo-pb-screening-public \
   --results examples/demo-pb-screening-public/inputs/wave1_results.csv \
-  --out-dir /tmp/demo-pb/wave2_botorch \
-  --backend botorch \
-  --acquisition qei \
-  --bo-n-candidates 6 \
-  --remaining-budget 3
+  --out-dir /tmp/demo-pb/botorch \
+  --backend botorch --acquisition qei --bo-n-candidates 3
 ```
 
-Flags:
+`--bo-n-candidates` sets the candidate count. This branch does not apply `--remaining-budget`; set the count within your available budget. The CLI exposes `qei` and `qucb`. For explicit seed and optimizer settings, use `adapters.botorch_wave2.plan_bo_wave2` in Python.
 
-- `--backend botorch` selects the BoTorch route. Default is `stdlib`.
-- `--acquisition qei | qucb`. `qei` is q-batch Expected Improvement (standard BO baseline). `qucb` is q-batch Upper Confidence Bound; tunable explore vs exploit. Default `qei`.
-- `--bo-n-candidates N` is the next-batch size. Default 3.
-- `--remaining-budget N` constrains how many of the BO candidates the planner can recommend within the campaign's remaining run budget.
+## Read The Output
 
-`--seed` is honored if you want reproducible candidate selection.
-
-## What gets written
-
-The output directory contains the standard follow-up packet plus the BoTorch-specific artifacts:
-
-- `wave2_recommendation.json` and `wave2_recommendation.md`
-- `adaptive_wave2_plan.json`
-- `result_ingestion_report.json`
-- `assay_power_results.json`
-- `locked_prior_runs.csv`
-- `augment_design.csv` (BoTorch candidate rows, labeled `bayesian_optimization_planned`)
-- `botorch_strategy_report.json` (GP fit summary, acquisition function, restart count, raw-sample count, short-circuit reason if the adapter fell through)
-- `adaptive_trace.json`
-- `negative_result_memory.json`
-- `learning_ledger.csv`
-- `hiccup_review.md`
-- `wave2_manifest.patch.json`
-
-The `botorch_strategy_report.json` is the key artifact for review: it records which factors were modeled, the acquisition function used, the candidate coordinates in coded space, and the back-transform to manifest factor units.
-
-## How to interpret the candidates
-
-Each candidate row in `augment_design.csv` carries:
-
-- `claim_level: bayesian_optimization_planned`
-- the factor values in manifest units
-- `acquisition_value` (the EI or UCB score at that point)
-- `scoring_mode: bayesian_optimization`
-
-A high `acquisition_value` means the GP posterior thinks that point has high expected improvement (qEI) or high upper confidence (qUCB). It does not mean the response is guaranteed to be higher there. A statistician should review the candidates against the campaign's decision rules, assay-power policy, and cost ceiling before any rows are committed to the lab.
-
-## When the adapter short-circuits
-
-The BoTorch adapter writes a `short_circuit_reason` and an empty candidate list when:
-
-- `not_available`: `torch` / `botorch` / `gpytorch` imports failed. Install the `botorch` extra.
-- `no_numeric_factors_for_bo`: the manifest has no numeric or ordinal factors with declared `low` and `high`. BoTorch needs numeric bounds.
-- `no_primary_response_declared`: the manifest does not declare `objective.response_id`.
-- `insufficient_observations_for_{rid}`: first-batch results CSV has fewer than 4 usable rows for the primary response after QC and inclusion filtering.
-- `only_{n}_observations_need_at_least_4_for_bo`: same boundary, different phrasing for n < 4.
-- `unsupported_acquisition_{name}`: passed `--acquisition` is not `qei` or `qucb`.
-
-When BoTorch short-circuits, the stdlib closed-loop path still produces a full follow-up packet. The short-circuit reason is recorded in `botorch_strategy_report.json` for the orchestrator to surface.
-
-## Backend choice
-
-| Situation | Backend |
+| File | Contents |
 |---|---|
-| First-batch evidence is small (n < 4 usable), categorical-heavy, or split-plot | `stdlib` |
-| First-batch evidence is dense, numeric factors only, you want explicit explore/exploit | `botorch` with `qei` |
-| Same as above but you want more exploration | `botorch` with `qucb` |
-| Constraints are linear, mixture, or NChooseK | `bofire` (routes through `adapters/bofire_strategy.py`; see [`BOFIRE_POSITIONING.md`](BOFIRE_POSITIONING.md)) |
-| NChooseK cardinality is load-bearing in the BO loop | `entmoot` (see [`ENTMOOT_SWAP_DESIGN.md`](ENTMOOT_SWAP_DESIGN.md)) |
+| `bo_wave2_plan.json` | Adapter report, model details or a short-circuit reason, and candidate records |
+| `bo_wave2_design.csv` | Candidate rows, written when the report contains candidates |
 
-The stdlib path is the default because it runs on a clean install, handles every campaign shape, and labels its outputs honestly. The BoTorch path is the right choice when you want GP-based BO and the manifest can support it.
+The command returns after this adapter call. It does not also write the stdlib follow-up recommendation, learning records, or manifest patch. To obtain those artifacts, run the default `plan-wave2` workflow separately and compare the reports.
 
-## Non-claims
+If the extra cannot be imported, the CLI exits with an error. Insufficient or unsupported inputs produce a short-circuit report. Inspect the report and candidate count before choosing another call; an exit status alone does not establish that candidates were generated.
 
-BoTorch candidates are planned BO output, not validated optimization. The GP posterior is only as good as the first-batch data used to fit it. A statistician should review the acquisition-function choice and the GP fit before driving expensive runs. See [`../NON_CLAIMS.md`](../NON_CLAIMS.md).
+Candidates carry `claim_level: bayesian_optimization_planned`. Review the model, factor coverage, and bounds before selecting experiments.

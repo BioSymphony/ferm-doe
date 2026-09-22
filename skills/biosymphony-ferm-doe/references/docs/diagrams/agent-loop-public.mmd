@@ -1,11 +1,11 @@
 flowchart TB
-  A["Define the campaign"] --> B["Check inputs"]
-  B -->|"blocking errors"| A
-  B -->|"no blocking errors"| C["Generate a design"]
-  C -->|"add supplied result rows"| D["Analyze results"]
-  D --> E["Plan a follow-up batch"]
-  E --> F["Assemble a review packet"]
+  K["Tool registry and method recipes"] --> A["Agent selects a tool"]
+  A --> C["CLI or Python adapter"]
+  C --> O["JSON or CSV output"]
+  O -->|"inspect before next call"| A
+  M["Campaign manifest"] --> A
+  R["Supplied result rows"] --> C
   classDef step fill:#ffffff,stroke:#176b68,color:#123d3c;
   classDef output fill:#075350,stroke:#075350,color:#fffaf0;
-  class A,B,C,D,E step;
-  class F output;
+  class K,A,C,M,R step;
+  class O output;

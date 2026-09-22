@@ -136,7 +136,7 @@ release-check: test validate-all assay-power-demo contract-check tool-registry-c
 	PYTHONPATH=src $(PYTHON) -m biosymphony_ferm_doe.public_release \
 		README.md AGENTS.md pyproject.toml CHANGELOG.md NON_CLAIMS.md Makefile noxfile.py .gitignore \
 		BIOSAFETY.md SECURITY.md CONTRIBUTING.md CITATION.cff .github agents deploy scripts \
-		assets/images/biosymphony-agent-loop.svg assets/images/scale-bridge-review.svg assets/images/agent-work-packets.svg assets/images/experiment-design-map.png \
+		assets/images/biosymphony-agent-loop.svg assets/images/scale-bridge-review.svg assets/images/tool-use-loop.svg assets/images/experiment-design-map.png \
 		assets/images/scale-transfer-criteria.png assets/images/doe-family-selector.png \
 		docs/README.md docs/AGENT_QUICKSTART.md docs/USE_CASES.md docs/WORKFLOWS.md docs/ORCHESTRATOR_BOUNDARY.md docs/PUBLIC_ADOPTION_PATH.md \
 		docs/VISUAL_OVERVIEW.md docs/PUBLIC_SECURITY_MODEL.md docs/RELEASE_READINESS_CHECKLIST.md docs/ISSUE_PACK_COOKBOOK.md docs/superpowers.md \

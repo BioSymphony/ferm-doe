@@ -1,52 +1,50 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="480" viewBox="0 0 960 480" role="img" aria-labelledby="title desc">
-<title id="title">Plan, Analyze, And Review</title><desc id="desc">Six planning steps. Define the campaign, check inputs, and generate a design. Add supplied result rows before analysis, then plan a follow-up batch and assemble a review packet.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="496" viewBox="0 0 960 496" role="img" aria-labelledby="title desc">
+<title id="title">Chain Tools On One Campaign</title><desc id="desc">Campaign inputs feed design selection and generation. Lab work happens separately. Supplied result rows feed analysis and follow-up planning. The agent reviews each output before the next call.</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9" fill="none" stroke="#176b68" stroke-width="1.6"/></marker></defs>
-<style>
-text { font-family:Arial,Helvetica,sans-serif; fill:#123d3c; }
-.heading { font-size:28px; font-weight:700; }
-.label { font-size:23px; font-weight:700; }
-.body { font-size:21px; fill:#355b58; }
-.tag { font-size:19px; font-weight:700; fill:#176b68; }
-.light { fill:#fffaf0; }
-.line { fill:none; stroke:#176b68; stroke-width:2.5; marker-end:url(#arrow); }
-.muted { fill:#fff2d9; stroke:#a87b2c; }
-</style>
-<rect width="960" height="480" rx="18" fill="#f6f8f4"/>
-<text x="32" y="47" class="heading">Plan, Analyze, And Review</text>
-<rect x="32" y="82" width="272" height="152" rx="12" fill="#ffffff" stroke="#bed3ce" stroke-width="1.5"/>
-<text x="52" y="113" class="tag">1 · CAMPAIGN</text>
-<text x="52" y="147" class="label">Define the question</text>
-<text x="52" y="181" class="body">Responses, factors,</text>
-<text x="52" y="209" class="body">constraints, and sources</text>
-<rect x="344" y="82" width="272" height="152" rx="12" fill="#ffffff" stroke="#bed3ce" stroke-width="1.5"/>
-<text x="364" y="113" class="tag">2 · INPUT CHECKS</text>
-<text x="364" y="147" class="label">Review the report</text>
-<text x="364" y="181" class="body">Resolve blocking errors;</text>
-<text x="364" y="209" class="body">record guidance limits</text>
-<rect x="656" y="82" width="272" height="152" rx="12" fill="#ffffff" stroke="#bed3ce" stroke-width="1.5"/>
-<text x="676" y="113" class="tag">3 · DESIGN</text>
-<text x="676" y="147" class="label">Propose run settings</text>
-<text x="676" y="181" class="body">Design table with</text>
-<text x="676" y="209" class="body">method and claim labels</text>
-<path d="M304 158 H338" class="line"/>
-<path d="M616 158 H650" class="line"/>
-<rect x="656" y="298" width="272" height="152" rx="12" fill="#ffffff" stroke="#bed3ce" stroke-width="1.5"/>
-<text x="676" y="329" class="tag">4 · ANALYSIS</text>
-<text x="676" y="363" class="label">Analyze results</text>
-<text x="676" y="397" class="body">Effect estimates,</text>
-<text x="676" y="425" class="body">intervals, and diagnostics</text>
-<rect x="344" y="298" width="272" height="152" rx="12" fill="#ffffff" stroke="#bed3ce" stroke-width="1.5"/>
-<text x="364" y="329" class="tag">5 · FOLLOW-UP</text>
-<text x="364" y="363" class="label">Plan the next batch</text>
-<text x="364" y="397" class="body">Action, candidate rows,</text>
-<text x="364" y="425" class="body">and manifest patch</text>
-<rect x="32" y="298" width="272" height="152" rx="12" fill="#075350" stroke="#075350" stroke-width="1.5"/>
-<text x="52" y="329" class="tag light">6 · REVIEW PACKET</text>
-<text x="52" y="363" class="label light">Assemble the plan</text>
-<text x="52" y="397" class="body light">Markdown and JSON</text>
-<text x="52" y="425" class="body light">for scientific review</text>
-<path d="M792 234 V292" class="line"/>
-<text x="565" y="271" class="tag">Add result rows</text>
-<path d="M656 374 H622" class="line"/>
-<path d="M344 374 H310" class="line"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#123d3c}.heading{font-size:28px;font-weight:700}.label{font-size:23px;font-weight:700}.body{font-size:21px;fill:#355b58}.tag{font-size:18px;font-weight:700;fill:#176b68}.light{fill:#fffaf0}.line{fill:none;stroke:#176b68;stroke-width:2.5;marker-end:url(#arrow)}</style>
+<rect width="960" height="496" rx="18" fill="#f6f8f4"/>
+<text x="32" y="47" class="heading">Chain Tools On One Campaign</text>
+<g class="card"><rect x="32" y="86" width="272" height="150" rx="12" fill="#ffffff" stroke="#bed3ce" stroke-width="1.5"/>
+<text x="52" y="117" class="tag">1 · INPUTS</text>
+<text x="52" y="151" class="label">Frame the campaign</text>
+<text x="52" y="185" class="body">Factors and responses</text>
+<text x="52" y="213" class="body">Constraints and budget</text>
+</g>
+<g class="card"><rect x="344" y="86" width="272" height="150" rx="12" fill="#ffffff" stroke="#bed3ce" stroke-width="1.5"/>
+<text x="364" y="117" class="tag">2 · SELECT</text>
+<text x="364" y="151" class="label">Choose a design</text>
+<text x="364" y="185" class="body">recommend-family</text>
+<text x="364" y="213" class="body">Review the rationale</text>
+</g>
+<g class="card"><rect x="656" y="86" width="272" height="150" rx="12" fill="#ffffff" stroke="#bed3ce" stroke-width="1.5"/>
+<text x="676" y="117" class="tag">3 · GENERATE</text>
+<text x="676" y="151" class="label">Create candidate runs</text>
+<text x="676" y="185" class="body">generate-design</text>
+<text x="676" y="213" class="body">Inspect CSV + metadata</text>
+</g>
+<g class="card"><rect x="656" y="318" width="272" height="150" rx="12" fill="#ffffff" stroke="#bed3ce" stroke-width="1.5"/>
+<text x="676" y="349" class="tag">4 · SUPPLIED DATA</text>
+<text x="676" y="383" class="label">Read result rows</text>
+<text x="676" y="417" class="body">Results CSV</text>
+<text x="676" y="445" class="body">Run IDs and QC fields</text>
+</g>
+<g class="card"><rect x="344" y="318" width="272" height="150" rx="12" fill="#ffffff" stroke="#bed3ce" stroke-width="1.5"/>
+<text x="364" y="349" class="tag">5 · ANALYZE</text>
+<text x="364" y="383" class="label">Estimate the effects</text>
+<text x="364" y="417" class="body">analyze</text>
+<text x="364" y="445" class="body">Inspect model diagnostics</text>
+</g>
+<g class="card"><rect x="32" y="318" width="272" height="150" rx="12" fill="#075350" stroke="#075350" stroke-width="1.5"/>
+<text x="52" y="349" class="tag light">6 · FOLLOW-UP</text>
+<text x="52" y="383" class="label light">Plan the next batch</text>
+<text x="52" y="417" class="body light">plan-wave2</text>
+<text x="52" y="445" class="body light">Read action + candidates</text>
+</g>
+<path d="M304 162 H338" class="line"/>
+<path d="M616 162 H650" class="line"/>
+<path d="M792 236 V312" class="line"/>
+<path d="M656 393 H622" class="line"/>
+<path d="M344 393 H310" class="line"/>
+<text x="382" y="274" class="tag">Lab work runs separately.</text>
+<text x="382" y="299" class="tag">Supply results, or use the synthetic demo.</text>
 </svg>

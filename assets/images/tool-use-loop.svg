@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="466" viewBox="0 0 960 466" role="img" aria-labelledby="title desc">
+<title id="title">How Your Agent Uses The Tools</title><desc id="desc">Tool knowledge informs the agent. The agent calls the CLI or a Python adapter and reads the returned JSON or CSV to select the next call.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9" fill="none" stroke="#176b68" stroke-width="1.6"/></marker></defs>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#123d3c}.heading{font-size:28px;font-weight:700}.label{font-size:23px;font-weight:700}.body{font-size:21px;fill:#355b58}.tag{font-size:18px;font-weight:700;fill:#176b68}.light{fill:#fffaf0}.line{fill:none;stroke:#176b68;stroke-width:2.5;marker-end:url(#arrow)}</style>
+<rect width="960" height="466" rx="18" fill="#f6f8f4"/>
+<text x="32" y="47" class="heading">How Your Agent Uses The Tools</text>
+<g class="card"><rect x="32" y="86" width="272" height="348" rx="12" fill="#ffffff" stroke="#bed3ce" stroke-width="1.5"/>
+<text x="52" y="117" class="tag">TOOL KNOWLEDGE</text>
+<text x="52" y="151" class="label">Find the right method</text>
+<text x="52" y="185" class="body">Registry and recipes</text>
+<text x="52" y="213" class="body">Task fit and constraints</text>
+<text x="52" y="241" class="body">Package requirements</text>
+<text x="52" y="269" class="body">Source links</text>
+<text x="52" y="297" class="body">Implementation status</text>
+</g>
+<g class="card"><rect x="344" y="86" width="272" height="158" rx="12" fill="#ffffff" stroke="#bed3ce" stroke-width="1.5"/>
+<text x="364" y="117" class="tag">YOUR AGENT</text>
+<text x="364" y="151" class="label">Choose the call</text>
+<text x="364" y="185" class="body">Read campaign inputs</text>
+<text x="364" y="213" class="body">Check available tools</text>
+</g>
+<g class="card"><rect x="656" y="86" width="272" height="158" rx="12" fill="#ffffff" stroke="#bed3ce" stroke-width="1.5"/>
+<text x="676" y="117" class="tag">CLI OR PYTHON</text>
+<text x="676" y="151" class="label">Run the tool</text>
+<text x="676" y="185" class="body">Built-in methods</text>
+<text x="676" y="213" class="body">Optional adapters</text>
+</g>
+<g class="card"><rect x="344" y="314" width="584" height="120" rx="12" fill="#075350" stroke="#075350" stroke-width="1.5"/>
+<text x="364" y="345" class="tag light">RESULTS → NEXT CALL</text>
+<text x="364" y="379" class="label light">Inspect JSON and CSV</text>
+<text x="364" y="413" class="body light">Candidates, diagnostics, status, and reasons</text>
+</g>
+<path d="M304 165 H338" class="line"/>
+<path d="M616 165 H650" class="line"/>
+<path d="M792 244 V308" class="line"/>
+<path d="M480 314 V250" class="line"/>
+<text x="807" y="285" class="tag">returns</text>
+<text x="358" y="285" class="tag">agent reads</text>
+</svg>
